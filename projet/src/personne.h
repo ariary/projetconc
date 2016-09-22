@@ -1,9 +1,7 @@
-
-
 typedef struct Personne{
 	int position_x;
 	int position_y;
-};
+}Personne;
 
 
 void move();

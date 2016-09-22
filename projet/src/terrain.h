@@ -1,6 +1,7 @@
 typedef struct Terrain{
-	int[][] taleau;
+	int** taleau;
 	int nb_personnes;
+	struct Personne* tableau_personnes;
 }Terrain;
 
 
