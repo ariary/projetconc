@@ -1,8 +1,2 @@
-#include "terrain.h"
+#include "./include/terrain.h"
 
-
-int main(){
-
-	
-	return 0;
-}
