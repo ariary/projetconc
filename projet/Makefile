@@ -1,5 +1,5 @@
-CC=gcc
-CFLAGS=-Wall -std=gnu99 -g
+CC=g++
+CFLAGS=-Wall -std=c++11 -g
 
 SRCDIR=src
 EXEDIR=bin
