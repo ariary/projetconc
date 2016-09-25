@@ -6,6 +6,7 @@
 #include "./include/terrain.h"
 #include  <iostream>
 #include <getopt.h>
+#include <sys/resource.h> //getrusage
 
 
 
@@ -14,6 +15,8 @@ int main(int argc, char *argv[]){
     int nb_personne,nb_thread;
     bool time_execution=false;
     int opt;
+
+    struct rusage r_usage;//-m
 
     while ((opt = getopt(argc , argv, "mp:t:")) != -1){
         switch (opt) {
@@ -50,11 +53,16 @@ int main(int argc, char *argv[]){
     //(time_execution)?printf("Avec mesure de temps \n"):printf("sans mesure de temps\n");
 
 
+
     /*lancement du programme*/
     //init(int nb_personne,nb_thread,bool time_execution)
 
     //app
-
+    if (time_execution)
+    {
+        getrusage(RUSAGE_SELF,&r_usage);
+        printf("Empreinte maximale du programme: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_maxrss,r_usage.ru_utime.tv_sec,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
+    }
     
     return 0;
 }
