@@ -1,26 +1,44 @@
-CC=g++
-CFLAGS=-Wall -std=c++11 -g
+#=======================================================================
+# Basic C++: makefile example to use as a reminder or as a template
+#-----------------------------------------------------------------------
+# Julien DeAntoni --- No Copyright 2016
+# $Id: convenient Makefile but muist be tuned for templated project 
+#      v0.2 2016/09/06
+#=======================================================================
 
-SRCDIR=src
-EXEDIR=bin
-SRC=$(wildcard $(SRCDIR)/*.c)
-EXE=$(SRC:.c=)
-OBJ=$(SRC:.c=.o)
+#only ok for project with no templated classes
+
+#compiler
+COMPILER = g++
+#linker
+LINKER =g++
+
+#options for linker and compiler
+FLAGS =-g -ansi -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -D_DEBUG_ -std=c++11
+
+EXE_NAME = toto.exe
+
+#can have several ones separated by spaces, only cpp files
+SOURCES = src/main.cpp src/personne.cpp src/terrain.cpp
 
 
-all: $(EXE)
+#PATH to extra header used in the project (when using libs not installed in the OS)
+INC_PATHS= -I 
 
+#extra libs used in the project (for instance -lpthread)
+LIBS	= -L 
+
+LINKOBJ	= $(SOURCES:.cpp=.o)
+SOURCEHEADERS = $(SOURCES:.cpp=.h)
+
+avec: $(EXE_NAME)
+
+$(EXE_NAME): $(LINKOBJ)
+	$(LINKER) $(LINKOBJ) $(INC_PATHS) $(LIBS) -o $(EXE_NAME) $(FLAGS)
+
+%.o: %.cpp %.h
+	$(COMPILER) -g -c $< -o $@ $(INC_PATHS) $(FLAGS)
+
+# cleanup
 clean:
-	rm -f *~ $(SRCDIR)/$(OBJ) $(EXEDIR)/executable
-
-avec: $(SRCDIR)/personne.o $(SRCDIR)/terrain.o
-	$(CC) -o $(EXEDIR)/executable $(SRCDIR)/personne.o $(SRCDIR)/terrain.o
-
-$(SRCDIR)/personne.o: $(SRCDIR)/personne.c $(SRCDIR)/personne.h
-	$(CC) -o $(SRCDIR)/personne.o -c $(SRCDIR)/personne.c $(CFLAGS)
-
-$(SRCDIR)/terrain.o: $(SRCDIR)/terrain.c $(SRCDIR)/terrain.h
-	$(CC) -o $(SRCDIR)/terrain.o -c $(SRCDIR)/terrain.c $(CFLAGS) 
-
-
-sans: all
+	rm -f $(LINKOBJ)
