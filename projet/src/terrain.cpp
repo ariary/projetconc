@@ -8,6 +8,7 @@ terrain::terrain(int nombre_personnes) {
 	this->matrice = std::vector<std::vector<int> > (128, std::vector<int>(512));
 	this->nb_personnes = nombre_personnes;
 	this->nb_threads = 1; //pour l'instant à 1
+	this->initialiser_matrice();
 //	this->liste_personnes = std::list(nombre_personnes, 0);
 }
 
@@ -105,10 +106,3 @@ int terrain::get_nombre_personnes(){
 	return this->nb_personnes;
 }
 
-int main(){
-	terrain t = terrain(100) ;
-    t.initialiser_matrice();
-    t.print_matrice();
-    t.init_muret();
-    return 0;
-}

@@ -25,16 +25,19 @@ SOURCES = src/main.cpp src/personne.cpp src/terrain.cpp
 #PATH to extra header used in the project (when using libs not installed in the OS)
 INC_PATHS= -I 
 
+
 #extra libs used in the project (for instance -lpthread)
 LIBS	= -L 
 
+GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
+
 LINKOBJ	= $(SOURCES:.cpp=.o)
-SOURCEHEADERS = $(SOURCES:.cpp=.h)
+SOURCEHEADERS = $(SOURCES:.cpp=./include/.h)
 
 avec: $(EXE_NAME)
 
 $(EXE_NAME): $(LINKOBJ)
-	$(LINKER) $(LINKOBJ) $(INC_PATHS) $(LIBS) -o $(EXE_NAME) $(FLAGS)
+	$(LINKER) $(LINKOBJ) $(INC_PATHS) $(LIBS) -o $(EXE_NAME) $(GRAPH) $(FLAGS)
 
 %.o: %.cpp %.h
 	$(COMPILER) -g -c $< -o $@ $(INC_PATHS) $(FLAGS)
