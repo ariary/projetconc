@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
     int opt;
 
     struct rusage r_usage;//-m
+    clock_t tempsDebut, tempsFin;//-m
 
     while ((opt = getopt(argc , argv, "mp:t:")) != -1){
         switch (opt) {
@@ -53,6 +54,7 @@ int main(int argc, char *argv[]){
 */
 
     //(time_execution)?printf("Avec mesure de temps \n"):printf("sans mesure de temps\n");
+    //tempsDebut = clock();
 
 
 
@@ -60,10 +62,15 @@ int main(int argc, char *argv[]){
     //init(int nb_personne,nb_thread,bool time_execution)
 
     //app
+
+    //tempsFin = clock();
     /*if (time_execution)
     {
+        printf("Temps processeur utilisé: %.3lf secondes", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC)
         getrusage(RUSAGE_SELF,&r_usage);
-        printf("Empreinte maximale du programme: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_maxrss,r_usage.ru_utime.tv_sec,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
+        printf("Empreinte maximale du programme principal: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
+                getrusage(RUSAGE_CHILDREN,&r_usage);
+        printf("Empreinte maximale des threads: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
     }*/
     /*terrain t = terrain(100) ;
     t.initialiser_matrice();
