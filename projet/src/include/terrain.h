@@ -18,10 +18,11 @@ class terrain {
 		std::vector< std::vector<int> > matrice;
 		int nb_personnes;
 		int nb_threads;
-		std::list<personne> liste_personnes;
+		
 		bool coordonnees_correctes(int pos_x, int pos_y);
 
 	public:
+		std::vector<personne> liste_personnes;
 		void init_muret();
 		terrain(int nombre_personnes);
 		int get_nombre_personnes();
@@ -29,8 +30,9 @@ class terrain {
 		void print_liste_personnes();
 		void initialiser_matrice();
 		bool finish();
-		void personne_arrivee(personne p);
-		void bouger_personne(personne p);
+		void bouger_personne(int indicePersonne);
+		void enlever_personne(int indice);
+		
 };
 
 

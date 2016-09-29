@@ -7,6 +7,7 @@ using namespace std;
 terrain::terrain(int nombre_personnes) {
 	this->matrice = std::vector<std::vector<int> > (128, std::vector<int>(512));
 	this->nb_personnes = nombre_personnes;
+	this->liste_personnes;
 	this->nb_threads = 1; //pour l'instant à 1
 	this->initialiser_matrice();
 }
@@ -32,9 +33,8 @@ void terrain::initialiser_matrice(){
 	//on va prendre deux nombres au hasard (coordonnées x et y) pour insérer les personnes sur le terrain
 	int rand_X;
 	int rand_Y;
-	std::list<personne>::iterator it;
+	std::vector<personne>::iterator it;
 	srand (time(NULL));
-	cout << nb_personnes << endl;
 	for(int i = 0; i < this->nb_personnes; i++){
 		rand_X = rand() % 128;
 		rand_Y = rand() % 512;
@@ -43,7 +43,6 @@ void terrain::initialiser_matrice(){
 			rand_X = rand() % 128;
 			rand_Y = rand() % 512;
 		}
-		cout << "Personne créée :( " << rand_X << ", " << rand_Y << ")" << endl;
 		//on peut mettre la personne sur la matrice
 		for(int j = 0 ; j < 4; j++){
 			for(int k = 0; k < 4; k++){
@@ -76,8 +75,8 @@ bool terrain::coordonnees_correctes(int pos_x,int pos_y){
 
 void terrain::print_liste_personnes(){
 
-	for (list<personne>::iterator it=this->liste_personnes.begin(); it!=this->liste_personnes.end(); ++it)
-	    cout << "(" << it->get_pos_x() << ", " << it->get_pos_y() << ")" << endl;
+	for (vector<personne>::iterator it=this->liste_personnes.begin(); it!=this->liste_personnes.end(); ++it)
+	    it-> print_personne();
 
 }
 
@@ -110,10 +109,24 @@ bool terrain::finish(){
 	return this->nb_personnes == 0;
 }
 
-void bouger_personne(personne p){
+void terrain::bouger_personne(int indicePersonne){
+	//il faut trouver une stratégie pour que la personne trouve le chemin le plus court
+	//on récupère la personne
+	personne p = this->liste_personnes.at(indicePersonne);
+	if(p.aFini()){
+		//la personne est arrivée au bout et elle peut donc disparaitre
+		this->enlever_personne(indicePersonne);
+	}else{ //la personne n'est pas arrivée au bout et doit donc avancer
+		cout << "coucou" << endl;
+
+	}
 
 }
 
+void terrain::enlever_personne(int indice){
+	this->liste_personnes.erase(this->liste_personnes.begin() + indice);
+	this->nb_personnes--;
+}
 /*void avancer_nord(personne p){
 	if(this->coordonnees_correctes(p.get_pos_x()-1, p.get_pos_y())
 }*/

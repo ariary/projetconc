@@ -56,7 +56,9 @@ int main(int argc, char *argv[]){
 
 
     /*lancement du programme*/
-    terrain t = terrain((int)pow(2,nb_personne)) ;
+    terrain t = terrain((int)pow(2,0)) ;
+    t.print_liste_personnes();
+    
 
     tempsFin = clock();
     if (time_execution)
