@@ -49,7 +49,7 @@ int main(int argc, char *argv[]){
     }      
 
     printf("nb de personne 2^%d; nb de threads %d; ", nb_personne, nb_thread);
-    (time_execution)?printf("Avec mesure de temps \n"):printf("sans mesure de temps\n");
+    (time_execution)?printf("Avec mesure de temps\n"):printf("sans mesure de temps\n");
     tempsDebut = clock();
 
 
