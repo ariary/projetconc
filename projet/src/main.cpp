@@ -71,7 +71,21 @@ int main(int argc, char *argv[]){
         pthread_create(&t0, NULL, thread_avancerALL, NULL);
         pthread_join(t0, NULL);
     }else if(nb_thread==1){
-        int j=0;
+        pthread_t t1;
+        pthread_t t2;
+        pthread_t t3;
+        pthread_t t4;
+
+        pthread_create(&t1, NULL, thread_avancerNE, NULL);
+        pthread_create(&t2, NULL, thread_avancerNO, NULL);
+        pthread_create(&t3, NULL, thread_avancerSE, NULL);
+        pthread_create(&t4, NULL, thread_avancerSO, NULL);
+
+        pthread_join(t1, NULL);
+        pthread_join(t2, NULL);
+        pthread_join(t3, NULL);
+        pthread_join(t4, NULL);
+
     }else{//nb_thread=4
         int k=0;
     }
