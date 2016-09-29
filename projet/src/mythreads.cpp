@@ -9,18 +9,21 @@ void *thread_avancerALL (void *p_data){
 	cout<<"avancerALL()"<<endl;
 	if (p_data != NULL)
    {
-      /* recuperation du contexte applicatif */
-      terrain *ter= p_data;
-      while(!finish()){
-      	
-      }
+    	
+      	terrain *ter= p_data;// recuperation du contexte applicatif 
+
+    	while(!finish()){
+      		for(int i=0;i<ter.liste_personnes.size();i++){
+      			ter.liste_personnes[i].avancer();
+      		}
+      	}
    }else{
-   	cout< "problème dans la récupération du contexte applicatif du thread (-t0)"
+   		cout<< "problème dans la récupération du contexte applicatif du thread (-t0)"<<endl;
    }
 } 
 
 /*t1*/
-void *thread_avancerNE(void *pd_data){
+void *thread_avancerNE(void *pd_data){ //peut être iterateur pour parcourir les joueurs de la zone
 	cout<<"avancerNE()"<<endl;
 }
 
