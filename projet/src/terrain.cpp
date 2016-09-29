@@ -106,3 +106,36 @@ int terrain::get_nombre_personnes(){
 	return this->nb_personnes;
 }
 
+bool terrain::finish(){
+	return this->nb_personnes == 0;
+}
+
+void terrain::personne_arrivee(personne p){
+	this->liste_personnes.remove(p);
+	this->nb_personnes--;
+	for(int i = 0; i < 3; i++){
+		for(int j = 0; j < 3; j++){
+			this->matrice.at(p->position_x+i).at(p->position_y+j) = 0;
+		}
+	}
+}
+
+void terrain::tour(){
+	/*for (list<personne>::iterator it=this->liste_personnes.begin(); it!=this->liste_personnes.end(); ++it){
+		if(it->get_pos_x > 64){
+		//je suis sur la partie nord du terrain
+
+		}
+
+	}*/
+}
+void avancer_nord(personne p){
+	if(this->coordonnees_correctes(p->get_pos_x()-1, p->get_pos_y())
+}
+void avancer_nord_est(personne p)
+void avancer_nord_ouest(personne p)
+void avancer_sud(personne p)
+void avancer_sud_est(personne p)
+void avancer_sud_ouest(personne p)
+void avancer_est(personne p)
+void avancer_ouest(personne p)

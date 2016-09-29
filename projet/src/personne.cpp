@@ -12,14 +12,34 @@ personne::personne(int x, int y){
 	this->position_y = y;
 
 }
-void personne::avancer_nord_ouest(){}
-void personne::avancer_nord(){}
-void personne::avancer_nord_est(){}
-void personne::avancer_est(){}
-void personne::avancer_sud_est(){}
-void personne::avancer_sud(){}
-void personne::avancer_sud_ouest(){}
-void personne::avancer_ouest(){}
+void personne::avancer_nord_ouest(){
+	this->position_x--;
+	this->position_y--; 
+}
+void personne::avancer_nord(){
+	this->position_x--;
+}
+void personne::avancer_nord_est(){
+	this->position_x--;
+	this->position_y++;
+}
+void personne::avancer_est(){
+	this->position_y++;
+}
+void personne::avancer_sud_est(){
+	this->position_x++;
+	this->position_y++;
+}
+void personne::avancer_sud(){
+	this->position_x++;
+}
+void personne::avancer_sud_ouest(){
+	this->position_x++;
+	this->position_y--;
+}
+void personne::avancer_ouest(){
+	this->position_y--;
+}
 
 int personne::get_pos_x(){
 	return this->position_x;

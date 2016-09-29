@@ -28,6 +28,9 @@ class terrain {
 		void print_matrice();
 		void print_liste_personnes();
 		void initialiser_matrice();
+		bool finish();
+		void personne_arrivee(personne p);
+		void tour();
 
 };
 

@@ -72,25 +72,11 @@ int main(int argc, char *argv[]){
                 getrusage(RUSAGE_CHILDREN,&r_usage);
         printf("Empreinte maximale des threads: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
     }*/
-    /*terrain t = terrain(100) ;
+    terrain t = terrain(100) ;
     t.initialiser_matrice();
-    cout << "coucou" << endl;*/
-    sf::RenderWindow window(sf::VideoMode(200, 200), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Green);
-
-    while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed)
-                window.close();
-        }
-
-        window.clear();
-        window.draw(shape);
-        window.display();
+    int x = 1;
+    while(x > 0){
+        
     }
     return 0;
 
