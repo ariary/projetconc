@@ -116,8 +116,11 @@ void terrain::bouger_personne(int indicePersonne){
 		//la personne est arrivée au bout et elle peut donc disparaitre
 		this->enlever_personne(indicePersonne);
 	}else{ //la personne n'est pas arrivée au bout et doit donc avancer
-		cout << "coucou" << endl;
-
+		//on regarde si la personne est au dessus ou au dessous de l'azimuth
+		if(p.au_dessus_azimuth1()){
+				//on fait le déplacement SUD-OUEST
+				this->deplacement_personne_SO(indicePersonne);
+		}
 	}
 
 }
@@ -126,13 +129,56 @@ void terrain::enlever_personne(int indice){
 	this->liste_personnes.erase(this->liste_personnes.begin() + indice);
 	this->nb_personnes--;
 }
-/*void avancer_nord(personne p){
-	if(this->coordonnees_correctes(p.get_pos_x()-1, p.get_pos_y())
-}*/
-/*void avancer_nord_est(personne p)
-void avancer_nord_ouest(personne p)
-void avancer_sud(personne p)
-void avancer_sud_est(personne p)
-void avancer_sud_ouest(personne p)
-void avancer_est(personne p)
+
+void terrain::deplacement_personne_SO(int indice){
+	personne p = this->liste_personnes.at(indice);
+	bool possible_deplacement = true;
+	if(this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	if(this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()) == 1 || this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+1) == 1 || this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+1) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+2) == 1 || this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+2) == 2)
+		possible_deplacement = false;
+	
+	if(possible_deplacement){
+		this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()) = 1;
+		this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+1) = 1;
+		this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+2) = 1;
+
+
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()) = 0;
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+1) = 0;
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+2) = 0;
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+3) = 0;
+
+		
+		this->liste_personnes.erase(liste_personnes.begin()+indice);
+		personne newP = personne(p.get_pos_x()+1,p.get_pos_y()-1);
+		//newP.print_personne();
+		this->liste_personnes.insert(liste_personnes.begin()+indice,newP);	
+
+	}
+}
+
+/*void avancer_est(personne p)
 void avancer_ouest(personne p)*/

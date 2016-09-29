@@ -11,8 +11,6 @@
 personne::personne(int x, int y){
 	this->position_x = x;
 	this->position_y = y;
-	this->position_x_fin = position_x + 3;
-	this->position_y_fin = position_y + 3;
 
 }
 bool personne::aFini(){
@@ -53,12 +51,21 @@ int personne::get_pos_x(){
 int personne::get_pos_y(){
 	return this->position_y;
 }
-int personne::get_pos_x_fin(){
-	return this->position_x_fin;
+
+void personne::changer_position(int newX, int newY){
+	this->position_x = newX;
+	this->position_y = newY;
+
 }
-int personne::get_pos_y_fin(){
-	return this->position_y_fin;
-}
+
 void personne::print_personne(){
 	std::cout << "(" << this->position_x << ", " << this->position_y << ")" << std::endl;
+}
+
+bool personne::au_dessus_azimuth1(){
+	return this->position_x < 60;
+}
+
+bool personne::au_dessous_azimuth2(){
+	return this->position_x > 68;
 }

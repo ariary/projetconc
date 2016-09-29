@@ -31,7 +31,7 @@ class terrain {
 		bool finish();
 		void bouger_personne(int indicePersonne);
 		void enlever_personne(int indice);
-		
+		void deplacement_personne_SO(int indice);
 };
 
 

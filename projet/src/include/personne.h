@@ -13,8 +13,7 @@ class personne {
 	private:
 		int position_x;
 		int position_y;
-		int position_x_fin;
-		int position_y_fin;
+
 
 	public:
 		personne(int x, int y);
@@ -31,8 +30,10 @@ class personne {
 
 		int get_pos_x();
 		int get_pos_y();
-		int get_pos_x_fin();
-		int get_pos_y_fin();
+
+		bool au_dessus_azimuth1();
+		bool au_dessous_azimuth2();
+		void changer_position(int newX,int newY);
 
 
 

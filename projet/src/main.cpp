@@ -62,8 +62,11 @@ int main(int argc, char *argv[]){
 
     /*lancement du programme*/
     terrain t = terrain((int)pow(2,0)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
-    t.initialiser_matrice();
+    cout << "first ";
     t.print_liste_personnes(); 
+    t.bouger_personne(0);
+    cout << "second ";
+    t.print_liste_personnes();
 
     if (nb_thread==0)
     {
