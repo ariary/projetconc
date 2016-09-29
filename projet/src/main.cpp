@@ -14,7 +14,7 @@ int main(int argc, char *argv[]){
     
     
     /*prise en charge des arguments*/
-    /*int nb_personne,nb_thread;
+    int nb_personne,nb_thread;
     bool time_execution=false;
     int opt;
 
@@ -50,34 +50,24 @@ int main(int argc, char *argv[]){
 
     printf("nb de personne 2^%d; nb de threads %d; ", nb_personne, nb_thread);
     (time_execution)?printf("Avec mesure de temps \n"):printf("sans mesure de temps\n");
-    
-*/
-
-    //(time_execution)?printf("Avec mesure de temps \n"):printf("sans mesure de temps\n");
-    //tempsDebut = clock();
+    tempsDebut = clock();
 
 
 
     /*lancement du programme*/
-    //init(int nb_personne,nb_thread,bool time_execution)
-
-    //app
-
-    //tempsFin = clock();
-    /*if (time_execution)
-    {
-        printf("Temps processeur utilisé: %.3lf secondes", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC)
-        getrusage(RUSAGE_SELF,&r_usage);
-        printf("Empreinte maximale du programme principal: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
-                getrusage(RUSAGE_CHILDREN,&r_usage);
-        printf("Empreinte maximale des threads: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
-    }*/
-    terrain t = terrain(100) ;
+    terrain t = terrain(2^nb_personne) ;
     t.initialiser_matrice();
-    int x = 1;
-    while(x > 0){
-        
+
+    tempsFin = clock();
+    if (time_execution)
+    {
+        printf("Temps processeur utilisé: %.3lf secondes", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC);
+        getrusage(RUSAGE_SELF,&r_usage);
+        //printf("Empreinte maximale du programme principal: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_time.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
+                getrusage(RUSAGE_CHILDREN,&r_usage);
+        //printf("Empreinte maximale des threads: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_time.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
     }
+    
     return 0;
 
 }

@@ -30,8 +30,7 @@ class terrain {
 		void initialiser_matrice();
 		bool finish();
 		void personne_arrivee(personne p);
-		void tour();
-
+		void bouger_personne(personne p);
 };
 
 

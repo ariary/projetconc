@@ -35,6 +35,7 @@ void terrain::initialiser_matrice(){
 	int rand_Y;
 	std::list<personne>::iterator it;
 	srand (time(NULL));
+	//cout << nb_personnes << endl;
 	for(int i = 0; i < this->nb_personnes; i++){
 		rand_X = rand() % 128;
 		rand_Y = rand() % 512;
@@ -43,7 +44,7 @@ void terrain::initialiser_matrice(){
 			rand_X = rand() % 128;
 			rand_Y = rand() % 512;
 		}
-		cout << "rand_X : " << rand_X << " rand_Y : " << rand_Y << endl;
+		//cout << "Personne créée :( " << rand_X << ", " << rand_Y << ")" << endl;
 		//on peut mettre la personne sur la matrice
 		for(int j = 0 ; j < 4; j++){
 			for(int k = 0; k < 4; k++){
@@ -110,32 +111,23 @@ bool terrain::finish(){
 	return this->nb_personnes == 0;
 }
 
-void terrain::personne_arrivee(personne p){
+/*void terrain::personne_arrivee(personne p){
 	this->liste_personnes.remove(p);
 	this->nb_personnes--;
 	for(int i = 0; i < 3; i++){
 		for(int j = 0; j < 3; j++){
-			this->matrice.at(p->position_x+i).at(p->position_y+j) = 0;
+			this->matrice.at(p.get_pos_x() + i).at(p.get_pos_y() + j) = 0;
 		}
 	}
-}
+}*/
 
-void terrain::tour(){
-	/*for (list<personne>::iterator it=this->liste_personnes.begin(); it!=this->liste_personnes.end(); ++it){
-		if(it->get_pos_x > 64){
-		//je suis sur la partie nord du terrain
-
-		}
-
-	}*/
-}
-void avancer_nord(personne p){
-	if(this->coordonnees_correctes(p->get_pos_x()-1, p->get_pos_y())
-}
-void avancer_nord_est(personne p)
+/*void avancer_nord(personne p){
+	if(this->coordonnees_correctes(p.get_pos_x()-1, p.get_pos_y())
+}*/
+/*void avancer_nord_est(personne p)
 void avancer_nord_ouest(personne p)
 void avancer_sud(personne p)
 void avancer_sud_est(personne p)
 void avancer_sud_ouest(personne p)
 void avancer_est(personne p)
-void avancer_ouest(personne p)
+void avancer_ouest(personne p)*/
