@@ -2,10 +2,21 @@
 #include <iostream>
 
 using namespace std;
+using namespace terrain;
 
 /*t0*/
 void *thread_avancerALL (void *p_data){
 	cout<<"avancerALL()"<<endl;
+	if (p_data != NULL)
+   {
+      /* recuperation du contexte applicatif */
+      terrain *ter= p_data;
+      while(!finish()){
+      	
+      }
+   }else{
+   	cout< "problème dans la récupération du contexte applicatif du thread (-t0)"
+   }
 } 
 
 /*t1*/

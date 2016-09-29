@@ -17,7 +17,6 @@ class terrain {
 	private:
 		std::vector< std::vector<int> > matrice;
 		int nb_personnes;
-		int nb_threads;
 		
 		bool coordonnees_correctes(int pos_x, int pos_y);
 
