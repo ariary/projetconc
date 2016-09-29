@@ -7,6 +7,7 @@
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
 #include <SFML/Graphics.hpp>
+#include <math.h>
 
 
 using namespace std;
@@ -55,8 +56,7 @@ int main(int argc, char *argv[]){
 
 
     /*lancement du programme*/
-    terrain t = terrain(2^nb_personne) ;
-    t.initialiser_matrice();
+    terrain t = terrain((int)pow(2,nb_personne)) ;
 
     tempsFin = clock();
     if (time_execution)

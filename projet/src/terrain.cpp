@@ -9,7 +9,6 @@ terrain::terrain(int nombre_personnes) {
 	this->nb_personnes = nombre_personnes;
 	this->nb_threads = 1; //pour l'instant à 1
 	this->initialiser_matrice();
-//	this->liste_personnes = std::list(nombre_personnes, 0);
 }
 
 void terrain::print_matrice(){
@@ -35,7 +34,7 @@ void terrain::initialiser_matrice(){
 	int rand_Y;
 	std::list<personne>::iterator it;
 	srand (time(NULL));
-	//cout << nb_personnes << endl;
+	cout << nb_personnes << endl;
 	for(int i = 0; i < this->nb_personnes; i++){
 		rand_X = rand() % 128;
 		rand_Y = rand() % 512;
@@ -44,7 +43,7 @@ void terrain::initialiser_matrice(){
 			rand_X = rand() % 128;
 			rand_Y = rand() % 512;
 		}
-		//cout << "Personne créée :( " << rand_X << ", " << rand_Y << ")" << endl;
+		cout << "Personne créée :( " << rand_X << ", " << rand_Y << ")" << endl;
 		//on peut mettre la personne sur la matrice
 		for(int j = 0 ; j < 4; j++){
 			for(int k = 0; k < 4; k++){
@@ -111,15 +110,9 @@ bool terrain::finish(){
 	return this->nb_personnes == 0;
 }
 
-/*void terrain::personne_arrivee(personne p){
-	this->liste_personnes.remove(p);
-	this->nb_personnes--;
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++){
-			this->matrice.at(p.get_pos_x() + i).at(p.get_pos_y() + j) = 0;
-		}
-	}
-}*/
+void bouger_personne(personne p){
+
+}
 
 /*void avancer_nord(personne p){
 	if(this->coordonnees_correctes(p.get_pos_x()-1, p.get_pos_y())
