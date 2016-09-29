@@ -1,0 +1,30 @@
+Stratégie 4 threads:
+
+rappel: "Le terrain est découpé en 4 partie . Un thread est associé à chaque partie du terrain. Et chaque threads doit faire avancer les joueurs présent sur sa partie du terrain"
+
+j'ai 4 actions qui vont être éxécuter par des threads différents:
+	avancerSE (partie sud-est),avancerSO(partie sud-ouest) etc..
+
+ces fonctions sont lancés dans le main (c'est le main qui gère les threads , les actions lancées par lee threads sont de simple fonction ne nécéssitant pas la manipulation de thread).
+
+A l'interieur de ces fonctions chacun leur tour les joueurs présent dans la zone vont avancer vers le point azimut.
+Se pose alors un problème: comment gérer le changement de zone?
+
+Voila comment je vois la chose:
+	Il faut une fonction qui nous renvoie une liste des joueurs présent dans la zone
+	Ainsi cela donnerais:
+		tant que "tout le monde n'est pas arrivé":
+			avancer joueur zone SE;
+								SO;
+					...
+
+		fin tant que;
+	 et à l'intérieur de avancer joueur zone SE(par exemple):
+	 		charger liste joueur SE;  (loadSElist() me semble un bon nom de fonction)
+	 		pour chaque joueur de cette liste:
+	 			avancer vers sortie;
+	 			actualiser les listes;
+	 		fin pour;
+Questions? le "actualiser les listes" je ne sais pas s'il faut le mettre à l'éxterieur du "pour":
+pcq imaginons que le joueurs reste dans la zone , il actualise la liste, le joueur y est toujours donc il refait
+la boucle avec le même. Du coup les autres sont obligés d'attendre qu'il sorte tu vois ce que je veux dire?
