@@ -7,7 +7,6 @@
 
 #ifndef PERSONNE_H_
 #define PERSONNE_H_
-#include <iostream>
 
 class personne {
 	private:

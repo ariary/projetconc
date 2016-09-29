@@ -6,6 +6,7 @@
  */
 
 #include "include/personne.h"
+#include <iostream>
 
 
 personne::personne(int x, int y){
