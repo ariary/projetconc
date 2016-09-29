@@ -32,6 +32,10 @@ class terrain {
 		void bouger_personne(int indicePersonne);
 		void enlever_personne(int indice);
 		void deplacement_personne_SO(int indice);
+		void deplacement_personne_S(int indice);
+		void deplacement_personne_NO(int indicePersonne);
+		void deplacement_personne_N(int indicePersonne);
+		void deplacement_personne_O(int indicePersonne);
 };
 
 

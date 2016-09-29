@@ -119,7 +119,12 @@ void terrain::bouger_personne(int indicePersonne){
 		//on regarde si la personne est au dessus ou au dessous de l'azimuth
 		if(p.au_dessus_azimuth1()){
 				//on fait le déplacement SUD-OUEST
+				this->deplacement_personne_NO(indicePersonne);
+		}else{
+			if(p.au_dessous_azimuth2())
 				this->deplacement_personne_SO(indicePersonne);
+			else
+				this->deplacement_personne_O(indicePersonne);
 		}
 	}
 
@@ -177,8 +182,15 @@ void terrain::deplacement_personne_SO(int indice){
 		//newP.print_personne();
 		this->liste_personnes.insert(liste_personnes.begin()+indice,newP);	
 
+	}else{
+		this->deplacement_personne_S(indice);
 	}
 }
 
-/*void avancer_est(personne p)
-void avancer_ouest(personne p)*/
+void terrain::deplacement_personne_S(int indice){
+	cout << "deplacement_personne_S" << endl;
+
+}
+void terrain::deplacement_personne_NO( int indicePersonne){
+	cout << "deplacement_personne_NO" << endl;
+}
