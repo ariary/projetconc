@@ -3,28 +3,30 @@
 #include <time.h>
 #include <stdlib.h> //atoi
 #include "include/terrain.h"
+#include "include/mythreads.h"
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
-#include <SFML/Graphics.hpp>
+//#include <SFML/Graphics.hpp>
 #include <math.h> //pow
+#include <pthread.h>
 
 
 using namespace std;
 int main(int argc, char *argv[]){
     
     
-    /*prise en charge des arguments*/
-    int nb_personne,nb_thread;
-    bool time_execution=false;
-    int opt;
-
     /*-m*/
     struct rusage r_usage;
     clock_t tempsDebut, tempsFin;
     struct timeval utime;
     struct timeval stime;
+    
 
+    /*prise en charge des arguments*/
+    int nb_personne,nb_thread;
+    bool time_execution=false;
+    int opt;
     while ((opt = getopt(argc , argv, "mp:t:")) != -1){
         switch (opt) {
         case 'm':
@@ -59,14 +61,21 @@ int main(int argc, char *argv[]){
 
 
     /*lancement du programme*/
-<<<<<<< 19555991b58885c03f281e6c0ac3a9a11f93fe8e
-    terrain t = terrain((int)pow(2,0)) ;
-    t.print_liste_personnes();
-    
-=======
     terrain t = terrain((int)pow(2,0)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
     t.initialiser_matrice();
->>>>>>> 5a62cd9acfeb978f09ae6056be0155dd76078587
+    t.print_liste_personnes(); 
+
+    if (nb_thread==0)
+    {
+        pthread_t t0;
+        pthread_create(&t0, NULL, thread_avancerALL, NULL);
+        pthread_join(t0, NULL);
+    }else if(nb_thread==1){
+        int j=0;
+    }else{//nb_thread=4
+        int k=0;
+    }
+    
 
     tempsFin = clock();
     if (time_execution)
@@ -80,9 +89,6 @@ int main(int argc, char *argv[]){
         printf("\tTemps CPU : \n\t\tTemps système utilisé (ru_utime): %ld.%06ld \n\t\tTemps sytème utilisateur utilisé(ru_stime):  %ld.%06ld \n",
         (int64_t)utime.tv_sec, (int64_t)utime.tv_usec,
         (int64_t)stime.tv_sec, (int64_t)stime.tv_usec);
-        //printf("Empreinte maximale du programme principal: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_time.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
-               // getrusage(RUSAGE_CHILDREN,&r_usage);
-        //printf("Empreinte maximale des threads: %ld\n temps utilisateur: %ld.%06ld \n temps système: %ld.%06ld \n",r_usage.ru_time.ru_maxrss,r_usage.ru_utime.maxrss,r_usage.ru_utime.tv_sec, r_usage.ru_stime.tv_usec);
     }
     
     return 0;

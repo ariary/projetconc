@@ -19,7 +19,7 @@ FLAGS =-g -ansi -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -D_DEBUG_ -s
 EXE_NAME = main.exe
 
 #can have several ones separated by spaces, only cpp files
-SOURCES = main.cpp personne.cpp terrain.cpp
+SOURCES = main.cpp personne.cpp terrain.cpp mythreads.cpp
 
 SRCDIR = src
 BINDIR = bin
@@ -29,9 +29,9 @@ INC_PATHS= -I
 OBJ = $(COMPILER) -c -I ./src/include
 
 #extra libs used in the project (for instance -lpthread)
-LIBS	= -L 
+LIBS	= -lpthread
 
-GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
+#GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
 
 #LINKOBJ	= $(SOURCES:.cpp=.o)
 #SOURCEHEADERS = $(SOURCES:.cpp=./include/.h)
@@ -39,9 +39,9 @@ GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-a
 avec: $(EXE_NAME)
 
 $(EXE_NAME): main.o
-	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(GRAPH) $(FLAGS)
+	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(FLAGS)
 
-main.o: terrain.o personne.o
+main.o: terrain.o personne.o mythreads.o
 	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp
 
 terrain.o: personne.o 
@@ -49,6 +49,9 @@ terrain.o: personne.o
 
 personne.o:
 	$(OBJ) -o $(BINDIR)/personne.o $(SRCDIR)/personne.cpp
+
+mythreads.o:
+	$(OBJ) -o $(BINDIR)/mythreads.o $(SRCDIR)/mythreads.cpp
 
 clean:
 	rm -f $(BINDIR)/*.o $(BINDIR)/$(EXE_NAME)
