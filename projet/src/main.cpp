@@ -68,8 +68,9 @@ int main(int argc, char *argv[]){
     if (nb_thread==0)
     {
         pthread_t t0;
-        pthread_create(&t0, NULL, thread_avancerALL, NULL);
+        pthread_create(&t0, NULL, thread_avancerALL, &t);
         pthread_join(t0, NULL);
+        
     }else if(nb_thread==1){
         pthread_t t1;
         pthread_t t2;
