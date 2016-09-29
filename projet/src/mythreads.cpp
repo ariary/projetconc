@@ -10,11 +10,11 @@ void *thread_avancerALL (void *p_data){
 	if (p_data != NULL)
    {
     	
-      	terrain *ter= p_data;// recuperation du contexte applicatif 
+      	terrain *t= p_data;// recuperation du contexte applicatif 
 
     	while(!finish()){
-      		for(int i=0;i<ter.liste_personnes.size();i++){
-      			ter.liste_personnes[i].avancer();
+      		for(int i=0;i<t.liste_personnes.size();i++){
+      			t.liste_personnes[i].avancer();
       		}
       	}
    }else{
