@@ -36,6 +36,7 @@ class terrain {
 		void deplacement_personne_NO(int indicePersonne);
 		void deplacement_personne_N(int indicePersonne);
 		void deplacement_personne_O(int indicePersonne);
+		bool arrive(int indice);
 };
 
 

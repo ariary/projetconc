@@ -176,7 +176,9 @@ void terrain::deplacement_personne_SO(int indice){
 		personne newP = personne(p.get_pos_x()+1,p.get_pos_y()-1);
 		//newP.print_personne();
 		this->liste_personnes.insert(liste_personnes.begin()+indice,newP);	
-
+		if(this->arrive(indice)){
+			this->enlever_personne(indice);
+		}
 	}else{
 		this->deplacement_personne_S(indice);
 	}
@@ -204,7 +206,58 @@ void terrain::deplacement_personne_S(int indice){
 
 
 void terrain::deplacement_personne_NO( int indicePersonne){
-	cout << "deplacement_personne_NO" << endl;
+	personne p = this->liste_personnes.at(indicePersonne);
+	bool possible_deplacement = true;
+	if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+1) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+1) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+2) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+2) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	
+	if(this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()-1) == 2)
+		possible_deplacement = false;
+	
+	if(possible_deplacement){
+		this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()) = 1;
+		this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+1) = 1;
+		this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+2) = 1;
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()+1) = 1;
+
+
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()) = 0;
+		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+1) = 0;
+		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+2) = 0;
+
+		
+		this->liste_personnes.erase(liste_personnes.begin()+indicePersonne);
+		personne newP = personne(p.get_pos_x()-1,p.get_pos_y()-1);
+		//newP.print_personne();
+		this->liste_personnes.insert(liste_personnes.begin()+indicePersonne,newP);	
+		if(this->arrive(indicePersonne)){
+			this->enlever_personne(indicePersonne);
+		}
+	}else{
+		this->deplacement_personne_N(indicePersonne);
+	}
+	
 }
 
 void terrain::deplacement_personne_N(int indice){
@@ -243,5 +296,13 @@ void terrain::deplacement_personne_O( int indicePersonne){
 		this->liste_personnes.erase(liste_personnes.begin()+indicePersonne);
 		personne newP = personne(p.get_pos_x(),p.get_pos_y()-1);
 		this->liste_personnes.insert(liste_personnes.begin()+indicePersonne,newP);
+		if(this->arrive(indicePersonne)){
+			this->enlever_personne(indicePersonne);
+		}
 	}
+}
+
+bool terrain::arrive(int indice){
+	personne p = this->liste_personnes.at(indice);
+	return p.get_pos_y() == 0;
 }
