@@ -23,7 +23,7 @@ void *thread_avancerALL (void *p_data){
 } 
 
 /*t1*/
-void *thread_avancerNE(void *pd_data){ //peut être iterateur pour parcourir les joueurs de la zone
+void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
 	cout<<"avancerNE()"<<endl;
 	if (p_data != NULL)
    {

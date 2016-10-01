@@ -68,7 +68,7 @@ int main(int argc, char *argv[]){
     cout << "second ";
     t.print_liste_personnes();
 
-    if (nb_thread==0)
+    /*if (nb_thread==0)
     {
         pthread_t t0;
         pthread_create(&t0, NULL, thread_avancerALL, &t);
@@ -108,7 +108,7 @@ int main(int argc, char *argv[]){
         (int64_t)utime.tv_sec, (int64_t)utime.tv_usec,
         (int64_t)stime.tv_sec, (int64_t)stime.tv_usec);
     }
-    
+    */
     return 0;
 
 }

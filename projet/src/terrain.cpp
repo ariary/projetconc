@@ -109,20 +109,15 @@ bool terrain::finish(){
 }
 
 void terrain::bouger_personne(int indicePersonne){
-	//il faut trouver une stratégie pour que la personne trouve le chemin le plus court
-	//on récupère la personne
 	personne p = this->liste_personnes.at(indicePersonne);
 	if(p.aFini()){
-		//la personne est arrivée au bout et elle peut donc disparaitre
 		this->enlever_personne(indicePersonne);
-	}else{ //la personne n'est pas arrivée au bout et doit donc avancer
-		//on regarde si la personne est au dessus ou au dessous de l'azimuth
+	}else{ 
 		if(p.au_dessus_azimuth1()){
-				//on fait le déplacement SUD-OUEST
-				this->deplacement_personne_NO(indicePersonne);
+				this->deplacement_personne_SO(indicePersonne);
 		}else{
 			if(p.au_dessous_azimuth2())
-				this->deplacement_personne_SO(indicePersonne);
+				this->deplacement_personne_NO(indicePersonne);
 			else
 				this->deplacement_personne_O(indicePersonne);
 		}
@@ -188,9 +183,65 @@ void terrain::deplacement_personne_SO(int indice){
 }
 
 void terrain::deplacement_personne_S(int indice){
-	cout << "deplacement_personne_S" << endl;
-
+	//verifier si on peut aller vers le Sud
+	personne p = this->liste_personnes.at(indice);
+	bool possible_deplacement = true;
+	for(int i = 0; i < 3;i++){
+		if(this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+i) == 1 || this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+i) == 2)
+			possible_deplacement = false;
+	}
+	
+	if(possible_deplacement){
+		for(int i = 0; i < 3; i++){
+			this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y() + i) = 1;
+			this->matrice.at(p.get_pos_x()).at(p.get_pos_y() + i) = 0 ;
+		}
+		this->liste_personnes.erase(liste_personnes.begin()+indice);
+		personne newP = personne(p.get_pos_x()+1,p.get_pos_y());
+		this->liste_personnes.insert(liste_personnes.begin()+indice,newP);
+	}
 }
+
+
 void terrain::deplacement_personne_NO( int indicePersonne){
 	cout << "deplacement_personne_NO" << endl;
+}
+
+void terrain::deplacement_personne_N(int indice){
+	//verifier si on peut aller vers le Nord
+	personne p = this->liste_personnes.at(indice);
+	bool possible_deplacement = true;
+	for(int i = 0; i < 3;i++){
+		if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+i) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+i) == 2)
+			possible_deplacement = false;
+	}
+	
+	if(possible_deplacement){
+		for(int i = 0; i < 3; i++){
+			this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y() + i) = 1;
+			this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y() + i) = 0 ;
+		}
+		this->liste_personnes.erase(liste_personnes.begin()+indice);
+		personne newP = personne(p.get_pos_x()-1,p.get_pos_y());
+		this->liste_personnes.insert(liste_personnes.begin()+indice,newP);
+	}
+}
+void terrain::deplacement_personne_O( int indicePersonne){
+	//verifier si on peut aller vers l'ouest
+	personne p = this->liste_personnes.at(indicePersonne);
+	bool possible_deplacement = true;
+	for(int i = 0; i < 3;i++){
+		if(this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y()-1) == 2)
+			possible_deplacement = false;
+	}
+	
+	if(possible_deplacement){
+		for(int i = 0; i < 3; i++){
+			this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y() - 1) = 1;
+			this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y() + 3) = 0 ;
+		}
+		this->liste_personnes.erase(liste_personnes.begin()+indicePersonne);
+		personne newP = personne(p.get_pos_x(),p.get_pos_y()-1);
+		this->liste_personnes.insert(liste_personnes.begin()+indicePersonne,newP);
+	}
 }
