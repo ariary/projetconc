@@ -21,6 +21,7 @@ int main(int argc, char *argv[]){
     clock_t tempsDebut, tempsFin;
     struct timeval utime;
     struct timeval stime;
+    time_t begin,end;
     
 
     /*prise en charge des arguments*/
@@ -57,6 +58,7 @@ int main(int argc, char *argv[]){
     printf("nb de personne 2^%d; nb de threads %d; ", nb_personne, nb_thread);
     (time_execution)?printf("Avec mesure de temps\n\n"):printf("sans mesure de temps\n\n");
     tempsDebut = clock();
+    begin= time(NULL);
 
 
 
@@ -68,7 +70,7 @@ int main(int argc, char *argv[]){
     cout << "second ";
     t.print_liste_personnes();
 
-    /*if (nb_thread==0)
+    if (nb_thread==0)
     {
         pthread_t t0;
         pthread_create(&t0, NULL, thread_avancerALL, &t);
@@ -96,6 +98,7 @@ int main(int argc, char *argv[]){
     
 
     tempsFin = clock();
+    end = time(NULL);
     if (time_execution)
     {
         printf("Temps processeur utilisé: %.3lf secondes\n", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC);
@@ -104,11 +107,11 @@ int main(int argc, char *argv[]){
         stime = r_usage.ru_stime;
         printf("RUSAGE:\n");
         printf("\tEmpreinte maximale du programme: %ld\n",r_usage.ru_maxrss);
-        printf("\tTemps CPU : \n\t\tTemps système utilisé (ru_utime): %ld.%06ld \n\t\tTemps sytème utilisateur utilisé(ru_stime):  %ld.%06ld \n",
+        printf("\tTemps CPU : \n\t\tTemps système utilisateur utilisé (ru_utime): %ld.%06ld \n\t\tTemps sytème  utilisé(ru_stime):  %ld.%06ld \n",
         (int64_t)utime.tv_sec, (int64_t)utime.tv_usec,
         (int64_t)stime.tv_sec, (int64_t)stime.tv_usec);
+        //printf("time :%f\n",difftime(end, begin) );
     }
-    */
     return 0;
 
 }
