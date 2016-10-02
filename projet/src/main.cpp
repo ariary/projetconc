@@ -7,7 +7,7 @@
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
-//#include <SFML/Graphics.hpp>
+#include <SFML/Graphics.hpp>
 #include <math.h> //pow
 #include <pthread.h>
 
@@ -63,17 +63,54 @@ int main(int argc, char *argv[]){
 
 
     /*lancement du programme*/
-    terrain t = terrain((int)pow(2,0)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
-    cout << "first ";
+    /*terrain t = terrain((int)pow(2,2)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
+
+    cout << "il y a " << t.liste_personnes.size() << "personnes" << endl;
     t.print_liste_personnes(); 
-    t.bouger_personne(0);
-    cout << "second ";
-    t.print_liste_personnes();
+
+    for(int i = 0; i < t.liste_personnes.size(); i++){
+            cout << "first ";
+            t.liste_personnes.at(i).print_personne();
+            t.bouger_personne(i);
+            cout << "second ";
+            t.liste_personnes.at(i).print_personne();
+
+    }*/
+
+            // création de la fenêtre
+    sf::RenderWindow window(sf::VideoMode(512,128), "Mon graphique");
+
+    // on fait tourner le programme tant que la fenêtre n'a pas été fermée
+    while (window.isOpen())
+    {
+        // on traite tous les évènements de la fenêtre qui ont été générés depuis la dernière itération de la boucle
+        sf::Event event;
+        while (window.pollEvent(event))
+        {
+            // fermeture de la fenêtre lorsque l'utilisateur le souhaite
+            if (event.type == sf::Event::Closed)
+                window.close();
+        }
+
+        // effacement de la fenêtre en noir
+        window.clear(sf::Color::Black);
+
+        // c'est ici qu'on dessine tout
+        // window.draw(...);
+        sf::RectangleShape line1(sf::Vector2f(60, 4));
+        line1.setPosition(60, 60);
+        line1.setFillColor(sf::Color::Blue);
+        window.draw(line1);
+        
+        
+        // fin de la frame courante, affichage de tout ce qu'on a dessiné
+        window.display();
+    }
 
     if (nb_thread==0)
     {
         pthread_t t0;
-        pthread_create(&t0, NULL, thread_avancerALL, &t);
+        pthread_create(&t0, NULL, thread_avancerALL, &t0);
         pthread_join(t0, NULL);
         
     }else if(nb_thread==1){

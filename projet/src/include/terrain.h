@@ -15,13 +15,14 @@
 
 class terrain {
 	private:
-		std::vector< std::vector<int> > matrice;
+		
 		int nb_personnes;
 		
 		bool coordonnees_correctes(int pos_x, int pos_y);
 
 	public:
 		std::vector<personne> liste_personnes;
+		std::vector< std::vector<int> > matrice;
 		void init_muret();
 		terrain(int nombre_personnes);
 		int get_nombre_personnes();

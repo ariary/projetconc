@@ -30,8 +30,7 @@ OBJ = $(COMPILER) -c -I ./src/include
 
 #extra libs used in the project (for instance -lpthread)
 LIBS	= -lpthread
-
-#GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
+GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
 
 #LINKOBJ	= $(SOURCES:.cpp=.o)
 #SOURCEHEADERS = $(SOURCES:.cpp=./include/.h)
@@ -39,7 +38,7 @@ LIBS	= -lpthread
 avec: $(EXE_NAME)
 
 $(EXE_NAME): main.o
-	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(FLAGS)
+	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(GRAPH) $(FLAGS)
 
 main.o: terrain.o personne.o mythreads.o
 	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp
@@ -52,6 +51,9 @@ personne.o:
 
 mythreads.o:
 	$(OBJ) -o $(BINDIR)/mythreads.o $(SRCDIR)/mythreads.cpp
+
+#graphique.o:
+#	$(OBJ) -o $(BINDIR)/graphique.o $(SRCDIR)/graphique.cpp
 
 clean:
 	rm -f $(BINDIR)/*.o $(BINDIR)/$(EXE_NAME)
