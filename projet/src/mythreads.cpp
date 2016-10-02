@@ -13,7 +13,7 @@ void *thread_avancerALL (void *p_data){
 
     	while(!t->finish()){
       		for(int i=0;i<t->liste_personnes.size();i++){
-      			//t->liste_personnes[i].avancer();
+      			//t->avancer_personne(i);
       			t->print_liste_personnes();
       		}
       	}
@@ -32,6 +32,8 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
    }else{
    		cout<< "problème dans la récupération du contexte applicatif du thread (-t1: avancerNE())"<<endl;
    }
+
+   while()
 }
 
 void *thread_avancerNO(void *p_data){
@@ -44,7 +46,7 @@ void *thread_avancerNO(void *p_data){
       cout<< "problème dans la récupération du contexte applicatif du thread (-t1: avancerNO())"<<endl;
    }
 
-   
+
 }
 
 void *thread_avancerSE(void *p_data){

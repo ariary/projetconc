@@ -9,6 +9,7 @@
 #define PERSONNE_H_
 #include <iostream>
 
+
 class personne {
 	private:
 		int position_x;

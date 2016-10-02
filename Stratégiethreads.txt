@@ -11,7 +11,7 @@ A l'interieur de ces fonctions chacun leur tour les joueurs présent dans la zon
 Se pose alors un problème: comment gérer le changement de zone?
 
 Voila comment je vois la chose:
-	Il faut une fonction qui nous renvoie une liste des joueurs présent dans la zone 
+	Il faut une fonction qui nous renvoie une liste/vecteur des joueurs présent dans la zone 
 	PB2: comment faire quand un joueur est sur deux zone en même temps?
 	Ainsi cela donnerais:
 		tant que "tout le monde n'est pas arrivé":
