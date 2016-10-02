@@ -130,7 +130,11 @@ int main(int argc, char *argv[]){
         pthread_join(t4, NULL);
 
     }else{//nb_thread=4
-        int k=0;
+        for (int i = 0; i < t.size(); ++i)
+        {
+            pthread_t th_personne;
+            pthread_create(&th_personne, NULL, thread_avancerNE, &t);
+        }
     }
     
 
