@@ -71,14 +71,14 @@ int main(int argc, char *argv[]){
     for(int i = 0; i < t.liste_personnes.size(); i++){
             cout << "first ";
             t.liste_personnes.at(i).print_personne();
-            t.bouger_personne(i);
+            t.avancer_personne(i);
             cout << "second ";
             t.liste_personnes.at(i).print_personne();
 
     }
 
-            // création de la fenêtre
-    sf::RenderWindow window(sf::VideoMode(512,128), "Mon graphique");
+         
+    sf::RenderWindow window(sf::VideoMode(512,128), "Mon graphique"); // création de la fenêtre
 
     // on fait tourner le programme tant que la fenêtre n'a pas été fermée
     while (window.isOpen())

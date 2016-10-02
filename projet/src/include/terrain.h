@@ -30,7 +30,8 @@ class terrain {
 		void print_liste_personnes();
 		void initialiser_matrice();
 		bool finish();
-		void avancer_personne(int indicePersonne);
+		void avancer_personne(int indicePersonne); //ce serait plus simple si on donnait en parametre une personne
+		void avancer(personne p);
 		void enlever_personne(int indice);
 		void deplacement_personne_SO(int indice);
 		void deplacement_personne_S(int indice);
@@ -41,8 +42,8 @@ class terrain {
 
 		std::vector<personne> get_vector_personneNE();
 		std::vector<personne> get_vector_personneSE();
-		std::vector<personne> get_vector_personneN0();
-		std::vector<personne> get_vector_personneSo();
+		std::vector<personne> get_vector_personneNO();
+		std::vector<personne> get_vector_personneSO();
 };
 
 

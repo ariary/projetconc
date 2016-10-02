@@ -108,7 +108,7 @@ bool terrain::finish(){
 	return this->nb_personnes == 0;
 }
 
-void terrain::bouger_personne(int indicePersonne){
+void terrain::avancer_personne(int indicePersonne){
 	personne p = this->liste_personnes.at(indicePersonne);
 	if(p.aFini()){
 		this->enlever_personne(indicePersonne);
@@ -305,4 +305,24 @@ void terrain::deplacement_personne_O( int indicePersonne){
 bool terrain::arrive(int indice){
 	personne p = this->liste_personnes.at(indice);
 	return p.get_pos_y() == 0;
+}
+
+std::vector<personne> terrain::get_vector_personneNE(){
+	return this->liste_personnes;
+}
+
+std::vector<personne> terrain::get_vector_personneSE(){
+	return this->liste_personnes;
+}
+
+std::vector<personne> terrain::get_vector_personneNO(){
+	return this->liste_personnes;
+}
+
+std::vector<personne> terrain::get_vector_personneSO(){
+	return this->liste_personnes;
+}
+
+void terrain::avancer(personne p){
+	return;
 }
