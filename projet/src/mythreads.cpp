@@ -24,26 +24,49 @@ void *thread_avancerALL (void *p_data){
 
 /*t1*/
 void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
-	cout<<"avancerNE()"<<endl;
+
 	if (p_data != NULL)
    {
     	
       	terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
    }else{
-   		cout<< "problème dans la récupération du contexte applicatif du thread (-t1)"<<endl;
+   		cout<< "problème dans la récupération du contexte applicatif du thread (-t1: avancerNE())"<<endl;
    }
 }
 
-void *thread_avancerNO(void *pd_data){
-	cout<<"avancerNO()"<<endl;
+void *thread_avancerNO(void *p_data){
+
+    if (p_data != NULL)
+   {
+      
+        terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
+   }else{
+      cout<< "problème dans la récupération du contexte applicatif du thread (-t1: avancerNO())"<<endl;
+   }
+
+   
 }
 
-void *thread_avancerSE(void *pd_data){
-	cout<<"avancerSE()"<<endl;
+void *thread_avancerSE(void *p_data){
+
+    if (p_data != NULL)
+   {
+      
+        terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
+   }else{
+      cout<< "problème dans la récupération du contexte applicatif du thread (-t1: (avancerSE())"<<endl;
+   }
 }
 
-void *thread_avancerSO(void *pd_data){
-	cout<<"avancerSO()"<<endl;
+void *thread_avancerSO(void *p_data){
+
+    if (p_data != NULL)
+   {
+      
+        terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
+   }else{
+      cout<< "problème dans la récupération du contexte applicatif du thread (-t1)"<<endl;
+   }
 }
 
 /*t2*/

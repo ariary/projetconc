@@ -1,4 +1,4 @@
-Stratégie 4 threads:
+ -Stratégie 4 threads:
 
 rappel: "Le terrain est découpé en 4 partie . Un thread est associé à chaque partie du terrain. Et chaque threads doit faire avancer les joueurs présent sur sa partie du terrain"
 
@@ -11,7 +11,8 @@ A l'interieur de ces fonctions chacun leur tour les joueurs présent dans la zon
 Se pose alors un problème: comment gérer le changement de zone?
 
 Voila comment je vois la chose:
-	Il faut une fonction qui nous renvoie une liste des joueurs présent dans la zone
+	Il faut une fonction qui nous renvoie une liste des joueurs présent dans la zone 
+	PB2: comment faire quand un joueur est sur deux zone en même temps?
 	Ainsi cela donnerais:
 		tant que "tout le monde n'est pas arrivé":
 			avancer joueur zone SE;
@@ -28,3 +29,5 @@ Voila comment je vois la chose:
 Questions? le "actualiser les listes" je ne sais pas s'il faut le mettre à l'éxterieur du "pour":
 pcq imaginons que le joueurs reste dans la zone , il actualise la liste, le joueur y est toujours donc il refait
 la boucle avec le même. Du coup les autres sont obligés d'attendre qu'il sorte tu vois ce que je veux dire?
+
+

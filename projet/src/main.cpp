@@ -63,7 +63,7 @@ int main(int argc, char *argv[]){
 
 
     /*lancement du programme*/
-    /*terrain t = terrain((int)pow(2,2)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
+    terrain t = terrain((int)pow(2,2)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
 
     cout << "il y a " << t.liste_personnes.size() << "personnes" << endl;
     t.print_liste_personnes(); 
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
             cout << "second ";
             t.liste_personnes.at(i).print_personne();
 
-    }*/
+    }
 
             // création de la fenêtre
     sf::RenderWindow window(sf::VideoMode(512,128), "Mon graphique");
@@ -110,19 +110,19 @@ int main(int argc, char *argv[]){
     if (nb_thread==0)
     {
         pthread_t t0;
-        pthread_create(&t0, NULL, thread_avancerALL, &t0);
+        pthread_create(&t0, NULL, thread_avancerALL, &t);
         pthread_join(t0, NULL);
         
     }else if(nb_thread==1){
-        pthread_t t1;
-        pthread_t t2;
-        pthread_t t3;
-        pthread_t t4;
+        pthread_t t1; //NE
+        pthread_t t2; //NO
+        pthread_t t3; //SE
+        pthread_t t4; //SO
 
-        pthread_create(&t1, NULL, thread_avancerNE, NULL);
-        pthread_create(&t2, NULL, thread_avancerNO, NULL);
-        pthread_create(&t3, NULL, thread_avancerSE, NULL);
-        pthread_create(&t4, NULL, thread_avancerSO, NULL);
+        pthread_create(&t1, NULL, thread_avancerNE, &t);
+        pthread_create(&t2, NULL, thread_avancerNO, &t);
+        pthread_create(&t3, NULL, thread_avancerSE, &t);
+        pthread_create(&t4, NULL, thread_avancerSO, &t);
 
         pthread_join(t1, NULL);
         pthread_join(t2, NULL);
