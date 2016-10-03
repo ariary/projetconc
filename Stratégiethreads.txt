@@ -34,3 +34,5 @@ la boucle avec le même. Du coup les autres sont obligés d'attendre qu'il sorte
 Pour les zones de l'ouest il faut faire une boucle while fin du jeu au lieu de while liste vide pcq le fait que la liste soit vide n'implique pas qu'il ne reste pas des personnes à l'est qui passeront necessairement par l'ouest pour arriver à l'azimut. Pour l'est faire while (deux liste de l'est non vide) pcq avec notre algorithme de déplacement une fois que tlm est à l'ouest personne peut revenir à l'est
 
 t2: que donner en contexte applicatif : expliquer pb si on passe  que la personne ouque le terrain  => structure pour passer à la fois une personne(indice) et le terrain
+
+Donner personne et pas indice
