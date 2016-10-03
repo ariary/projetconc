@@ -108,30 +108,37 @@ bool terrain::finish(){
 	return this->nb_personnes == 0;
 }
 
-void terrain::avancer_personne(int indicePersonne){
-	personne p = this->liste_personnes.at(indicePersonne);
+void terrain::avancer_personne(personne& p){
+	//personne p = this->liste_personnes.at(indicePersonne);
 	if(p.aFini()){
-		this->enlever_personne(indicePersonne);
+		this->enlever_personne(p);
 	}else{ 
 		if(p.au_dessus_azimuth1()){
-				this->deplacement_personne_SO(indicePersonne);
+				this->deplacement_personne_SO(p);
 		}else{
-			if(p.au_dessous_azimuth2())
+			/*if(p.au_dessous_azimuth2())
 				this->deplacement_personne_NO(indicePersonne);
 			else
 				this->deplacement_personne_O(indicePersonne);
+				*/
 		}
 	}
 
 }
 
-void terrain::enlever_personne(int indice){
-	this->liste_personnes.erase(this->liste_personnes.begin() + indice);
+void terrain::enlever_personne(personne& p){
+	for(int i = 0; i < this->liste_personnes.size(); i++){
+		if(this->liste_personnes.at(i).get_pos_x() == p.get_pos_x() && this->liste_personnes.at(i).get_pos_y() == p.get_pos_y()){
+			this->liste_personnes.erase(this->liste_personnes.begin() + i);
+			break;
+		}
+	} 
+	//mettre les zéros dans la matrice pour faire disparaitre la personne arrivée
 	this->nb_personnes--;
 }
 
-void terrain::deplacement_personne_SO(int indice){
-	personne p = this->liste_personnes.at(indice);
+void terrain::deplacement_personne_SO(personne& p){
+	//personne p = this->liste_personnes.at(indice);
 	bool possible_deplacement = true;
 	if(this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) == 2)
 		possible_deplacement = false;
@@ -179,14 +186,14 @@ void terrain::deplacement_personne_SO(int indice){
 		if(this->arrive(indice)){
 			this->enlever_personne(indice);
 		}
-	}else{
+	}/*else{
 		this->deplacement_personne_S(indice);
-	}
+	}*/
 }
 
 void terrain::deplacement_personne_S(int indice){
 	//verifier si on peut aller vers le Sud
-	personne p = this->liste_personnes.at(indice);
+	/*personne p = this->liste_personnes.at(indice);
 	bool possible_deplacement = true;
 	for(int i = 0; i < 3;i++){
 		if(this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+i) == 1 || this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+i) == 2)
@@ -201,12 +208,12 @@ void terrain::deplacement_personne_S(int indice){
 		this->liste_personnes.erase(liste_personnes.begin()+indice);
 		personne newP = personne(p.get_pos_x()+1,p.get_pos_y());
 		this->liste_personnes.insert(liste_personnes.begin()+indice,newP);
-	}
+	}*/
 }
 
 
 void terrain::deplacement_personne_NO( int indicePersonne){
-	personne p = this->liste_personnes.at(indicePersonne);
+	/*personne p = this->liste_personnes.at(indicePersonne);
 	bool possible_deplacement = true;
 	if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()-1) == 2)
 		possible_deplacement = false;
@@ -257,12 +264,12 @@ void terrain::deplacement_personne_NO( int indicePersonne){
 	}else{
 		this->deplacement_personne_N(indicePersonne);
 	}
-	
+	*/
 }
 
 void terrain::deplacement_personne_N(int indice){
 	//verifier si on peut aller vers le Nord
-	personne p = this->liste_personnes.at(indice);
+	/*personne p = this->liste_personnes.at(indice);
 	bool possible_deplacement = true;
 	for(int i = 0; i < 3;i++){
 		if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+i) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+i) == 2)
@@ -277,11 +284,11 @@ void terrain::deplacement_personne_N(int indice){
 		this->liste_personnes.erase(liste_personnes.begin()+indice);
 		personne newP = personne(p.get_pos_x()-1,p.get_pos_y());
 		this->liste_personnes.insert(liste_personnes.begin()+indice,newP);
-	}
+	}*/
 }
 void terrain::deplacement_personne_O( int indicePersonne){
 	//verifier si on peut aller vers l'ouest
-	personne p = this->liste_personnes.at(indicePersonne);
+	/*personne p = this->liste_personnes.at(indicePersonne);
 	bool possible_deplacement = true;
 	for(int i = 0; i < 3;i++){
 		if(this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y()-1) == 2)
@@ -299,7 +306,7 @@ void terrain::deplacement_personne_O( int indicePersonne){
 		if(this->arrive(indicePersonne)){
 			this->enlever_personne(indicePersonne);
 		}
-	}
+	}*/
 }
 
 bool terrain::arrive(int indice){

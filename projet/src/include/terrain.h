@@ -30,10 +30,10 @@ class terrain {
 		void print_liste_personnes();
 		void initialiser_matrice();
 		bool finish();
-		void avancer_personne(int indicePersonne); //ce serait plus simple si on donnait en parametre une personne
+		void avancer_personne(personne& p); //ce serait plus simple si on donnait en parametre une personne
 		void avancer(personne p);
-		void enlever_personne(int indice);
-		void deplacement_personne_SO(int indice);
+		void enlever_personne(personne& p);
+		void deplacement_personne_SO(personne& p);
 		void deplacement_personne_S(int indice);
 		void deplacement_personne_NO(int indicePersonne);
 		void deplacement_personne_N(int indicePersonne);
