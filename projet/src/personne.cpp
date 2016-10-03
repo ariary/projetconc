@@ -13,6 +13,11 @@ personne::personne(int x, int y){
 	this->position_y = y;
 
 }
+
+void personne::set_position(int x, int y){
+	this->position_x = x;
+	this->position_y = y;
+}
 bool personne::aFini(){
 	return (this->position_x > 60  && this->position_x < 68) && this->position_y == 0;
 }

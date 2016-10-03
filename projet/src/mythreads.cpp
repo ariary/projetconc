@@ -13,7 +13,8 @@ void *thread_avancerALL (void *p_data){
 
     	while(!t->finish()){
       		for(int i=0;i<t->liste_personnes.size();i++)
-      			t->avancer_personne(i);
+      			//t->avancer_personne(i);
+            cout << "coucou" << endl;
       }
    }else{
    		cout<< "problème dans la récupération du contexte applicatif du thread (-t0)"<<endl;

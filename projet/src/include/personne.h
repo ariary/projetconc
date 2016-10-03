@@ -35,6 +35,7 @@ class personne {
 		bool au_dessus_azimuth1();
 		bool au_dessous_azimuth2();
 		void changer_position(int newX,int newY);
+		void set_position(int x, int y);
 
 
 

@@ -30,15 +30,14 @@ class terrain {
 		void print_liste_personnes();
 		void initialiser_matrice();
 		bool finish();
-		void avancer_personne(personne& p); //ce serait plus simple si on donnait en parametre une personne
-		void avancer(personne p);
+		void avancer(personne& p);
 		void enlever_personne(personne& p);
 		void deplacement_personne_SO(personne& p);
-		void deplacement_personne_S(int indice);
-		void deplacement_personne_NO(int indicePersonne);
-		void deplacement_personne_N(int indicePersonne);
-		void deplacement_personne_O(int indicePersonne);
-		bool arrive(int indice);
+		void deplacement_personne_S(personne& p);
+		void deplacement_personne_NO(personne& p);
+		void deplacement_personne_N(personne& p);
+		void deplacement_personne_O(personne& p);
+		bool arrive(personne& p);
 
 		std::vector<personne> get_vector_personneNE();
 		std::vector<personne> get_vector_personneSE();
