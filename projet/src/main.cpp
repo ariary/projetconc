@@ -131,12 +131,24 @@ int main(int argc, char *argv[]){
 
     }else{//nb_thread=4
 
-        
+        vector<pthread_t> v_thread;
+        /*On lance un thread par personne */
         for (int i = 0; i < t.liste_personnes.size(); ++i)
         {
             pthread_t th_personne;
-            pthread_create(&th_personne, NULL, thread_avancerNE, &t);
+            pthread_create(&th_personne, NULL, thread_avancerALONE, &t);
+            v_thread.push_back(th_personne);
         }
+
+        /*On attend la fin de chaque thread */
+        for (pthread_t t : v_thread)
+        {
+            pthread_join(t, NULL);
+        }
+
+
+
+
     }
     
 
