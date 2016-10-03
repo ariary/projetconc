@@ -41,7 +41,7 @@ $(EXE_NAME): main.o
 	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(GRAPH) $(FLAGS)
 
 main.o: terrain.o personne.o mythreads.o
-	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp
+	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp --std=c++11
 
 terrain.o: personne.o 
 	$(OBJ) -o $(BINDIR)/terrain.o $(SRCDIR)/terrain.cpp
