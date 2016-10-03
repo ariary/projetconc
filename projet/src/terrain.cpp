@@ -82,18 +82,20 @@ void terrain::init_muret(){
 	//création du premier muret
 	for(int i = 0; i < 128; i++){
 		for(int j = 0; j < 16; j++){
-			if(i == 60)
+			if(i == 60){
 				i +=8;
-			else
-				this->matrice.at(i).at(j) = 2;
+				j = 0;
+			}
+			this->matrice.at(i).at(j) = 2;
 		}
 	}
 	for(int i = 0; i < 128; i++){
 		for(int j = 112; j < 128; j++){
-			if(i == 56)
+			if(i == 56){
 				i += 16;
-			else
-				this->matrice.at(i).at(j) = 2;
+				j = 128;
+			}
+			this->matrice.at(i).at(j) = 2;
 		}
 	}
 

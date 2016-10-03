@@ -21,34 +21,6 @@ void personne::set_position(int x, int y){
 bool personne::aFini(){
 	return (this->position_x > 60  && this->position_x < 68) && this->position_y == 0;
 }
-/*void personne::avancer_nord_ouest(){
-	this->position_x--;
-	this->position_y--; 
-}
-void personne::avancer_nord(){
-	this->position_x--;
-}
-void personne::avancer_nord_est(){
-	this->position_x--;
-	this->position_y++;
-}
-void personne::avancer_est(){
-	this->position_y++;
-}
-void personne::avancer_sud_est(){
-	this->position_x++;
-	this->position_y++;
-}
-void personne::avancer_sud(){
-	this->position_x++;
-}
-void personne::avancer_sud_ouest(){
-	this->position_x++;
-	this->position_y--;
-}
-void personne::avancer_ouest(){
-	this->position_y--;
-}*/
 
 int personne::get_pos_x(){
 	return this->position_x;

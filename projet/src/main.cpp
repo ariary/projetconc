@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     
     
     /*-m*/
-    struct rusage r_usage;
+    /*struct rusage r_usage;
     clock_t tempsDebut, tempsFin;
     struct timeval utime;
     struct timeval stime;
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
     
 
     /*prise en charge des arguments*/
-    int nb_personne,nb_thread;
+    /*int nb_personne,nb_thread;
     bool time_execution=false;
     int opt;
     while ((opt = getopt(argc , argv, "mp:t:")) != -1){
@@ -67,6 +67,7 @@ int main(int argc, char *argv[]){
 
     cout << "il y a " << t.liste_personnes.size() << "personnes" << endl;
     t.print_liste_personnes(); 
+    t.print_matrice();
 
     for(int i = 0; i < t.liste_personnes.size(); i++){
             cout << "first ";
@@ -76,8 +77,9 @@ int main(int argc, char *argv[]){
             t.liste_personnes.at(i).print_personne();
     }
 
+    t.print_matrice();
 
-    if (nb_thread==0)
+    /*if (nb_thread==0)
     {
         pthread_t t0;
         pthread_create(&t0, NULL, thread_avancerALL, &t);
@@ -103,7 +105,7 @@ int main(int argc, char *argv[]){
 
         vector<pthread_t> v_thread;
         /*On lance un thread par personne */
-        for (int i = 0; i < t.liste_personnes.size(); ++i)
+        /*for (int i = 0; i < t.liste_personnes.size(); ++i)
         {
             pthread_t th_personne;
             pthread_create(&th_personne, NULL, thread_avancerALONE, &t);
@@ -111,7 +113,7 @@ int main(int argc, char *argv[]){
         }
 
         /*On attend la fin de chaque thread */
-        for (pthread_t t : v_thread)
+        /*for (pthread_t t : v_thread)
         {
             pthread_join(t, NULL);
         }
@@ -136,7 +138,7 @@ int main(int argc, char *argv[]){
         (int64_t)utime.tv_sec, (int64_t)utime.tv_usec,
         (int64_t)stime.tv_sec, (int64_t)stime.tv_usec);
         //printf("time :%f\n",difftime(end, begin) );
-    }
+    }*/
     return 0;
 
 }
