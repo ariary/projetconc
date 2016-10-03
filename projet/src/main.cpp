@@ -75,6 +75,30 @@ int main(int argc, char *argv[]){
             cout << "second ";
             t.liste_personnes.at(i).print_personne();
     }
+    vector<personne> testNE = t.get_vector_personneNE();
+    vector<personne> testSE = t.get_vector_personneSE();
+    vector<personne> testNO = t.get_vector_personneNO();
+    vector<personne> testSO = t.get_vector_personneSO();
+    cout << "ici on voit les personnes de la zone NE" << endl;
+    for(int i = 0; i < testNE.size(); i++){
+        testNE.at(i).print_personne();
+    }
+
+    cout << "ici on voit les personnes de la zone SE" << endl;
+    for(int i = 0; i < testSE.size(); i++){
+        testSE.at(i).print_personne();
+    }
+
+    cout << "ici on voit les personnes de la zone NO" << endl;
+    for(int i = 0; i < testNO.size(); i++){
+        testNO.at(i).print_personne();
+    }
+
+    cout << "ici on voit les personnes de la zone SO" << endl;
+    for(int i = 0; i < testSO.size(); i++){
+        testSO.at(i).print_personne();
+    }
+
 
     /*if (nb_thread==0)
     {

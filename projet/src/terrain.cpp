@@ -52,8 +52,10 @@ void terrain::initialiser_matrice(){
 	}
 }
 
-bool terrain::coordonnees_correctes(int pos_x,int pos_y){
-
+bool terrain::coordonnees_correctes(int pos_x, int pos_y){
+	if(pos_x < 0 || pos_y < 0){
+		return false;
+	}
 	//on gère d'abord les effets de bord
 	if(pos_y + 3 >= 512)
 		return false;
@@ -300,17 +302,37 @@ bool terrain::arrive(personne& p){
 }
 
 std::vector<personne> terrain::get_vector_personneNE(){
-	return this->liste_personnes;
+	vector<personne> personnesNE;
+	for(int i = 0 ; i < this->liste_personnes.size(); i++){
+		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() <=63)
+			personnesNE.push_back(this->liste_personnes.at(i));
+	}
+	return personnesNE;
 }
 
 std::vector<personne> terrain::get_vector_personneSE(){
-	return this->liste_personnes;
+	vector<personne> personnesSE;
+	for(int i = 0 ; i < this->liste_personnes.size(); i++){
+		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() > 63)
+			personnesSE.push_back(this->liste_personnes.at(i));
+	}
+	return personnesSE;
 }
 
 std::vector<personne> terrain::get_vector_personneNO(){
-	return this->liste_personnes;
+	vector<personne> personnesNO;
+	for(int i = 0 ; i < this->liste_personnes.size(); i++){
+		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() < 64)
+			personnesNO.push_back(this->liste_personnes.at(i));
+	}
+	return personnesNO;
 }
 
 std::vector<personne> terrain::get_vector_personneSO(){
-	return this->liste_personnes;
+	vector<personne> personnesSO;
+	for(int i = 0 ; i < this->liste_personnes.size(); i++){
+		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() > 63)
+			personnesSO.push_back(this->liste_personnes.at(i));
+	}
+	return personnesSO;
 }
