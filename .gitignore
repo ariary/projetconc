@@ -2,3 +2,5 @@
 *.o
 #ignorer les .exe
 *.exe
+
+projet/bin/*
