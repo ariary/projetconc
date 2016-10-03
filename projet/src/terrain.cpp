@@ -236,7 +236,7 @@ void terrain::deplacement_personne_NO(personne& p){
 		this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()+2) = 1;
 		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()-1) = 1;
 		this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) = 1;
-		this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()+1) = 1;
+		this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()-1) = 1;
 
 
 		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+3) = 0;

@@ -109,7 +109,7 @@ void *thread_avancerSO(void *p_data){
 }
 
 /*t2*/
-void *thread_avancerALONE(void *p_data){
+/*void *thread_avancerALONE(void *p_data){
 	if (p_data != NULL)
   {
     Data* p = p_data;
@@ -121,4 +121,4 @@ void *thread_avancerALONE(void *p_data){
   }else{
     cout<< "problème dans la récupération du contexte applicatif du thread (-t2)"<<endl;
   }
-}
+}*/

@@ -67,7 +67,6 @@ int main(int argc, char *argv[]){
 
     cout << "il y a " << t.liste_personnes.size() << "personnes" << endl;
     t.print_liste_personnes(); 
-    t.print_matrice();
 
     for(int i = 0; i < t.liste_personnes.size(); i++){
             cout << "first ";
@@ -76,8 +75,6 @@ int main(int argc, char *argv[]){
             cout << "second ";
             t.liste_personnes.at(i).print_personne();
     }
-
-    t.print_matrice();
 
     /*if (nb_thread==0)
     {
