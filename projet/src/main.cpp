@@ -103,12 +103,17 @@ int main(int argc, char *argv[]){
 
     }else{//nb_thread=4
 
-        vector<pthread_t> v_thread;
+        Data d; // pour passer en paramètre du thread et le terrain et l'indice de la personne à gérer
+        d.t=t;
+        
+        vector<pthread_t> v_thread; //création pour l'attente des threads
+        
         /*On lance un thread par personne */
         /*for (int i = 0; i < t.liste_personnes.size(); ++i)
         {
             pthread_t th_personne;
-            pthread_create(&th_personne, NULL, thread_avancerALONE, &t);
+            d.indice_personne=i;
+            pthread_create(&th_personne, NULL, thread_avancerALONE, &d);
             v_thread.push_back(th_personne);
         }
 
