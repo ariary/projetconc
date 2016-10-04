@@ -109,16 +109,16 @@ void *thread_avancerSO(void *p_data){
 }
 
 /*t2*/
-/*void *thread_avancerALONE(void *p_data){
+void *thread_avancerALONE(void *p_data){
 	if (p_data != NULL)
   {
-    Data* p = p_data;
-    my_terrain=p->t;
-    my_personne=my_terrain.liste_personnes[i];
+    Data* p =(struct Data*) p_data;
+    terrain my_terrain(p->terr);
+    personne my_personne(p->pers);
     while(!my_personne.aFini())
       my_terrain.avancer(my_personne);
 
   }else{
     cout<< "problème dans la récupération du contexte applicatif du thread (-t2)"<<endl;
   }
-}*/
+}

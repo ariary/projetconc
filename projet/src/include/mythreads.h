@@ -24,11 +24,10 @@ void *thread_avancerSO(void *pd_data);
 /*t2*/
 void *thread_avancerALONE(void *pd_data);
 
-typedef struct Data Data;
 struct Data
 {
-   terrain t;
-   int indice_personne;
+   terrain terr;
+   personne pers;
 };
 
 #endif
