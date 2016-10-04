@@ -19,7 +19,7 @@ void personne::set_position(int x, int y){
 	this->position_y = y;
 }
 bool personne::aFini(){
-	return (this->position_x > 60  && this->position_x < 68) && this->position_y == 0;
+	return this->position_x >= 60  && this->position_x <= 67 && this->position_y == 0;
 }
 
 int personne::get_pos_x(){
@@ -44,5 +44,5 @@ bool personne::au_dessus_azimuth1(){
 }
 
 bool personne::au_dessous_azimuth2(){
-	return this->position_x > 68;
+	return this->position_x > 63;
 }

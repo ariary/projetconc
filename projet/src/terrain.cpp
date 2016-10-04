@@ -95,7 +95,7 @@ void terrain::init_muret(){
 		for(int j = 112; j < 128; j++){
 			if(i == 56){
 				i += 16;
-				j = 128;
+				j = 112;
 			}
 			this->matrice.at(i).at(j) = 2;
 		}
@@ -127,17 +127,32 @@ void terrain::avancer(personne& p){
 }
 
 void terrain::enlever_personne(personne& p){
+	this->matrice.at(p.get_pos_x()).at(p.get_pos_y()) = 0;
+	this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+1) = 0;
+	this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+2) = 0;
+	this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+3) = 0;
+
+	this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()) = 0;
+	this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()+1) = 0;
+	this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()+2) = 0;
+	this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()+3) = 0;
+
+	this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()) = 0;
+	this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()+1) = 0;
+	this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()+2) = 0;
+	this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()+3) = 0;
+
+	this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()) = 0;
+	this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+1) = 0;
+	this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+2) = 0;
+	this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+3) = 0;
 	for(int i = 0; i < this->liste_personnes.size(); i++){
 		if(this->liste_personnes.at(i).get_pos_x() == p.get_pos_x() && this->liste_personnes.at(i).get_pos_y() == p.get_pos_y()){
 			this->liste_personnes.erase(this->liste_personnes.begin() + i);
 			break;
 		}
 	} 
-	for(int i = 0; i < 3; i++){
-		for(int j = 0; j < 3; j++){
-			this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y()+j) = 0;
-		}
-	}
+	
 	this->nb_personnes--;
 }
 
@@ -182,9 +197,6 @@ void terrain::deplacement_personne_SO(personne& p){
 		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+3) = 0;
 
 		p.set_position(p.get_pos_x()+1,p.get_pos_y()-1);
-		if(this->arrive(p)){
-			this->enlever_personne(p);
-		}
 	}else{
 		this->deplacement_personne_S(p);
 	}
@@ -192,6 +204,7 @@ void terrain::deplacement_personne_SO(personne& p){
 
 void terrain::deplacement_personne_S(personne& p){
 	//verifier si on peut aller vers le Sud
+
 	bool possible_deplacement = true;
 	for(int i = 0; i < 3;i++){
 		if(this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+i) == 1 || this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y()+i) == 2)
@@ -199,10 +212,16 @@ void terrain::deplacement_personne_S(personne& p){
 	}
 	
 	if(possible_deplacement){
-		for(int i = 0; i < 3; i++){
-			this->matrice.at(p.get_pos_x()+4).at(p.get_pos_y() + i) = 1;
-			this->matrice.at(p.get_pos_x()).at(p.get_pos_y() + i) = 0 ;
-		}
+		this->matrice.at(p.get_pos_x() +4).at(p.get_pos_y()) = 1;
+		this->matrice.at(p.get_pos_x() +4).at(p.get_pos_y()+1) = 1;
+		this->matrice.at(p.get_pos_x() +4).at(p.get_pos_y()+2) = 1;
+		this->matrice.at(p.get_pos_x() +4).at(p.get_pos_y()+3) = 1;
+
+
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()) = 0;
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+1) = 0;
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+2) = 0;
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+3) = 0;
 		p.set_position(p.get_pos_x()+1,p.get_pos_y());
 	}else
 		this->deplacement_personne_O(p);
@@ -251,9 +270,6 @@ void terrain::deplacement_personne_NO(personne& p){
 
 	
 		p.set_position(p.get_pos_x()-1,p.get_pos_y()-1);
-		if(this->arrive(p)){
-			this->enlever_personne(p);
-		}
 	}else{
 		this->deplacement_personne_N(p);
 	}
@@ -269,10 +285,16 @@ void terrain::deplacement_personne_N(personne& p){
 	}
 	
 	if(possible_deplacement){
-		for(int i = 0; i < 3; i++){
-			this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y() + i) = 1;
-			this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y() + i) = 0 ;
-		}
+		this->matrice.at(p.get_pos_x() - 1).at(p.get_pos_y()) = 1;
+		this->matrice.at(p.get_pos_x() - 1).at(p.get_pos_y()+1) = 1;
+		this->matrice.at(p.get_pos_x() - 1).at(p.get_pos_y()+2) = 1;
+		this->matrice.at(p.get_pos_x() - 1).at(p.get_pos_y()+3) = 1;
+
+
+		this->matrice.at(p.get_pos_x() +3).at(p.get_pos_y()) = 0;
+		this->matrice.at(p.get_pos_x() +3).at(p.get_pos_y()+1) = 0;
+		this->matrice.at(p.get_pos_x() +3).at(p.get_pos_y()+2) = 0;
+		this->matrice.at(p.get_pos_x() +3).at(p.get_pos_y()+3) = 0;
 		p.set_position(p.get_pos_x()-1,p.get_pos_y());
 	}else
 		this->deplacement_personne_O(p);
@@ -286,14 +308,17 @@ void terrain::deplacement_personne_O(personne& p){
 	}
 	
 	if(possible_deplacement){
-		for(int i = 0; i < 3; i++){
-			this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y() - 1) = 1;
-			this->matrice.at(p.get_pos_x()+i).at(p.get_pos_y() + 3) = 0 ;
-		}
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+1).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+2).at(p.get_pos_y()-1) = 1;
+		this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()-1) = 1;
+
+
+		this->matrice.at(p.get_pos_x()).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x() +1).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x() +2).at(p.get_pos_y()+3) = 0;
+		this->matrice.at(p.get_pos_x() +3).at(p.get_pos_y()+3) = 0;
 		p.set_position(p.get_pos_x(),p.get_pos_y()-1);
-		if(this->arrive(p)){
-			this->enlever_personne(p);
-		}
 	}
 }
 

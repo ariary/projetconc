@@ -63,40 +63,48 @@ int main(int argc, char *argv[]){
 
 
     /*lancement du programme*/
-    terrain t = terrain((int)pow(2,0)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
+    terrain t = terrain((int)pow(2,1)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
 
+    /* ici faire la partie graphique */
+    sf::RenderWindow window(sf::VideoMode(512, 128), "Titre");
+
+    window.clear(sf::Color(214,214,214));
+     
+    /*sf::RectangleShape rectangle;
+    rectangle.setSize(sf::Vector2f(100, 50)); // Taille (100x50)
+    rectangle.setPosition(10, 20); //Position sur l'écran");*/
+    sf::Color black = sf::Color::Black;
+    sf::Color white = sf::Color::White;
+    sf::Color red = sf::Color::Red;
     cout << "il y a " << t.liste_personnes.size() << "personnes" << endl;
-    t.print_liste_personnes(); 
-
-    for(int i = 0; i < t.liste_personnes.size(); i++){
-            cout << "first ";
-            t.liste_personnes.at(i).print_personne();
-            t.avancer(t.liste_personnes.at(i));
-            cout << "second ";
-            t.liste_personnes.at(i).print_personne();
-    }
-    vector<personne> testNE = t.get_vector_personneNE();
-    vector<personne> testSE = t.get_vector_personneSE();
-    vector<personne> testNO = t.get_vector_personneNO();
-    vector<personne> testSO = t.get_vector_personneSO();
-    cout << "ici on voit les personnes de la zone NE" << endl;
-    for(int i = 0; i < testNE.size(); i++){
-        testNE.at(i).print_personne();
-    }
-
-    cout << "ici on voit les personnes de la zone SE" << endl;
-    for(int i = 0; i < testSE.size(); i++){
-        testSE.at(i).print_personne();
-    }
-
-    cout << "ici on voit les personnes de la zone NO" << endl;
-    for(int i = 0; i < testNO.size(); i++){
-        testNO.at(i).print_personne();
-    }
-
-    cout << "ici on voit les personnes de la zone SO" << endl;
-    for(int i = 0; i < testSO.size(); i++){
-        testSO.at(i).print_personne();
+    //t.print_liste_personnes(); 
+    while (window.isOpen())
+    {
+        while(!t.finish()){
+            for(int i = 0; i < t.liste_personnes.size(); i++){
+                t.avancer(t.liste_personnes.at(i));
+            }
+            for(int i = 0; i < 128; i++){
+                for(int j = 0; j < 512; j++){
+                    sf::RectangleShape rectangle;
+                    rectangle.setSize(sf::Vector2f(1, 1)); // Taille (1x1)
+                    rectangle.setPosition(j, i); //Position sur l'écran");
+                    //sa couleur : 
+                    switch(t.matrice.at(i).at(j)){
+                        case 2 : rectangle.setFillColor(black);
+                                break;
+                        case 1 : rectangle.setFillColor(red);
+                                break;
+                        default: rectangle.setFillColor(white);
+                                break;
+                    }
+                    window.draw(rectangle);
+                }
+            }
+            window.display();
+        }
+        cout << "la simulation est terminée" << endl;
+        window.close();
     }
 
 
