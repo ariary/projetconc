@@ -29,7 +29,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
   {
      	terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
 
-      while (  (!(t->get_vector_personneNE().empty()) && !(t->get_vector_personneSE().empty())) ){
+      while (  (!(t->get_vector_personneNE().empty()) || !(t->get_vector_personneSE().empty())) ){
         if (!t->get_vector_personneNE().empty())
         {
           for(int i=0;i<t->get_vector_personneNE().size();i++)
@@ -73,7 +73,7 @@ void *thread_avancerSE(void *p_data){
         terrain* t=(terrain*) p_data;// recuperation du contexte applicatif
 
 
-        while (  (!(t->get_vector_personneSE().empty()) && !(t->get_vector_personneNE().empty())) ){
+        while (  (!(t->get_vector_personneSE().empty()) || !(t->get_vector_personneNE().empty())) ){
           if (!t->get_vector_personneSE().empty())
           {
             for(int i=0;i<t->get_vector_personneSE().size();i++)
