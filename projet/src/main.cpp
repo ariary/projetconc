@@ -17,7 +17,7 @@ int main(int argc, char *argv[]){
     
     
     /*-m*/
-    /*struct rusage r_usage;
+    struct rusage r_usage;
     clock_t tempsDebut, tempsFin;
     struct timeval utime;
     struct timeval stime;
@@ -25,7 +25,7 @@ int main(int argc, char *argv[]){
     
 
     /*prise en charge des arguments*/
-    /*int nb_personne,nb_thread;
+    int nb_personne,nb_thread;
     bool time_execution=false;
     int opt;
     while ((opt = getopt(argc , argv, "mp:t:")) != -1){
@@ -100,7 +100,7 @@ int main(int argc, char *argv[]){
     }
 
 
-    /*if (nb_thread==0)
+    if (nb_thread==0)
     {
         pthread_t t0;
         pthread_create(&t0, NULL, thread_avancerALL, &t);
@@ -124,22 +124,22 @@ int main(int argc, char *argv[]){
 
     }else{//nb_thread=4
 
-        Data d; // pour passer en paramètre du thread et le terrain et l'indice de la personne à gérer
-        d.t=t;
+        personne p_temp(0,0); //temporaire car on est obligé d'initilaser la structure sinon elle appelle les constructeur des classes sur des elts vides
+        struct Data d={t,p_temp};// pour passer en paramètre du thread et une personne
         
         vector<pthread_t> v_thread; //création pour l'attente des threads
         
         /*On lance un thread par personne */
-        /*for (int i = 0; i < t.liste_personnes.size(); ++i)
+        for (int i = 0; i < t.liste_personnes.size(); ++i)
         {
             pthread_t th_personne;
-            d.indice_personne=i;
+            d.pers=t.liste_personnes[i];
             pthread_create(&th_personne, NULL, thread_avancerALONE, &d);
             v_thread.push_back(th_personne);
         }
 
         /*On attend la fin de chaque thread */
-        /*for (pthread_t t : v_thread)
+        for (pthread_t t : v_thread)
         {
             pthread_join(t, NULL);
         }
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]){
         (int64_t)utime.tv_sec, (int64_t)utime.tv_usec,
         (int64_t)stime.tv_sec, (int64_t)stime.tv_usec);
         //printf("time :%f\n",difftime(end, begin) );
-    }*/
+    }
     return 0;
 
 }
