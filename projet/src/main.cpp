@@ -7,12 +7,47 @@
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
-#include <SFML/Graphics.hpp>
+
 #include <math.h> //pow
 #include <pthread.h>
 
 
 using namespace std;
+
+/*void* refresh_frame(terrain* t){
+    /* ici faire la partie graphique */
+    /*sf::RenderWindow window(sf::VideoMode(512, 128), "Titre");
+
+    window.clear(sf::Color(214,214,214));
+     
+    sf::Color black = sf::Color::Black;
+    sf::Color white = sf::Color::White;
+    sf::Color red = sf::Color::Red;
+    //t.print_liste_personnes(); 
+    while (window.isOpen())
+    {
+        for(int i = 0; i < 128; i++){
+            for(int j = 0; j < 512; j++){
+                sf::RectangleShape rectangle;
+                rectangle.setSize(sf::Vector2f(1, 1)); // Taille (1x1)
+                rectangle.setPosition(j, i); //Position sur l'écran");
+                //sa couleur : 
+                switch(t.matrice.at(i).at(j)){
+                    case 2 : rectangle.setFillColor(black);
+                            break;
+                    case 1 : rectangle.setFillColor(red);
+                            break;
+                    default: rectangle.setFillColor(white);
+                            break;
+                }
+                window.draw(rectangle);
+            }
+        }
+        window.display();
+        cout << "la simulation est terminée" << endl;
+        window.close();
+    }
+}*/
 int main(int argc, char *argv[]){
     
     
@@ -64,50 +99,9 @@ int main(int argc, char *argv[]){
 
     /*lancement du programme*/
     terrain t = terrain((int)pow(2,1)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
-
-    /* ici faire la partie graphique */
-    sf::RenderWindow window(sf::VideoMode(512, 128), "Titre");
-
-    window.clear(sf::Color(214,214,214));
-     
-    /*sf::RectangleShape rectangle;
-    rectangle.setSize(sf::Vector2f(100, 50)); // Taille (100x50)
-    rectangle.setPosition(10, 20); //Position sur l'écran");*/
-    sf::Color black = sf::Color::Black;
-    sf::Color white = sf::Color::White;
-    sf::Color red = sf::Color::Red;
-    cout << "il y a " << t.liste_personnes.size() << "personnes" << endl;
-    //t.print_liste_personnes(); 
-    while (window.isOpen())
-    {
-        while(!t.finish()){
-            for(int i = 0; i < t.liste_personnes.size(); i++){
-                t.avancer(t.liste_personnes.at(i));
-            }
-            for(int i = 0; i < 128; i++){
-                for(int j = 0; j < 512; j++){
-                    sf::RectangleShape rectangle;
-                    rectangle.setSize(sf::Vector2f(1, 1)); // Taille (1x1)
-                    rectangle.setPosition(j, i); //Position sur l'écran");
-                    //sa couleur : 
-                    switch(t.matrice.at(i).at(j)){
-                        case 2 : rectangle.setFillColor(black);
-                                break;
-                        case 1 : rectangle.setFillColor(red);
-                                break;
-                        default: rectangle.setFillColor(white);
-                                break;
-                    }
-                    window.draw(rectangle);
-                }
-            }
-            window.display();
-        }
-        cout << "la simulation est terminée" << endl;
-        window.close();
-    }
-
-
+    
+    
+    nb_thread = 1;
     if (nb_thread==0)
     {
         pthread_t t0;

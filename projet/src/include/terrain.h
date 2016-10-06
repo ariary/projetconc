@@ -15,13 +15,17 @@
 
 class terrain {
 	private:
-		
+
 		int nb_personnes;
 		
 		bool coordonnees_correctes(int pos_x, int pos_y);
 
 	public:
 		std::vector<personne> liste_personnes;
+		std::vector<personne> liste_personnesNO;
+		std::vector<personne> liste_personnesNE;
+		std::vector<personne> liste_personnesSO;
+		std::vector<personne> liste_personnesSE;
 		std::vector< std::vector<int> > matrice;
 		void init_muret();
 		terrain(int nombre_personnes);
@@ -39,10 +43,10 @@ class terrain {
 		void deplacement_personne_O(personne& p);
 		bool arrive(personne& p);
 
-		std::vector<personne> get_vector_personneNE();
-		std::vector<personne> get_vector_personneSE();
-		std::vector<personne> get_vector_personneNO();
-		std::vector<personne> get_vector_personneSO();
+		void refresh_vector_personnesNE();
+		void refresh_vector_personnesSE();
+		void refresh_vector_personnesNO();
+		void refresh_vector_personnesSO();
 };
 
 

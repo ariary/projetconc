@@ -1,8 +1,8 @@
 #include "include/mythreads.h"
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
 using namespace std;
-
 /*t0*/
 void *thread_avancerALL (void *p_data){
 	cout<<"avancerALL()"<<endl;
@@ -13,8 +13,7 @@ void *thread_avancerALL (void *p_data){
 
     	while(!t->finish()){
       		for(int i=0;i<t->liste_personnes.size();i++)
-      			//t->avancer_personne(i);
-            cout << "coucou" << endl;
+      			t->avancer(t->liste_personnes.at(i));
       }
    }else{
    		cout<< "problème dans la récupération du contexte applicatif du thread (-t0)"<<endl;
@@ -28,13 +27,16 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
 	if (p_data != NULL)
   {
      	terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
-
-      while (  (!(t->get_vector_personneNE().empty()) || !(t->get_vector_personneSE().empty())) ){
-        if (!t->get_vector_personneNE().empty())
+      t->refresh_vector_personnesNE();
+      t->refresh_vector_personnesSE();
+      while (  (!(t->liste_personnesNE.empty()) || !(t->liste_personnesSE.empty())) ){
+        if (!t->liste_personnesNE.empty())
         {
-          for(int i=0;i<t->get_vector_personneNE().size();i++)
-            t->avancer(t->get_vector_personneNE()[i]);
+          for(int i=0;i<t->liste_personnesNE.size();i++)
+            t->avancer(t->liste_personnesNE.at(i));
         }
+        t->refresh_vector_personnesNE();
+        t->refresh_vector_personnesSE();
       }
 
   }else{
@@ -51,11 +53,11 @@ void *thread_avancerNO(void *p_data){
         terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
 
         while (  !(t->finish()) ){
-          
-          if ( !(t->get_vector_personneNO().empty()) )
+          t->refresh_vector_personnesNO();
+          if ( !(t->liste_personnesNO.empty()) )
           {
-            for(int i=0;i<t->get_vector_personneNO().size();i++)
-              t->avancer(t->get_vector_personneNO()[i]);      
+            for(int i=0;i<t->liste_personnesNO.size();i++)
+              t->avancer(t->liste_personnesNO.at(i));      
           }
 
         }
@@ -72,13 +74,16 @@ void *thread_avancerSE(void *p_data){
       
         terrain* t=(terrain*) p_data;// recuperation du contexte applicatif
 
-
-        while (  (!(t->get_vector_personneSE().empty()) || !(t->get_vector_personneNE().empty())) ){
-          if (!t->get_vector_personneSE().empty())
+        t->refresh_vector_personnesSE();
+        t->refresh_vector_personnesNE();
+        while (  (!(t->liste_personnesSE.empty()) || !(t->liste_personnesNE.empty())) ){
+          if (!t->liste_personnesSE.empty())
           {
-            for(int i=0;i<t->get_vector_personneSE().size();i++)
-              t->avancer(t->get_vector_personneSE()[i]);
+            for(int i=0;i<t->liste_personnesSE.size();i++)
+              t->avancer(t->liste_personnesSE.at(i));
           }
+          t->refresh_vector_personnesSE();
+          t->refresh_vector_personnesNE();
         }
 
    }else{
@@ -94,11 +99,11 @@ void *thread_avancerSO(void *p_data){
         terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
 
         while (  !(t->finish()) ){
-          
-          if ( !(t->get_vector_personneSO().empty()) )
+          t->refresh_vector_personnesSO();
+          if ( !(t->liste_personnesSO.empty()) )
           {
-            for(int i=0;i<t->get_vector_personneSO().size();i++)
-              t->avancer(t->get_vector_personneSO()[i]);
+            for(int i=0;i<t->liste_personnesSO.size();i++)
+              t->avancer(t->liste_personnesSO.at(i));
           }
 
         }

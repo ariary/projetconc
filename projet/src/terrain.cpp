@@ -326,38 +326,38 @@ bool terrain::arrive(personne& p){
 	return p.get_pos_y() == 0 && (p.get_pos_x() >= 60 && p.get_pos_x() <= 68);
 }
 
-std::vector<personne> terrain::get_vector_personneNE(){
-	vector<personne> personnesNE;
+void terrain::refresh_vector_personnesNE(){
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
-		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() <=63)
-			personnesNE.push_back(this->liste_personnes.at(i));
+		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() <=63){
+			personne& ref = this->liste_personnes.at(i);
+			this->liste_personnesNE.push_back(ref);
+		}
 	}
-	return personnesNE;
 }
 
-std::vector<personne> terrain::get_vector_personneSE(){
-	vector<personne> personnesSE;
+void terrain::refresh_vector_personnesSE(){
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
-		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() > 63)
-			personnesSE.push_back(this->liste_personnes.at(i));
+		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() > 63){
+			personne& ref = this->liste_personnes.at(i);
+			this->liste_personnesSE.push_back(ref);
+		}
 	}
-	return personnesSE;
 }
 
-std::vector<personne> terrain::get_vector_personneNO(){
-	vector<personne> personnesNO;
+void terrain::refresh_vector_personnesNO(){
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
-		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() < 64)
-			personnesNO.push_back(this->liste_personnes.at(i));
+		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() < 64){
+			personne& ref = this->liste_personnes.at(i);
+			this->liste_personnesNO.push_back(ref);
+		}
 	}
-	return personnesNO;
 }
 
-std::vector<personne> terrain::get_vector_personneSO(){
-	vector<personne> personnesSO;
+void terrain::refresh_vector_personnesSO(){
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
-		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() > 63)
-			personnesSO.push_back(this->liste_personnes.at(i));
+		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() > 63){
+			personne& ref = this->liste_personnes.at(i);
+			this->liste_personnesSO.push_back(ref);
+		}
 	}
-	return personnesSO;
 }
