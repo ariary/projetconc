@@ -1,6 +1,6 @@
 #include "include/mythreads.h"
 #include <iostream>
-#include <SFML/Graphics.hpp>
+
 
 using namespace std;
 /*t0*/
