@@ -29,11 +29,13 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
      	terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
       t->refresh_vector_personnesNE();
       t->refresh_vector_personnesSE();
-      while (  (!(t->liste_personnesNE.empty()) || !(t->liste_personnesSE.empty())) ){
+      while (  (!(t->liste_personnesNE.empty()) || !(t->liste_personnesSE.empty()))){
+        cout << t->liste_personnesNE.size() << endl;
         if (!t->liste_personnesNE.empty())
         {
-          for(int i=0;i<t->liste_personnesNE.size();i++)
+          for(int i=0;i<t->liste_personnesNE.size();i++){
             t->avancer(t->liste_personnesNE.at(i));
+          }
         }
         t->refresh_vector_personnesNE();
         t->refresh_vector_personnesSE();
