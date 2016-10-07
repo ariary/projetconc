@@ -98,7 +98,7 @@ int main(int argc, char *argv[]){
 
 
     /*lancement du programme*/
-    terrain t = terrain((int)pow(2,1)) ;//terrain t = terrain((int)pow(2,nb_personne)) ;
+    terrain t = terrain((int)pow(2,nb_personne)) ;
     
     
     nb_thread = 1;
