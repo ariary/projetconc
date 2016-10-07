@@ -22,40 +22,6 @@
 
 using namespace std;
 
-/*void* refresh_frame(terrain* t){
-    /* ici faire la partie graphique */
-    /*sf::RenderWindow window(sf::VideoMode(512, 128), "Titre");
-
-    window.clear(sf::Color(214,214,214));
-     
-    sf::Color black = sf::Color::Black;
-    sf::Color white = sf::Color::White;
-    sf::Color red = sf::Color::Red;
-    //t.print_liste_personnes(); 
-    while (window.isOpen())
-    {
-        for(int i = 0; i < 128; i++){
-            for(int j = 0; j < 512; j++){
-                sf::RectangleShape rectangle;
-                rectangle.setSize(sf::Vector2f(1, 1)); // Taille (1x1)
-                rectangle.setPosition(j, i); //Position sur l'écran");
-                //sa couleur : 
-                switch(t.matrice.at(i).at(j)){
-                    case 2 : rectangle.setFillColor(black);
-                            break;
-                    case 1 : rectangle.setFillColor(red);
-                            break;
-                    default: rectangle.setFillColor(white);
-                            break;
-                }
-                window.draw(rectangle);
-            }
-        }
-        window.display();
-        cout << "la simulation est terminée" << endl;
-        window.close();
-    }
-}*/
 int main(int argc, char *argv[]){
     
     
@@ -109,7 +75,6 @@ int main(int argc, char *argv[]){
     terrain t = terrain((int)pow(2,nb_personne)) ;
     
     
-    nb_thread = 1;
     if (nb_thread==0)
     {
         pthread_t t0;
