@@ -1,3 +1,11 @@
+/*
+ *
+ * File: main.cpp
+ * Author: Adrien Prestini & Antoine Rabenandrasana
+ * 
+ * Version: rendu du 10 octobre 2016
+ */
+
 #include <stdio.h>
 #include <stdbool.h>
 #include <time.h>

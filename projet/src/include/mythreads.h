@@ -1,5 +1,5 @@
 /*
- * thread.h
+ * mythreads.h
  *
  *  Created on: 24 sept. 2016
  *      Author: Adrien Prestini & Antoine Rabenandrasana

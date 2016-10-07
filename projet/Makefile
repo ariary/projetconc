@@ -1,8 +1,8 @@
 #=======================================================================
-# Basic C++: makefile example to use as a reminder or as a template
+# Basic C++: makefile
 #-----------------------------------------------------------------------
-# Julien DeAntoni --- No Copyright 2016
-# $Id: convenient Makefile but muist be tuned for templated project 
+# template :Julien DeAntoni --- No Copyright 2016
+# modified by: Adrien Prestini & Antoine Rabenandrasana
 #      v0.2 2016/09/06
 #=======================================================================
 

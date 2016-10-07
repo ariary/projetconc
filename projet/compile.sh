@@ -1,4 +1,7 @@
 #!/bin/bash
+
+#Equipe 19: Adrien Prestini & Antoine Rabenandrasana
+
 mkdir bin
 echo -e "\nSi vous voulez compiler le simulateur sans partie graphique entrez 'sans' \nSinon entrez 'avec'"
 read -n 5 pgrah
@@ -8,5 +11,3 @@ then
 else
 	make sans
 fi
-
-#j'aurais juste pu faire make $praph mais le nom de make avec par exemple peut changer

@@ -1,8 +1,9 @@
 /*
- * Personne.cpp
+ * File: Personne.cpp
  *
  *  Created on: 24 sept. 2016
  *      Author: Adrien Prestini & Antoine Rabenandrasana
+ * Version: rendu du 10 octobre 2016
  */
 
 #include "include/personne.h"

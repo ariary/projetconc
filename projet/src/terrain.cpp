@@ -1,3 +1,11 @@
+/*
+ *
+ * File: terrain.cpp
+ * Author: Adrien Prestini & Antoine Rabenandrasana
+ * 
+ * Version: rendu du 10 octobre 2016
+ */
+
 #include "include/terrain.h"
 #include <stdlib.h>
 #include <list>

@@ -1,3 +1,11 @@
+/*
+ *
+ * File: mythreads.cpp
+ * Author: Adrien Prestini & Antoine Rabenandrasana
+ * 
+ * Version: rendu du 10 octobre 2016
+ */
+
 #include "include/mythreads.h"
 #include <iostream>
 
