@@ -15,7 +15,6 @@
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
-
 #include <math.h> //pow
 #include <pthread.h>
 
@@ -73,8 +72,8 @@ int main(int argc, char *argv[]){
 
     /*lancement du programme*/
     terrain t = terrain((int)pow(2,nb_personne)) ;
-    
-    
+
+    nb_thread = 0;
     if (nb_thread==0)
     {
         pthread_t t0;

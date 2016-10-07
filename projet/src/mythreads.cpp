@@ -38,7 +38,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
       t->refresh_vector_personnesNE();
       t->refresh_vector_personnesSE();
       while (  (!(t->liste_personnesNE.empty()) || !(t->liste_personnesSE.empty()))){
-        cout << t->liste_personnesNE.size() << endl;
+        //cout << t->liste_personnesNE.size() << endl;
         if (!t->liste_personnesNE.empty())
         {
           for(int i=0;i<t->liste_personnesNE.size();i++){

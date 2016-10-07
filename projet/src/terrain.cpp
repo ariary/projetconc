@@ -335,6 +335,7 @@ bool terrain::arrive(personne& p){
 }
 
 void terrain::refresh_vector_personnesNE(){
+	liste_personnesNE.clear();
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
 		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() <=63){
 			personne& ref = this->liste_personnes.at(i);
@@ -344,6 +345,7 @@ void terrain::refresh_vector_personnesNE(){
 }
 
 void terrain::refresh_vector_personnesSE(){
+	liste_personnesSE.clear();
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
 		if(this->liste_personnes.at(i).get_pos_y() >= 255 && this->liste_personnes.at(i).get_pos_x() > 63){
 			personne& ref = this->liste_personnes.at(i);
@@ -353,6 +355,7 @@ void terrain::refresh_vector_personnesSE(){
 }
 
 void terrain::refresh_vector_personnesNO(){
+	liste_personnesNO.clear();
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
 		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() < 64){
 			personne& ref = this->liste_personnes.at(i);
@@ -362,6 +365,7 @@ void terrain::refresh_vector_personnesNO(){
 }
 
 void terrain::refresh_vector_personnesSO(){
+	liste_personnesSO.clear();
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
 		if(this->liste_personnes.at(i).get_pos_y() < 256 && this->liste_personnes.at(i).get_pos_x() > 63){
 			personne& ref = this->liste_personnes.at(i);
