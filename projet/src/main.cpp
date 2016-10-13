@@ -72,6 +72,7 @@ int main(int argc, char *argv[]){
 
     /*lancement du programme*/
     terrain t = terrain((int)pow(2,nb_personne)) ;
+    nb_thread = 1;
     if (nb_thread==0)
     {
         pthread_t t0;
