@@ -21,6 +21,12 @@ void *thread_avancerNO(void *pd_data);
 void *thread_avancerSE(void *pd_data);
 void *thread_avancerSO(void *pd_data);
 
+//outils pour connaitre la région d'une personne
+bool isOnNE(personne p);
+bool isOnNO(personne p);
+bool isOnSE(personne p);
+bool isOnSO(personne p);
+
 /*t2*/
 void *thread_avancerALONE(void *pd_data);
 
