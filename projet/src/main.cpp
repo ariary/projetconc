@@ -33,11 +33,18 @@ int main(int argc, char *argv[]){
     
 
     /*prise en charge des arguments*/
-    int nb_personne,nb_thread;
+    int nb_personne,nb_thread,num_etape;
     bool time_execution=false;
     int opt;
     while ((opt = getopt(argc , argv, "mp:t:")) != -1){
         switch (opt) {
+        case 'e':
+            if (optarg)
+                num_etape=atoi(optarg);
+            else{
+                std::cerr<< "Problème d'arguments -e[1..3]!"<<std::endl;
+                exit(EXIT_FAILURE);
+            }
         case 'm':
           time_execution=true;
           break;
@@ -63,63 +70,67 @@ int main(int argc, char *argv[]){
         }
     }      
 
-    printf("nb de personne 2^%d; nb de threads %d; ", nb_personne, nb_thread);
+    printf("Execution de l'étape %d: nb de personne 2^%d; nb de threads %d; ",num_etape, nb_personne, nb_thread);
     (time_execution)?printf("Avec mesure de temps\n\n"):printf("sans mesure de temps\n\n");
     tempsDebut = clock();
     begin= time(NULL);
 
 
-
-    /*lancement du programme*/
-    terrain t = terrain((int)pow(2,5)) ;
-    nb_thread = 1;
-    if (nb_thread==0)
-    {
-        pthread_t t0;
-        pthread_create(&t0, NULL, thread_avancerALL, &t);
-        pthread_join(t0, NULL);
-        
-    }else if(nb_thread==1){
-        pthread_t t1; //NE
-        pthread_t t2; //NO
-        pthread_t t3; //SE
-        pthread_t t4; //SO
-
-        pthread_create(&t1, NULL, thread_avancerNE, &t);
-        pthread_create(&t2, NULL, thread_avancerNO, &t);
-        pthread_create(&t3, NULL, thread_avancerSE, &t);
-        pthread_create(&t4, NULL, thread_avancerSO, &t);
-
-        pthread_join(t1, NULL);
-        pthread_join(t2, NULL);
-        pthread_join(t3, NULL);
-        pthread_join(t4, NULL);
-
-    }else{//nb_thread=4
-
-        personne p_temp(0,0); //temporaire car on est obligé d'initilaser la structure sinon elle appelle les constructeur des classes sur des elts vides
-        struct Data d={t,p_temp};// pour passer en paramètre du thread et une personne
-        
-        vector<pthread_t> v_thread; //création pour l'attente des threads
-        
-        /*On lance un thread par personne */
-        for (int i = 0; i < t.liste_personnes.size(); ++i)
+    if (num_etape==1)
+    { //ETAPE 1
+        /*lancement du programme*/
+        terrain t = terrain((int)pow(2,5)) ;
+        nb_thread = 1;
+        if (nb_thread==0)
         {
-            pthread_t th_personne;
-            d.pers=t.liste_personnes[i];
-            pthread_create(&th_personne, NULL, thread_avancerALONE, &d);
-            v_thread.push_back(th_personne);
+            pthread_t t0;
+            pthread_create(&t0, NULL, thread_avancerALL, &t);
+            pthread_join(t0, NULL);
+            
+        }else if(nb_thread==1){
+            pthread_t t1; //NE
+            pthread_t t2; //NO
+            pthread_t t3; //SE
+            pthread_t t4; //SO
+
+            pthread_create(&t1, NULL, thread_avancerNE, &t);
+            pthread_create(&t2, NULL, thread_avancerNO, &t);
+            pthread_create(&t3, NULL, thread_avancerSE, &t);
+            pthread_create(&t4, NULL, thread_avancerSO, &t);
+
+            pthread_join(t1, NULL);
+            pthread_join(t2, NULL);
+            pthread_join(t3, NULL);
+            pthread_join(t4, NULL);
+
+        }else{//nb_thread=4
+
+            personne p_temp(0,0); //temporaire car on est obligé d'initilaser la structure sinon elle appelle les constructeur des classes sur des elts vides
+            struct Data d={t,p_temp};// pour passer en paramètre du thread et une personne
+            
+            vector<pthread_t> v_thread; //création pour l'attente des threads
+            
+            /*On lance un thread par personne */
+            for (int i = 0; i < t.liste_personnes.size(); ++i)
+            {
+                pthread_t th_personne;
+                d.pers=t.liste_personnes[i];
+                pthread_create(&th_personne, NULL, thread_avancerALONE, &d);
+                v_thread.push_back(th_personne);
+            }
+
+            /*On attend la fin de chaque thread */
+            for (pthread_t t : v_thread)
+            {
+                pthread_join(t, NULL);
+            }
         }
+    }else if (num_etape==2)
+    { //ETAPE 2
+        
 
-        /*On attend la fin de chaque thread */
-        for (pthread_t t : v_thread)
-        {
-            pthread_join(t, NULL);
-        }
-
-
-
-
+    }else{
+        //ETAPE 3
     }
     
 

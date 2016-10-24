@@ -29,21 +29,19 @@ void *thread_avancerALL (void *p_data){
 } 
 
 bool isOnNE(personne p){
-  cout << "verif NE" << endl;
   return p.get_pos_y() >= 255 && p.get_pos_x() <=63;
 }
-bool isOnNO(personne p){
-  cout << "verif NO" << endl;
+bool isOnNO(personne p){;
   return p.get_pos_y() < 256 && p.get_pos_x() < 64;
 }
 bool isOnSE(personne p){
-  cout << "verif SE" << endl;
   return p.get_pos_y() >= 255 && p.get_pos_x() > 63;
 }
 bool isOnSO(personne p){
-  cout << "verif SO" << endl;
   return p.get_pos_y() < 256 && p.get_pos_x() > 63;
 }
+
+
 /*t1*/
 void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
 
