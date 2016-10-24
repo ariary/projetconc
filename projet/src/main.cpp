@@ -36,7 +36,7 @@ int main(int argc, char *argv[]){
     int nb_personne,nb_thread,num_etape;
     bool time_execution=false;
     int opt;
-    while ((opt = getopt(argc , argv, "mp:t:")) != -1){
+    while ((opt = getopt(argc , argv, "mpe:t:")) != -1){
         switch (opt) {
         case 'e':
             if (optarg)
@@ -127,6 +127,7 @@ int main(int argc, char *argv[]){
         }
     }else if (num_etape==2)
     { //ETAPE 2
+        printf("2\n");
         
 
     }else{
