@@ -13,13 +13,17 @@
  #ifndef CONTEXTE_H_
 #define CONTEXT_H_
 
+#include <cstddef>
 #include "terrain.h"
 #include <semaphore.h>
 
-class terrain {
+class Contexte {
 
 public:
 	terrain* t; //pointeur sur terrain car : pas le terrain n'a pas le même cycle de vie que le contexte et je ne veux pas une copie
-	sem_t *mutex;
-	
-}
+	sem_t *mutex;//idem
+
+	Contexte(terrain* ter,sem_t* mut=nullptr);
+};
+
+#endif
