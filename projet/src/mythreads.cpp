@@ -47,6 +47,7 @@ bool isOnSO(personne p){
 /*t1*/
 void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
 
+  cout<<"NE"<<endl;
 	if (p_data != NULL)
   {
      	terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
@@ -65,7 +66,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
 }
 
 void *thread_avancerNO(void *p_data){
-
+  cout<<"NO"<<endl;
     if (p_data != NULL)
    {
       
@@ -84,7 +85,7 @@ void *thread_avancerNO(void *p_data){
 }
 
 void *thread_avancerSE(void *p_data){
-
+  cout<<"SE"<<endl;
     if (p_data != NULL)
    {
       
@@ -103,7 +104,7 @@ void *thread_avancerSE(void *p_data){
 }
 
 void *thread_avancerSO(void *p_data){
-
+  cout<<"SO"<<endl;
     if (p_data != NULL)
    {
       
