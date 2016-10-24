@@ -12,6 +12,7 @@
 #include <stdlib.h> //atoi
 #include "include/terrain.h"
 #include "include/mythreads.h"
+ #include "include/contexte.h"
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
@@ -37,7 +38,7 @@ int main(int argc, char *argv[]){
     int nb_personne,nb_thread,num_etape;
     bool time_execution=false;
     int opt;
-    while ((opt = getopt(argc , argv, "mpe:t:")) != -1){
+    while ((opt = getopt(argc , argv, "mp:t:e:")) != -1){
         switch (opt) {
         case 'e':
             if (optarg)
@@ -77,11 +78,12 @@ int main(int argc, char *argv[]){
     begin= time(NULL);
 
 
+
+    /*lancement du programme*/
+    terrain t = terrain((int)pow(2,nb_personne)) ;
+
     if (num_etape==1)
     { //ETAPE 1
-        /*lancement du programme*/
-        terrain t = terrain((int)pow(2,5)) ;
-        nb_thread = 1;
         if (nb_thread==0)
         {
             pthread_t t0;
@@ -128,7 +130,18 @@ int main(int argc, char *argv[]){
         }
     }else if (num_etape==2)
     { //ETAPE 2
-        
+        sem_t sem_terrain;
+
+        sem_init(&sem_terrain, 0, 1);
+
+        Contexte c(&t,&sem_terrain);
+
+        if (c.mutex==nullptr)
+        {
+            cout<<"on est effectivement dans l'étape 1"<<endl;
+        }else{
+            cout<<"on est effectivement dans l'étape 2"<<endl;   
+        }
         
 
     }else{
