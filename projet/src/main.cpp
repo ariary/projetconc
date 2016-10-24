@@ -17,6 +17,7 @@
 #include <sys/resource.h> //getrusage
 #include <math.h> //pow
 #include <pthread.h>
+#include <semaphore.h> //utilisation sémarphore
 
 
 using namespace std;
@@ -127,7 +128,7 @@ int main(int argc, char *argv[]){
         }
     }else if (num_etape==2)
     { //ETAPE 2
-        printf("2\n");
+        
         
 
     }else{

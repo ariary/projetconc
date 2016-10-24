@@ -28,6 +28,10 @@ void *thread_avancerALL (void *p_data){
    }
 } 
 
+
+
+
+/*t1*/
 bool isOnNE(personne p){
   return p.get_pos_y() >= 255 && p.get_pos_x() <=63;
 }
@@ -41,8 +45,6 @@ bool isOnSO(personne p){
   return p.get_pos_y() < 256 && p.get_pos_x() > 63;
 }
 
-
-/*t1*/
 void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
 
   cout<<"NE"<<endl;
