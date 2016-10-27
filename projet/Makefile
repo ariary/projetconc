@@ -47,7 +47,7 @@ personne.o:
 	$(OBJ) -o $(BINDIR)/personne.o $(SRCDIR)/personne.cpp
 
 mythreads.o:
-	$(OBJ) -o $(BINDIR)/mythreads.o $(SRCDIR)/mythreads.cpp
+	$(OBJ) -o $(BINDIR)/mythreads.o $(SRCDIR)/mythreads.cpp --std=c++11
 
 contexte.o:
 	$(OBJ) -std=c++11 -o $(BINDIR)/contexte.o $(SRCDIR)/contexte.cpp

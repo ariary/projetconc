@@ -21,9 +21,10 @@ class Contexte {
 
 public:
 	terrain* t; //pointeur sur terrain car : pas le terrain n'a pas le même cycle de vie que le contexte et je ne veux pas une copie
-	sem_t *mutex;//idem
+	sem_t *mutex;//idem, pour l'étape 2
+	personne *_pers;
 
-	Contexte(terrain* ter,sem_t* mut=nullptr);
+	Contexte(terrain* ter,sem_t* mut=nullptr,personne* pers=nullptr);
 };
 
 #endif

@@ -12,7 +12,7 @@
 #include <stdlib.h> //atoi
 #include "include/terrain.h"
 #include "include/mythreads.h"
- #include "include/contexte.h"
+#include "include/contexte.h"
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
@@ -35,7 +35,9 @@ int main(int argc, char *argv[]){
     
 
     /*prise en charge des arguments*/
-    int nb_personne,nb_thread,num_etape;
+    int nb_personne=2;
+    int nb_thread;
+    int num_etape=2;
     bool time_execution=false;
     int opt;
     while ((opt = getopt(argc , argv, "mp:t:e:")) != -1){
@@ -72,7 +74,7 @@ int main(int argc, char *argv[]){
         }
     }      
 
-    printf("Execution de l'étape %d: nb de personne 2^%d; nb de threads %d; ",num_etape, nb_personne, nb_thread);
+    printf("Execution de l'étape %d: nb de personne 2^%d; scénario de threads %d; ",num_etape, nb_personne, nb_thread);
     (time_execution)?printf("Avec mesure de temps\n\n"):printf("sans mesure de temps\n\n");
     tempsDebut = clock();
     begin= time(NULL);
@@ -82,12 +84,16 @@ int main(int argc, char *argv[]){
     /*lancement du programme*/
     terrain t = terrain((int)pow(2,nb_personne)) ;
 
+
     if (num_etape==1)
     { //ETAPE 1
+
+        Contexte my_contexte(&t);
+
         if (nb_thread==0)
         {
             pthread_t t0;
-            pthread_create(&t0, NULL, thread_avancerALL, &t);
+            pthread_create(&t0, NULL, thread_avancerALL, &my_contexte);
             pthread_join(t0, NULL);
             
         }else if(nb_thread==1){
@@ -108,8 +114,6 @@ int main(int argc, char *argv[]){
 
         }else{//nb_thread=4
 
-            personne p_temp(0,0); //temporaire car on est obligé d'initilaser la structure sinon elle appelle les constructeur des classes sur des elts vides
-            struct Data d={t,p_temp};// pour passer en paramètre du thread et une personne
             
             vector<pthread_t> v_thread; //création pour l'attente des threads
             
@@ -117,8 +121,8 @@ int main(int argc, char *argv[]){
             for (int i = 0; i < t.liste_personnes.size(); ++i)
             {
                 pthread_t th_personne;
-                d.pers=t.liste_personnes[i];
-                pthread_create(&th_personne, NULL, thread_avancerALONE, &d);
+                my_contexte._pers=&(t.liste_personnes[i]);
+                pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte);
                 v_thread.push_back(th_personne);
             }
 
@@ -135,13 +139,6 @@ int main(int argc, char *argv[]){
         sem_init(&sem_terrain, 0, 1);
 
         Contexte c(&t,&sem_terrain);
-
-        if (c.mutex==nullptr)
-        {
-            cout<<"on est effectivement dans l'étape 1"<<endl;
-        }else{
-            cout<<"on est effectivement dans l'étape 2"<<endl;   
-        }
         
 
     }else{

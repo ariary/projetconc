@@ -8,16 +8,17 @@
 
 #include "include/mythreads.h"
 #include <iostream>
-
+#include "include/contexte.h"
 
 using namespace std;
 /*t0*/
 void *thread_avancerALL (void *p_data){
 	cout<<"avancerALL()"<<endl;
-	if (p_data != NULL)
+	if (p_data != nullptr)
    {
     	
-      	terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
+      	Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        terrain* t=c->t;
 
     	while(!t->finish()){
       		for(int i=0;i<t->liste_personnes.size();i++)
@@ -48,9 +49,11 @@ bool isOnSO(personne p){
 void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
 
   cout<<"NE"<<endl;
-	if (p_data != NULL)
-  {
-     	terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
+  if (p_data != nullptr)
+   {
+      
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        terrain* t=c->t;
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
       while (!t->finish()){
         for(int i = 0; i < t->liste_personnes.size(); i++){
@@ -67,10 +70,11 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
 
 void *thread_avancerNO(void *p_data){
   cout<<"NO"<<endl;
-    if (p_data != NULL)
+  if (p_data != nullptr)
    {
       
-        terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        terrain* t=c->t;
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Ouest
        while (!t->finish()){
         for(int i = 0; i < t->liste_personnes.size(); i++){
@@ -86,10 +90,11 @@ void *thread_avancerNO(void *p_data){
 
 void *thread_avancerSE(void *p_data){
   cout<<"SE"<<endl;
-    if (p_data != NULL)
+  if (p_data != nullptr)
    {
       
-        terrain* t=(terrain*) p_data;// recuperation du contexte applicatif
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Est
         while (!t->finish()){
         for(int i = 0; i < t->liste_personnes.size(); i++){
@@ -105,10 +110,11 @@ void *thread_avancerSE(void *p_data){
 
 void *thread_avancerSO(void *p_data){
   cout<<"SO"<<endl;
-    if (p_data != NULL)
+  if (p_data != nullptr)
    {
       
-        terrain* t=(terrain*) p_data;// recuperation du contexte applicatif 
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Ouest
         while (!t->finish()){
         for(int i = 0; i < t->liste_personnes.size(); i++){
@@ -124,13 +130,15 @@ void *thread_avancerSO(void *p_data){
 
 /*t2*/
 void *thread_avancerALONE(void *p_data){
-	if (p_data != NULL)
-  {
-    Data* p =(struct Data*) p_data;
-    terrain my_terrain(p->terr);
-    personne my_personne(p->pers);
-    while(!my_personne.aFini())
-      my_terrain.avancer(my_personne);
+  if (p_data != nullptr)
+   {
+      
+      Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+      terrain my_terrain=*(c->t);
+      personne my_personne=*(c->_pers);
+
+      while(!my_personne.aFini())
+        my_terrain.avancer(my_personne);
 
   }else{
     cout<< "problème dans la récupération du contexte applicatif du thread (-t2)"<<endl;

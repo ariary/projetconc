@@ -11,6 +11,7 @@
 
 #include "personne.h"
 #include "terrain.h"
+#include <semaphore.h>
 
 /*t0*/
 void *thread_avancerALL (void *p_data); 
@@ -30,10 +31,6 @@ bool isOnSO(personne p);
 /*t2*/
 void *thread_avancerALONE(void *pd_data);
 
-struct Data
-{
-   terrain terr;
-   personne pers;
-};
+
 
 #endif
