@@ -52,15 +52,23 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
   if (p_data != nullptr)
    {
       
-        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
-        terrain* t=c->t;
-      //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
-      while (!t->finish()){
-        for(int i = 0; i < t->liste_personnes.size(); i++){
-          if(isOnNE(t->liste_personnes.at(i)))
-            t->avancer(t->liste_personnes.at(i));
+      Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+      terrain* t=c->t;
+
+      if (c->_etape==1)
+      {
+        /*Etape 1*/
+      
+        //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
+        while (!t->finish()){
+          for(int i = 0; i < t->liste_personnes.size(); i++){
+            if(isOnNE(t->liste_personnes.at(i)))
+              t->avancer(t->liste_personnes.at(i));
+          }
         }
-      }
+    }else if(c->_etape==2){
+      /*Etape 2*/
+    }
 
   }else{
       cout<< "problème dans la récupération du contexte applicatif du thread (-t1: avancerNE())"<<endl;

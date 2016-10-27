@@ -88,7 +88,7 @@ int main(int argc, char *argv[]){
     if (num_etape==1)
     { //ETAPE 1
 
-        Contexte my_contexte(&t);
+        Contexte my_contexte(1,&t);
 
         if (nb_thread==0)
         {
@@ -138,7 +138,7 @@ int main(int argc, char *argv[]){
 
         sem_init(&sem_terrain, 0, 1);
 
-        Contexte c(&t,&sem_terrain);
+        Contexte c(2,&t,&sem_terrain);
         
 
     }else{

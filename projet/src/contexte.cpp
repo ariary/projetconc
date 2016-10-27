@@ -8,7 +8,8 @@
  #include "include/contexte.h"
 
 
-Contexte::Contexte(terrain* ter,sem_t* mut,personne* pers){
+Contexte::Contexte(int num_etap,terrain* ter,sem_t* mut,personne* pers){
+	this->_etape=num_etap;
 	this->t=ter;
 	this->mutex=mut;
 	this->_pers=pers;
