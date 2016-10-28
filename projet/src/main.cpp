@@ -85,13 +85,12 @@ int main(int argc, char *argv[]){
     terrain t = terrain((int)pow(2,nb_personne)) ;
 
 
-    if (num_etape==1)
-    { //ETAPE 1
 
-        Contexte my_contexte(1,&t);
+
 
         if (nb_thread==0)
         {
+            Contexte my_contexte(1,&t);
             pthread_t t0;
             pthread_create(&t0, NULL, thread_avancerALL, &my_contexte);
             pthread_join(t0, NULL);
@@ -102,48 +101,64 @@ int main(int argc, char *argv[]){
             pthread_t t3; //SE
             pthread_t t4; //SO
 
-            pthread_create(&t1, NULL, thread_avancerNE, &t);
-            pthread_create(&t2, NULL, thread_avancerNO, &t);
-            pthread_create(&t3, NULL, thread_avancerSE, &t);
-            pthread_create(&t4, NULL, thread_avancerSO, &t);
+            if (num_etape==1)
+            {  //ETAPE 1
 
-            pthread_join(t1, NULL);
-            pthread_join(t2, NULL);
-            pthread_join(t3, NULL);
-            pthread_join(t4, NULL);
+                Contexte my_contexte(1,&t);
+                pthread_create(&t1, NULL, thread_avancerNE, &my_contexte);
+                pthread_create(&t2, NULL, thread_avancerNO, &my_contexte);
+                pthread_create(&t3, NULL, thread_avancerSE, &my_contexte);
+                pthread_create(&t4, NULL, thread_avancerSO, &my_contexte);
+
+                pthread_join(t1, NULL);
+                pthread_join(t2, NULL);
+                pthread_join(t3, NULL);
+                pthread_join(t4, NULL);
+            }else if(num_etape==2){
+                //ETAPE 2
+                
+                sem_t sem_terrain;
+                sem_init(&sem_terrain, 0, 1);
+                Contexte my_contexte(2,&t,&sem_terrain);
+
+                pthread_create(&t1, NULL, thread_avancerNE, &my_contexte);
+                pthread_create(&t2, NULL, thread_avancerNO, &my_contexte);
+                pthread_create(&t3, NULL, thread_avancerSE, &my_contexte);
+                pthread_create(&t4, NULL, thread_avancerSO, &my_contexte);
+            }
 
         }else{//nb_thread=4
 
-            
-            vector<pthread_t> v_thread; //création pour l'attente des threads
-            
-            /*On lance un thread par personne */
-            for (int i = 0; i < t.liste_personnes.size(); ++i)
-            {
-                pthread_t th_personne;
-                my_contexte._pers=&(t.liste_personnes[i]);
-                pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte);
-                v_thread.push_back(th_personne);
+            if (num_etape==1)
+            {   //ETAPE 1
+
+                Contexte my_contexte(1,&t);
+                vector<pthread_t> v_thread; //création pour l'attente des threads
+                
+                /*On lance un thread par personne */
+                for (int i = 0; i < t.liste_personnes.size(); ++i)
+                {
+                    pthread_t th_personne;
+                    my_contexte._pers=&(t.liste_personnes[i]);
+                    pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte);
+                    v_thread.push_back(th_personne);
+                }
+
+                /*On attend la fin de chaque thread */
+                for (pthread_t t : v_thread)
+                {
+                    pthread_join(t, NULL);
+                }
+            }else if(num_etape==2){
+                    //ETAPE2
+
+
+                sem_t sem_terrain;
+                sem_init(&sem_terrain, 0, 1);
+                Contexte c(2,&t,&sem_terrain);
             }
 
-            /*On attend la fin de chaque thread */
-            for (pthread_t t : v_thread)
-            {
-                pthread_join(t, NULL);
-            }
-        }
-    }else if (num_etape==2)
-    { //ETAPE 2
-        sem_t sem_terrain;
-
-        sem_init(&sem_terrain, 0, 1);
-
-        Contexte c(2,&t,&sem_terrain);
-        
-
-    }else{
-        //ETAPE 3
-    }
+        }   
     
 
     tempsFin = clock();
