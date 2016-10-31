@@ -125,6 +125,8 @@ int main(int argc, char *argv[]){
                 pthread_create(&t2, NULL, thread_avancerNO, &my_contexte);
                 pthread_create(&t3, NULL, thread_avancerSE, &my_contexte);
                 pthread_create(&t4, NULL, thread_avancerSO, &my_contexte);
+
+                sem_destroy(&sem_terrain);
             }
 
         }else{//nb_thread=4
@@ -156,6 +158,7 @@ int main(int argc, char *argv[]){
                 sem_t sem_terrain;
                 sem_init(&sem_terrain, 0, 1);
                 Contexte c(2,&t,&sem_terrain);
+                sem_destroy(&sem_terrain);
             }
 
         }   

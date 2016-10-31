@@ -54,7 +54,10 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
    {
       
       Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
-      terrain* t=c->t;
+      
+      if (c->t != nullptr) //récupartion du terrain
+          terrain* t=c->t;
+      
 
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
       switch (c->_etape)
@@ -67,8 +70,16 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
               }
             }
             break;
-            
+
         case 2: /*Etape 2*/
+            while(1){
+              sem_t* mutex=c->mutex;
+
+              sem_wait(mutex); //j'attends que le terrain soit disponible
+
+              if (t->finish())
+                break;
+            }
             break;
     }
 
@@ -84,7 +95,9 @@ void *thread_avancerNO(void *p_data){
    {
       
         Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
-        terrain* t=c->t;
+        if (c->t != nullptr) //récupartion du terrain
+            terrain* t=c->t;
+
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Ouest
       switch(c->_etape){
         case 1:
@@ -112,7 +125,9 @@ void *thread_avancerSE(void *p_data){
    {
       
         Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
-        terrain* t=c->t;
+        if (c->t != nullptr) //récupartion du terrain
+            terrain* t=c->t;
+
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Est
 
         switch(c->_etape){
@@ -141,7 +156,9 @@ void *thread_avancerSO(void *p_data){
    {
       
         Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
-        terrain* t=c->t;
+
+        if (c->t != nullptr) //récupartion du terrain
+            terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Ouest
 
         switch(c->_etape){
@@ -169,8 +186,12 @@ void *thread_avancerALONE(void *p_data){
    {
       
       Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
-      terrain my_terrain=*(c->t);
-      personne my_personne=*(c->_pers);
+
+      if( (c->t != nullptr) && (c->_pers != nullptr)) //récupartion du terrain & de la personne
+      {    
+        terrain* t=c->t;
+        personne my_personne=*(c->_pers);
+      }
 
       switch(c->_etape){
         case 1:
