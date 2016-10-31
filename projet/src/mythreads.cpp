@@ -49,7 +49,6 @@ bool isOnSO(personne p){
 
 void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
 
-  cout<<"NE"<<endl;
   if (p_data != nullptr)
    {
       
@@ -72,9 +71,9 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             sem_t* mutex=c->mutex;
             while(1){
 
-
+              cout<<"NE _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-
+              cout<<"NE _acquire"<<endl;
               if (t->finish())
                 break;
 
@@ -95,7 +94,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
 }
 
 void *thread_avancerNO(void *p_data){
-  cout<<"NO"<<endl;
+  
   if (p_data != nullptr)
    {
       
@@ -117,9 +116,9 @@ void *thread_avancerNO(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-
+              cout<<"NO _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-
+              cout<<"NO _acquire"<<endl;
               if (t->finish())
                 break;
 
@@ -139,7 +138,6 @@ void *thread_avancerNO(void *p_data){
 }
 
 void *thread_avancerSE(void *p_data){
-  cout<<"SE"<<endl;
   if (p_data != nullptr)
    {
       
@@ -162,9 +160,9 @@ void *thread_avancerSE(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-
+              cout<<"SE _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-
+              cout<<"SE _acquire"<<endl;
               if (t->finish())
                 break;
 
@@ -184,7 +182,7 @@ void *thread_avancerSE(void *p_data){
 }
 
 void *thread_avancerSO(void *p_data){
-  cout<<"SO"<<endl;
+ 
   if (p_data != nullptr)
    {
       
@@ -205,9 +203,9 @@ void *thread_avancerSO(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-
+              cout<<"SO _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-
+              cout<<"SO _acquire"<<endl;
               if (t->finish())
                 break;
 
