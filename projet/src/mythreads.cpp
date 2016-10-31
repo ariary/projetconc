@@ -20,7 +20,8 @@ void *thread_avancerALL (void *p_data){
       	Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
 
-    	while(!t->finish()){
+
+    	  while(!t->finish()){
       		for(int i=0;i<t->liste_personnes.size();i++)
       			t->avancer(t->liste_personnes.at(i));
       }
@@ -55,19 +56,20 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
       Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
       terrain* t=c->t;
 
-      if (c->_etape==1)
+      //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
+      switch (c->_etape)
       {
-        /*Etape 1*/
-      
-        //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
-        while (!t->finish()){
-          for(int i = 0; i < t->liste_personnes.size(); i++){
-            if(isOnNE(t->liste_personnes.at(i)))
-              t->avancer(t->liste_personnes.at(i));
-          }
-        }
-    }else if(c->_etape==2){
-      /*Etape 2*/
+        case 1: /*Etape 1*/
+            while (!t->finish()){
+              for(int i = 0; i < t->liste_personnes.size(); i++){
+                if(isOnNE(t->liste_personnes.at(i)))
+                  t->avancer(t->liste_personnes.at(i));
+              }
+            }
+            break;
+            
+        case 2: /*Etape 2*/
+            break;
     }
 
   }else{
@@ -84,11 +86,19 @@ void *thread_avancerNO(void *p_data){
         Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Ouest
-       while (!t->finish()){
-        for(int i = 0; i < t->liste_personnes.size(); i++){
-          if(isOnNO(t->liste_personnes.at(i)))
-            t->avancer(t->liste_personnes.at(i));
-        }
+      switch(c->_etape){
+        case 1:
+
+          while (!t->finish()){
+            for(int i = 0; i < t->liste_personnes.size(); i++){
+              if(isOnNO(t->liste_personnes.at(i)))
+                t->avancer(t->liste_personnes.at(i));
+            }
+          }
+          break;
+
+        case 2:
+          break;
       }
 
    }else{
@@ -104,12 +114,21 @@ void *thread_avancerSE(void *p_data){
         Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Est
-        while (!t->finish()){
-        for(int i = 0; i < t->liste_personnes.size(); i++){
-          if(isOnSE(t->liste_personnes.at(i)))
-            t->avancer(t->liste_personnes.at(i));
+
+        switch(c->_etape){
+          case 1:
+
+              while (!t->finish()){
+                for(int i = 0; i < t->liste_personnes.size(); i++){
+                  if(isOnSE(t->liste_personnes.at(i)))
+                    t->avancer(t->liste_personnes.at(i));
+                }
+              }
+              break; 
+
+          case 2:
+              break;
         }
-      }
 
    }else{
       cout<< "problème dans la récupération du contexte applicatif du thread (-t1: (avancerSE())"<<endl;
@@ -124,12 +143,20 @@ void *thread_avancerSO(void *p_data){
         Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Ouest
-        while (!t->finish()){
-        for(int i = 0; i < t->liste_personnes.size(); i++){
-          if(isOnSO(t->liste_personnes.at(i)))
-            t->avancer(t->liste_personnes.at(i));
+
+        switch(c->_etape){
+          case 1:
+              while (!t->finish()){
+                for(int i = 0; i < t->liste_personnes.size(); i++){
+                  if(isOnSO(t->liste_personnes.at(i)))
+                    t->avancer(t->liste_personnes.at(i));
+                }
+              }
+              break;
+          case 2:
+            break;
+
         }
-      }
 
    }else{
       cout<< "problème dans la récupération du contexte applicatif du thread (-t1)"<<endl;
@@ -145,8 +172,15 @@ void *thread_avancerALONE(void *p_data){
       terrain my_terrain=*(c->t);
       personne my_personne=*(c->_pers);
 
-      while(!my_personne.aFini())
-        my_terrain.avancer(my_personne);
+      switch(c->_etape){
+        case 1:
+            while(!my_personne.aFini())
+              my_terrain.avancer(my_personne);
+            break;
+        case 2:
+            break;            
+      }
+
 
   }else{
     cout<< "problème dans la récupération du contexte applicatif du thread (-t2)"<<endl;

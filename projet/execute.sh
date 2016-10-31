@@ -1,5 +1,5 @@
 #!/bin/bash
-./bin/main.exe -t1 -p4 -m
+./bin/main.exe -t1 -p4 -m -e2
 #parametre=($1 $2 $3)
 #if [ $# -gt 3 ]
 #then
