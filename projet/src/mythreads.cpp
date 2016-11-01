@@ -71,11 +71,12 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             sem_t* mutex=c->mutex;
             while(1){
 
-              cout<<"NE _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-              cout<<"NE _acquire"<<endl;
-              if (t->finish())
+
+              if (t->finish()){
+                sem_post(mutex);//je libère la sémaphore avant de quitter le thread
                 break;
+              }
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                   if(isOnNE(t->liste_personnes.at(i)))
@@ -116,11 +117,11 @@ void *thread_avancerNO(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-              cout<<"NO _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-              cout<<"NO _acquire"<<endl;
-              if (t->finish())
+              if (t->finish()){
+                sem_post(mutex);//je libère la sémaphore avant de quitter le thread
                 break;
+              }
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                   if(isOnNO(t->liste_personnes.at(i)))
@@ -160,11 +161,12 @@ void *thread_avancerSE(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-              cout<<"SE _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-              cout<<"SE _acquire"<<endl;
-              if (t->finish())
+              
+              if (t->finish()){
+                sem_post(mutex);//je libère la sémaphore avant de quitter le thread
                 break;
+              }
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                   if(isOnSE(t->liste_personnes.at(i)))
@@ -203,11 +205,12 @@ void *thread_avancerSO(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-              cout<<"SO _wait"<<endl;
               sem_wait(mutex); //j'attends que le terrain soit disponible
-              cout<<"SO _acquire"<<endl;
-              if (t->finish())
+
+              if (t->finish()){
+                sem_post(mutex); //je libère la sémaphore avant de quitter le thread
                 break;
+              }
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                   if(isOnSO(t->liste_personnes.at(i)))
