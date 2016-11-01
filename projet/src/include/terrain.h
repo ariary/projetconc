@@ -3,6 +3,11 @@
  *
  *  Created on: 24 sept. 2016
  *      Author: Adrien Prestini & Antoine Rabenandrasana
+ *
+ * Version: rendu du 10 octobre 2016
+ *
+ * Declaration de la classe modélisant le terrain (ressource partagée)
+ *
  */
 
 #ifndef TERRAIN_H_

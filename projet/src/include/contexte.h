@@ -4,6 +4,7 @@
  *  Created on: 24 oct. 2016
  *      Author: Adrien Prestini & Antoine Rabenandrasana
  *
+ *	Version: rendu du 7 novembre 2016
  *
  * Declaration de la classe Contexte: contenant les données livrées aux diffé-
  * rents threads. Elle a pour but de différencier les différentes étapes du pro-

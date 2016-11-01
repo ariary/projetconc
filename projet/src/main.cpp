@@ -4,6 +4,7 @@
  * Author: Adrien Prestini & Antoine Rabenandrasana
  * 
  * Version: rendu du 10 octobre 2016
+ * Moidifications: rencu du 7 novembre 2016
  */
 
 #include <stdio.h>

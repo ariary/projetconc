@@ -4,6 +4,7 @@
  *  Created on: 24 oct. 2016
  *      Author: Adrien Prestini & Antoine Rabenandrasana
  *
+ *	Version: rendu du 7 novembre 2016
  */
  #include "include/contexte.h"
 
