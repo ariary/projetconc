@@ -18,7 +18,6 @@ personne::personne(int x, int y){
 void personne::set_position(int x, int y){
 	this->position_x = x;
 	this->position_y = y;
-	this->print_personne();
 }
 bool personne::aFini(){
 	return this->position_x >= 60  && this->position_x <= 67 && this->position_y == 0;
