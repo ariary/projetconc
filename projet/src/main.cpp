@@ -117,22 +117,63 @@ int main(int argc, char *argv[]){
             }else if(num_etape==2){
                 //ETAPE 2
                 
+                /*Initialisation de la semaphore du terrain */
                 sem_t sem_terrain;
                 sem_init(&sem_terrain, 0, 1);
-                Contexte my_contexte(2,&t,&sem_terrain);
 
-                pthread_create(&t1, NULL, thread_avancerNE, &my_contexte);
-                pthread_create(&t2, NULL, thread_avancerNO, &my_contexte);
-                pthread_create(&t3, NULL, thread_avancerSE, &my_contexte);
-                pthread_create(&t4, NULL, thread_avancerSO, &my_contexte);
+                /*Initialisartion des sémaphores utiles pour attendre la fin des threads*/
+                //NO
+                sem_t join_NO;
+                sem_init(&join_NO, 0, 1);
+
+                //SO
+                sem_t join_SO;
+                sem_init(&join_SO, 0, 1);
+
+                //NE
+                sem_t join_NE;
+                sem_init(&join_NE, 0, 1);
+
+                //SE
+                sem_t join_SE;
+                sem_init(&join_SE, 0, 1);
+
+                /*Initialisation des Contextes*/
+
+                //NO
+                Contexte contexte_NO(2,&t,&sem_terrain,&join_NO);
+                //SO
+                Contexte contexte_SO(2,&t,&sem_terrain,&join_SO);
+                //NE
+                Contexte contexte_NE(2,&t,&sem_terrain,&join_NE);
+                //SE
+                Contexte contexte_SE(2,&t,&sem_terrain,&join_SE);
 
 
-                pthread_join(t1, NULL);
-                pthread_join(t2, NULL);
-                pthread_join(t3, NULL);
-                pthread_join(t4, NULL);
+                /*up sur les sémaphore des threads (down à la fin des threads)*/
+                sem_wait(&join_NO);
+                sem_wait(&join_SO);
+                sem_wait(&join_NE);
+                sem_wait(&join_SE);
 
+                /*lancement des threads*/
+                pthread_create(&t2, NULL, thread_avancerNO, &contexte_NO);
+                pthread_create(&t4, NULL, thread_avancerSO, &contexte_SO);
+                pthread_create(&t1, NULL, thread_avancerNE, &contexte_NE);
+                pthread_create(&t3, NULL, thread_avancerSE, &contexte_SE);
+                
+                /*up sur les semaphore des threads (bis) logiquement bloqué si la thread est active*/
+                sem_wait(&join_NO);
+                sem_wait(&join_SO);
+                sem_wait(&join_NE);
+                sem_wait(&join_SE);
+
+                /*destruction des sémaphores*/
                 sem_destroy(&sem_terrain);
+                sem_destroy(&join_NO);
+                sem_destroy(&join_SO);
+                sem_destroy(&join_NE);
+                sem_destroy(&join_SE);
             }
 
         }else{//nb_thread=4

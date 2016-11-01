@@ -33,7 +33,8 @@ void *thread_avancerALL (void *p_data){
       			t->avancer(t->liste_personnes.at(i));
       }
    }else{
-   		cout<< "problème dans la récupération du contexte applicatif du thread (-t0)"<<endl;
+    cerr<< "problème dans la récupération du contexte applicatif du thread (-t0): sortie du programme"<<endl;
+    exit(1);
    }
 } 
 
@@ -91,11 +92,20 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
 
               sem_post(mutex); //je libère le terrain
             }
+
+            /*je fais down sur la sémaphore du thread avant d'en sortir*/
+            if (c->join != nullptr)
+                sem_post(c->join);
+            else{
+              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              exit(1);
+            }           
             break;
     }
 
   }else{
-      cout<< "problème dans la récupération du contexte applicatif du thread (-t1: avancerNE())"<<endl;
+    cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
+    exit(1);
   }
 
 }
@@ -138,11 +148,20 @@ void *thread_avancerNO(void *p_data){
 
               sem_post(mutex); //je libère le terrain
             }
+
+            /*je fais down sur la sémaphore du thread avant d'en sortir*/
+            if (c->join != nullptr)
+                sem_post(c->join);
+            else{
+              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              exit(1);
+            }
             break;
       }
 
    }else{
-      cout<< "problème dans la récupération du contexte applicatif du thread (-t1: avancerNO())"<<endl;
+    cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
+    exit(1);
    }
 }
 
@@ -184,11 +203,20 @@ void *thread_avancerSE(void *p_data){
 
               sem_post(mutex); //je libère le terrain
             }
+
+            /*je fais down sur la sémaphore du thread avant d'en sortir*/
+            if (c->join != nullptr)
+                sem_post(c->join);
+            else{
+              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              exit(1);
+            }            
             break;
         }
 
    }else{
-      cout<< "problème dans la récupération du contexte applicatif du thread (-t1: (avancerSE())"<<endl;
+    cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
+    exit(1);
    }
 }
 
@@ -228,12 +256,21 @@ void *thread_avancerSO(void *p_data){
 
               sem_post(mutex); //je libère le terrain
             }
+
+            /*je fais down sur la sémaphore du thread avant d'en sortir*/
+            if (c->join != nullptr)
+                sem_post(c->join);
+            else{
+              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              exit(1);
+            }            
             break;
 
         }
 
    }else{
-      cout<< "problème dans la récupération du contexte applicatif du thread (-t1)"<<endl;
+    cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
+    exit(1);
    }
 }
 
@@ -265,7 +302,8 @@ void *thread_avancerALONE(void *p_data){
 
 
   }else{
-    cout<< "problème dans la récupération du contexte applicatif du thread (-t2)"<<endl;
+    cerr<< "problème dans la récupération du contexte applicatif du thread (-t2): sortie du programme"<<endl;
+    exit(1);
   }
 }
 
