@@ -125,19 +125,19 @@ int main(int argc, char *argv[]){
                 /*Initialisartion des sémaphores utiles pour attendre la fin des threads*/
                 //NO
                 sem_t join_NO;
-                sem_init(&join_NO, 0, 1);
+                sem_init(&join_NO, 0, 0); //sémaphore privée
 
                 //SO
                 sem_t join_SO;
-                sem_init(&join_SO, 0, 1);
+                sem_init(&join_SO, 0, 0);
 
                 //NE
                 sem_t join_NE;
-                sem_init(&join_NE, 0, 1);
+                sem_init(&join_NE, 0, 0);
 
                 //SE
                 sem_t join_SE;
-                sem_init(&join_SE, 0, 1);
+                sem_init(&join_SE, 0, 0);
 
                 /*Initialisation des Contextes*/
 
@@ -149,13 +149,6 @@ int main(int argc, char *argv[]){
                 Contexte contexte_NE(2,&t,&sem_terrain,&join_NE);
                 //SE
                 Contexte contexte_SE(2,&t,&sem_terrain,&join_SE);
-
-
-                /*up sur les sémaphore des threads (down à la fin des threads)*/
-                sem_wait(&join_NO);
-                sem_wait(&join_SO);
-                sem_wait(&join_NE);
-                sem_wait(&join_SE);
 
                 /*lancement des threads*/
                 pthread_create(&t2, NULL, thread_avancerNO, &contexte_NO);
