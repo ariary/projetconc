@@ -176,7 +176,7 @@ int main(int argc, char *argv[]){
             {   //ETAPE 1
 
                 Contexte my_contexte(1,&t);
-                vector<pthread_t> v_thread; //création pour l'attente des threads
+                vector<pthread_t*> v_thread; //création pour l'attente des threads
                 
                 /*On lance un thread par personne */
                 for (int i = 0; i < t.liste_personnes.size(); ++i)
@@ -184,21 +184,44 @@ int main(int argc, char *argv[]){
                     pthread_t th_personne;
                     my_contexte._pers=&(t.liste_personnes[i]);
                     pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte);
-                    v_thread.push_back(th_personne);
+                    v_thread.push_back(&th_personne);
                 }
 
                 /*On attend la fin de chaque thread */
-                for (pthread_t t : v_thread)
+                for (pthread_t* t : v_thread)
                 {
-                    pthread_join(t, NULL);
+                    pthread_join(*t, NULL);
                 }
             }else if(num_etape==2){
                     //ETAPE2
 
-
+                vector<sem_t*> v_private; //création pour l'attente des threads avec semaphores privées
                 sem_t sem_terrain;
                 sem_init(&sem_terrain, 0, 1);
-                Contexte c(2,&t,&sem_terrain);
+
+                /*On lance un thread par personne */
+                for (int i = 0; i < t.liste_personnes.size(); ++i)
+                {
+
+                    //Mise en place contexte
+                    sem_t s_private;
+                    sem_init(&s_private, 0, 0);
+                    v_private.push_back(&s_private);
+                    Contexte my_contexte(2,&t,&sem_terrain,&s_private,&(t.liste_personnes[i]));
+
+                    //lancement thread
+                    pthread_t th_personne;
+                    pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte);
+                    
+                }
+
+                /*On attend la fin de chaque thread */
+                for (sem_t* s_private: v_private)
+                {
+                    sem_wait(s_private);
+                    sem_destroy(s_private);
+                }
+
                 sem_destroy(&sem_terrain);
             }
 
@@ -218,7 +241,6 @@ int main(int argc, char *argv[]){
         printf("\tTemps CPU : \n\t\tTemps système utilisateur utilisé (ru_utime): %ld.%06ld \n\t\tTemps sytème  utilisé(ru_stime):  %ld.%06ld \n",
         (int64_t)utime.tv_sec, (int64_t)utime.tv_usec,
         (int64_t)stime.tv_sec, (int64_t)stime.tv_usec);
-        //printf("time :%f\n",difftime(end, begin) );
     }
     return 0;
 

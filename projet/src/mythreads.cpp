@@ -298,6 +298,22 @@ void *thread_avancerALONE(void *p_data){
               my_terrain.avancer(my_personne);
             break;
         case 2:
+            sem_t* mutex=c->mutex;
+            while(!my_personne.aFini())
+            {
+              sem_wait(mutex);
+              my_terrain.avancer(my_personne);
+              sem_post(mutex);
+            }
+
+            /*je fais down sur la sémaphore privée du thread avant d'en sortir*/
+            if (c->join != nullptr)
+                sem_post(c->join);
+            else{
+              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              exit(1);
+            }    
+
             break;            
       }
 
