@@ -82,7 +82,10 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             sem_t* mutex=c->mutex;
             while(1){
 
-              sem_wait(mutex); //j'attends que le terrain soit disponible
+              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
+              {
+                  perror("sem_wait() in mythread.cpp")
+              } 
 
               if (t->finish()){
                 sem_post(mutex);//je libère la sémaphore avant de quitter le thread
@@ -139,7 +142,10 @@ void *thread_avancerNO(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-              sem_wait(mutex); //j'attends que le terrain soit disponible
+              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
+              {
+                  perror("sem_wait() in mythread.cpp")
+              }
               if (t->finish()){
                 sem_post(mutex);//je libère la sémaphore avant de quitter le thread
                 break;
@@ -193,7 +199,10 @@ void *thread_avancerSE(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-              sem_wait(mutex); //j'attends que le terrain soit disponible
+              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
+              {
+                  perror("sem_wait() in mythread.cpp")
+              }
               
               if (t->finish()){
                 sem_post(mutex);//je libère la sémaphore avant de quitter le thread
@@ -246,7 +255,10 @@ void *thread_avancerSO(void *p_data){
             sem_t* mutex=c->mutex;
             while(1){
 
-              sem_wait(mutex); //j'attends que le terrain soit disponible
+              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
+              {
+                  perror("sem_wait() in mythread.cpp")
+              }
 
               if (t->finish()){
                 sem_post(mutex); //je libère la sémaphore avant de quitter le thread
@@ -305,7 +317,10 @@ void *thread_avancerALONE(void *p_data){
             sem_t* mutex=c->mutex;
             while(!my_personne.aFini())
             {
-              sem_wait(mutex);
+              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
+              {
+                  perror("sem_wait() in mythread.cpp")
+              }
               my_terrain.avancer(my_personne);
               sem_post(mutex);
             }

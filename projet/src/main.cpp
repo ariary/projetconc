@@ -203,10 +203,14 @@ int main(int argc, char *argv[]){
                 }
                 
                 /*up sur les semaphore des threads (bis) logiquement bloqué si la thread est active*/
-                sem_wait(&join_NO);
-                sem_wait(&join_SO);
-                sem_wait(&join_NE);
-                sem_wait(&join_SE);
+                if(   (sem_wait(&join_NO)==-1)
+                    ||(sem_wait(&join_SO)==-1)
+                    ||(sem_wait(&join_NE)==-1)
+                    ||(sem_wait(&join_SE)==-1))
+                {
+                    perror("sem_wait() in main.cpp");
+                    exit(1);
+                }
 
                 /*destruction des sémaphores*/
                 sem_destroy(&sem_terrain);
@@ -293,7 +297,11 @@ int main(int argc, char *argv[]){
                 /*On attend la fin de chaque thread */
                 for (sem_t* s_private: v_private)
                 {
-                    sem_wait(s_private);
+                    if(sem_wait(s_private)==-1)
+                    {
+                        perror("sem_wait() in main.cpp");
+                        exit(1);
+                    }
                     cout<<"liberez private"<<endl;
 
                     sem_destroy(s_private);
