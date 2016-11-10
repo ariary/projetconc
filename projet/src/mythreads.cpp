@@ -84,23 +84,36 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
-                  perror("sem_wait() in mythread.cpp")
+                  perror("sem_wait() in mythread.cpp");
+                  exit(1);
               } 
 
               if (t->finish()){
-                sem_post(mutex);//je libère la sémaphore avant de quitter le thread
+                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
+                {
+                    perror("sem_post()");
+                    exit(1);
+                }
                 break;
               }
 
               avancer_all_NE(t);
 
-              sem_post(mutex); //je libère le terrain
+              if(sem_post(mutex)==-1) //je libère le terraind
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
             }
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
-            if (c->join != nullptr)
-                sem_post(c->join);
-            else{
+            if (c->join != nullptr){
+              if(sem_post(c->join)==-1)
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
+            }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }           
@@ -144,22 +157,35 @@ void *thread_avancerNO(void *p_data){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
-                  perror("sem_wait() in mythread.cpp")
+                  perror("sem_wait() in mythread.cpp");
+                  exit(1);
               }
               if (t->finish()){
-                sem_post(mutex);//je libère la sémaphore avant de quitter le thread
+                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
+                {
+                    perror("sem_post()");
+                    exit(1);
+                }
                 break;
               }
 
               avancer_all_NO(t);
 
-              sem_post(mutex); //je libère le terrain
+              if(sem_post(mutex)==-1) //je libère le terrain
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
             }
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
-            if (c->join != nullptr)
-                sem_post(c->join);
-            else{
+            if (c->join != nullptr){
+              if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
+            }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }
@@ -201,23 +227,37 @@ void *thread_avancerSE(void *p_data){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
-                  perror("sem_wait() in mythread.cpp")
+                  perror("sem_wait() in mythread.cpp");
+                  exit(1);
               }
               
               if (t->finish()){
-                sem_post(mutex);//je libère la sémaphore avant de quitter le thread
+                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
+                {
+                    perror("sem_post()");
+                    exit(1);
+                }
                 break;
               }
 
               avancer_all_SE(t);
 
-              sem_post(mutex); //je libère le terrain
+              if(sem_post(mutex)==-1) //je libère le terrain
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
             }
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr)
-                sem_post(c->join);
-            else{
+            {
+              if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
+            }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }            
@@ -257,23 +297,37 @@ void *thread_avancerSO(void *p_data){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
-                  perror("sem_wait() in mythread.cpp")
+                  perror("sem_wait() in mythread.cpp");
+                  exit(1);
               }
 
               if (t->finish()){
-                sem_post(mutex); //je libère la sémaphore avant de quitter le thread
+                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
+                {
+                    perror("sem_post()");
+                    exit(1);
+                }
                 break;
               }
 
               avancer_all_SO(t);
 
-              sem_post(mutex); //je libère le terrain
+              if(sem_post(mutex)==-1) //je libère le terrain
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
             }
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr)
-                sem_post(c->join);
-            else{
+            {
+                if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
+                {
+                    perror("sem_post()");
+                    exit(1);
+                }
+            }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }            
@@ -319,15 +373,24 @@ void *thread_avancerALONE(void *p_data){
             {
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
-                  perror("sem_wait() in mythread.cpp")
+                perror("sem_wait() in mythread.cpp");
+                exit(1);
               }
               my_terrain.avancer(my_personne);
-              sem_post(mutex);
+              if(sem_post(mutex)==-1)
+              {
+                  perror("sem_post()");
+                  exit(1);
+              }
             }
 
             /*je fais down sur la sémaphore privée du thread avant d'en sortir*/
             if (c->join != nullptr){
-                sem_post(c->join);
+               if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
+               {
+                   perror("sem_post()");
+                   exit(1);
+               }
             }
             else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
