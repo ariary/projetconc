@@ -213,11 +213,15 @@ int main(int argc, char *argv[]){
                 }
 
                 /*destruction des sémaphores*/
-                sem_destroy(&sem_terrain);
-                sem_destroy(&join_NO);
-                sem_destroy(&join_SO);
-                sem_destroy(&join_NE);
-                sem_destroy(&join_SE);
+                if ((sem_destroy(&sem_terrain)==-1)
+                    ||(sem_destroy(&join_NO==-1)
+                    ||(sem_destroy(&join_SO==-1)
+                    ||(sem_destroy(&join_NE==-1)
+                    ||(sem_destroy(&join_SE==-1))
+                {
+                    perror("sem_destroy()");
+                    exit(1);
+                }
             }
 
         }else{//nb_thread=4
@@ -304,11 +308,20 @@ int main(int argc, char *argv[]){
                     }
                     cout<<"liberez private"<<endl;
 
-                    sem_destroy(s_private);
+                    if (sem_destroy(s_private)==-1)
+                    {
+                        perror("sem_destroy()");
+                        exit(1);
+                    }
+                    
                 }
                 //PB DANS LA MANIERE DATTENDRE
 
-                sem_destroy(&sem_terrain);
+                if(sem_destroy(&sem_terrain)==-1)
+                {
+                    perror("sem_destroy()");
+                    exit(1);
+                }
             }
 
         }   
