@@ -287,17 +287,21 @@ void *thread_avancerSO(void *p_data){
 void *thread_avancerALONE(void *p_data){
   if (p_data != nullptr)
    {
+      cout<<"debut thread"<<endl;
       
       Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
       terrain my_terrain=*(c->t);
       personne my_personne=*(c->_pers);
-
+      cout<<"before switch "<<(c->_etape)<<endl;
+      if (c->join != nullptr)c->_etape=2;
       switch(c->_etape){
         case 1:
+            cout<<"case 1"<<endl;
             while(!my_personne.aFini())
               my_terrain.avancer(my_personne);
             break;
         case 2:
+            cout<<"case 2"<<endl;
             sem_t* mutex=c->mutex;
             while(!my_personne.aFini())
             {
@@ -307,13 +311,14 @@ void *thread_avancerALONE(void *p_data){
             }
 
             /*je fais down sur la sémaphore privée du thread avant d'en sortir*/
-            if (c->join != nullptr)
+            if (c->join != nullptr){
                 sem_post(c->join);
+            }
             else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }    
-
+            cout<<"fin thread"<<endl;
             break;            
       }
 
