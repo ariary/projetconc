@@ -214,10 +214,10 @@ int main(int argc, char *argv[]){
 
                 /*destruction des sémaphores*/
                 if ((sem_destroy(&sem_terrain)==-1)
-                    ||(sem_destroy(&join_NO==-1)
-                    ||(sem_destroy(&join_SO==-1)
-                    ||(sem_destroy(&join_NE==-1)
-                    ||(sem_destroy(&join_SE==-1))
+                    ||(sem_destroy(&join_NO)==-1)
+                    ||(sem_destroy(&join_SO)==-1)
+                    ||(sem_destroy(&join_NE)==-1)
+                    ||(sem_destroy(&join_SE)==-1))
                 {
                     perror("sem_destroy()");
                     exit(1);
