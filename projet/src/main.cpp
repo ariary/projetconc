@@ -93,8 +93,17 @@ int main(int argc, char *argv[]){
         {
             Contexte my_contexte(1,&t);
             pthread_t t0;
-            pthread_create(&t0, NULL, thread_avancerALL, &my_contexte);
-            pthread_join(t0, NULL);
+            if(pthread_create(&t0, NULL, thread_avancerALL, &my_contexte)!=0)
+            {
+                perror("pthread_create()");
+                exit(1);
+            }
+
+            if(pthread_join(t0, NULL)!=0)
+            {
+                perror("pthread_join()");
+                exit(1);
+            }
             
         }else if(nb_thread==1){
             pthread_t t1; //NE
@@ -106,38 +115,71 @@ int main(int argc, char *argv[]){
             {  //ETAPE 1
 
                 Contexte my_contexte(1,&t);
-                pthread_create(&t1, NULL, thread_avancerNE, &my_contexte);
-                pthread_create(&t2, NULL, thread_avancerNO, &my_contexte);
-                pthread_create(&t3, NULL, thread_avancerSE, &my_contexte);
-                pthread_create(&t4, NULL, thread_avancerSO, &my_contexte);
 
-                pthread_join(t1, NULL);
-                pthread_join(t2, NULL);
-                pthread_join(t3, NULL);
-                pthread_join(t4, NULL);
+                if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
+                    || (pthread_create(&t2, NULL, thread_avancerNO, &my_contexte)!=0)
+                    || (pthread_create(&t3, NULL, thread_avancerSE, &my_contexte)!=0)
+                    || (pthread_create(&t4, NULL, thread_avancerSO, &my_contexte)!=0))
+                {
+                    perror("pthread_create()");
+                    exit(1);
+                }
+
+                if (  (pthread_join(t1, NULL))
+                    ||(pthread_join(t2, NULL))
+                    ||(pthread_join(t3, NULL))
+                    ||(pthread_join(t4, NULL)))
+                {
+                    perror("pthread_join()");
+                    exit(1);
+                }
+
             }else if(num_etape==2){
                 //ETAPE 2
                 
                 /*Initialisation de la semaphore du terrain */
                 sem_t sem_terrain;
-                sem_init(&sem_terrain, 0, 1);
+                if(sem_init(&sem_terrain, 0, 1)==-1)
+                {
+                    perror("sem_init()");
+                    exit(1);
+                }
 
                 /*Initialisartion des sémaphores utiles pour attendre la fin des threads*/
                 //NO
                 sem_t join_NO;
-                sem_init(&join_NO, 0, 0); //sémaphore privée
+                if(sem_init(&join_NO, 0, 0)) //sémaphore privée
+                {
+                    perror("sem_init()");
+                    exit(1);
+                }
 
                 //SO
                 sem_t join_SO;
-                sem_init(&join_SO, 0, 0);
+                if(sem_init(&join_SO, 0, 0)) //sémaphore privée
+                {
+                    perror("sem_init()");
+                    exit(1);
+                }
+
 
                 //NE
                 sem_t join_NE;
-                sem_init(&join_NE, 0, 0);
+                if(sem_init(&join_NE, 0, 0)) //sémaphore privée
+                {
+                    perror("sem_init()");
+                    exit(1);
+                }
+
 
                 //SE
                 sem_t join_SE;
-                sem_init(&join_SE, 0, 0);
+                if(sem_init(&join_SE, 0, 0)) //sémaphore privée
+                {
+                    perror("sem_init()");
+                    exit(1);
+                }
+
 
                 /*Initialisation des Contextes*/
 
@@ -151,10 +193,14 @@ int main(int argc, char *argv[]){
                 Contexte contexte_SE(2,&t,&sem_terrain,&join_SE);
 
                 /*lancement des threads*/
-                pthread_create(&t2, NULL, thread_avancerNO, &contexte_NO);
-                pthread_create(&t4, NULL, thread_avancerSO, &contexte_SO);
-                pthread_create(&t1, NULL, thread_avancerNE, &contexte_NE);
-                pthread_create(&t3, NULL, thread_avancerSE, &contexte_SE);
+                if(    (pthread_create(&t2, NULL, thread_avancerNE, &contexte_NO)!=0)
+                    || (pthread_create(&t4, NULL, thread_avancerNO, &contexte_SO)!=0)
+                    || (pthread_create(&t1, NULL, thread_avancerSE, &contexte_NE)!=0)
+                    || (pthread_create(&t3, NULL, thread_avancerSO, &contexte_SE)!=0))
+                {
+                    perror("pthread_create()");
+                    exit(1);
+                }
                 
                 /*up sur les semaphore des threads (bis) logiquement bloqué si la thread est active*/
                 sem_wait(&join_NO);
@@ -183,21 +229,36 @@ int main(int argc, char *argv[]){
                 {
                     pthread_t th_personne;
                     my_contexte._pers=&(t.liste_personnes[i]);
-                    pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte);
+
+                    if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
+                    {
+                        perror("pthread_create()");
+                        exit(1);
+                    }
+                    
                     v_thread.push_back(th_personne);
                 }
 
                 /*On attend la fin de chaque thread */
                 for (pthread_t t : v_thread)
                 {
-                    pthread_join(t, NULL);
+                    if (pthread_join(t, NULL))
+                    {
+                        perror("pthread_join()");
+                        exit(1);
+                    }
+                    
                 }
             }else if(num_etape==2){
                     //ETAPE2
 
                 vector<sem_t*> v_private; //création pour l'attente des threads avec semaphores privées
                 sem_t sem_terrain;
-                sem_init(&sem_terrain, 0, 1);
+                if(sem_init(&sem_terrain, 0, 1)==-1)
+                {
+                    perror("sem_init()");
+                    exit(1);
+                }
 
                 /*On lance un thread par personne */
                 for (int i = 0; i < t.liste_personnes.size(); ++i)
@@ -205,14 +266,24 @@ int main(int argc, char *argv[]){
 
                     //Mise en place contexte
                     sem_t s_private;
-                    sem_init(&s_private, 0, 0);
+                    if(sem_init(&s_private, 0, 0)) //sémaphore privée
+                    {
+                        perror("sem_init()");
+                        exit(1);
+                    }
+
                     v_private.push_back(&s_private);
                     Contexte my_contexte(2,&t,&sem_terrain,&s_private,&(t.liste_personnes[i]));
                     cout<<my_contexte._etape<<endl;
 
                     //lancement thread
                     pthread_t th_personne;
-                    pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte);
+
+                    if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
+                    {
+                        perror("pthread_create()");
+                        exit(1);
+                    }
 
                     cout<<"je lance un thread"<<endl;
 
