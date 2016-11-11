@@ -138,15 +138,27 @@ int main(int argc, char *argv[]){
             }else if(num_etape==2){
                 //ETAPE 2
                 
-                /*Initialisation de la semaphore du terrain */
-                sem_t sem_terrain;
-                if(sem_init(&sem_terrain, 0, 1)==-1)
+                /*Initialisation d'une sémaphore par zone*/
+                sem_t sem_NO,sem_SE,sem_SO,sem_NE;
+                if(   (sem_init(&sem_NO, 0, 1)==-1)
+                    ||(sem_init(&sem_SE, 0, 1)==-1)
+                    ||(sem_init(&sem_SO, 0, 1)==-1)
+                    ||(sem_init(&sem_NE, 0, 1)==-1) )
                 {
                     perror("sem_init()");
                     exit(1);
                 }
 
-                /*Initialisartion des sémaphores utiles pour attendre la fin des threads*/
+                /*Insertion des semaphore dans la map*/
+                map<string,sem_t*> m_sem;
+                m_sem.insert (pair<string,sem_t*>("NO",&sem_NO) );
+                m_sem.insert (pair<string,sem_t*>("SE",&sem_SE) );
+                m_sem.insert (pair<string,sem_t*>("SO",&sem_SO) );
+                m_sem.insert (pair<string,sem_t*>("NE",&sem_NE) );
+
+
+
+                /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
                 //NO
                 sem_t join_NO;
                 if(sem_init(&join_NO, 0, 0)) //sémaphore privée
@@ -185,13 +197,13 @@ int main(int argc, char *argv[]){
                 /*Initialisation des Contextes*/
 
                 //NO
-                Contexte contexte_NO(2,&t,&sem_terrain,&join_NO);
+                Contexte contexte_NO(2,&t,&m_sem,&join_NO);
                 //SO
-                Contexte contexte_SO(2,&t,&sem_terrain,&join_SO);
+                Contexte contexte_SO(2,&t,&m_sem,&join_SO);
                 //NE
-                Contexte contexte_NE(2,&t,&sem_terrain,&join_NE);
+                Contexte contexte_NE(2,&t,&m_sem,&join_NE);
                 //SE
-                Contexte contexte_SE(2,&t,&sem_terrain,&join_SE);
+                Contexte contexte_SE(2,&t,&m_sem,&join_SE);
 
                 /*lancement des threads*/
                 if(    (pthread_create(&t2, NULL, thread_avancerNE, &contexte_NO)!=0)
@@ -214,7 +226,10 @@ int main(int argc, char *argv[]){
                 }
 
                 /*destruction des sémaphores*/
-                if ((sem_destroy(&sem_terrain)==-1)
+                if ((sem_destroy(&sem_NE)==-1)
+                    ||(sem_destroy(&sem_SE)==-1)
+                    ||(sem_destroy(&sem_NO)==-1)
+                    ||(sem_destroy(&sem_SO)==-1)
                     ||(sem_destroy(&join_NO)==-1)
                     ||(sem_destroy(&join_SO)==-1)
                     ||(sem_destroy(&join_NE)==-1)
@@ -287,7 +302,7 @@ int main(int argc, char *argv[]){
                     }
 
                     v_private.push_back(&s_private);
-                    Contexte my_contexte(2,&t,&sem_terrain,&s_private,&(t.liste_personnes[i]));
+                    Contexte my_contexte(2,&t,nullptr,&s_private,&(t.liste_personnes[i]));
                     cout<<my_contexte._etape<<endl;
 
                     //lancement thread

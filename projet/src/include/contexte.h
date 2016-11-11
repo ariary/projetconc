@@ -17,17 +17,21 @@
 #include <cstddef>
 #include "terrain.h"
 #include <semaphore.h>
+#include <map>
+#include <string>
+
+using namespace std;
 
 class Contexte {
 
 public:
 	int _etape; //utilisé dans mythread.cpp
 	terrain* t; //pointeur sur terrain car : pas le terrain n'a pas le même cycle de vie que le contexte et je ne veux pas une copie
-	sem_t *mutex;//idem, pour l'étape 2
+	map<string,sem_t*> *map_sem; //map avec un mutex pour chaque zone
 	sem_t *join;
 	personne *_pers;
 
-	Contexte(int num_etap,terrain* ter,sem_t* mut=nullptr,sem_t* join=nullptr,personne* pers=nullptr);
+	Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem=nullptr,sem_t* join=nullptr,personne* pers=nullptr);
 };
 
 #endif

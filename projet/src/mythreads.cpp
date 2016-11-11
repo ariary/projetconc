@@ -80,8 +80,30 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             break;
 
         case 2: /*Etape 2*/
-            sem_t* mutex=c->mutex;
-            while(1){
+            /*récupération contexte suite*/
+            map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
+            sem_t *my_sem; //semaphore de la zone 
+
+            if (c->map_sem!=nullptr)
+                map_mutex=c->map_sem;
+            else
+                cerr<<"Problème de récupération de la map"<<endl;
+            
+            if((map_mutex->find("NE")->second)!=nullptr)
+                my_sem= map_mutex->find("NE")->second;
+            else
+                cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
+
+            /*ACTIONS*/
+            while(!t->finish())
+            {
+                if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une sémaphore l'a prise
+                {
+                    perror("sem_wait() in mythread.cpp");
+                    exit(1);
+                } 
+            }
+            /*while(1){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
@@ -105,7 +127,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                   perror("sem_post()");
                   exit(1);
               }
-            }
+            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr){
@@ -117,7 +139,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
-            }           
+            }          
             break;
     }
 
@@ -155,8 +177,8 @@ void *thread_avancerNO(void *p_data){
           break;
 
         case 2:
-            sem_t* mutex=c->mutex;
-            while(1){
+            map<string,sem_t*> *map_mutex=c->map_sem;
+            /*while(1){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
@@ -179,7 +201,7 @@ void *thread_avancerNO(void *p_data){
                   perror("sem_post()");
                   exit(1);
               }
-            }
+            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr){
@@ -227,8 +249,8 @@ void *thread_avancerSE(void *p_data){
               break; 
 
           case 2:
-            sem_t* mutex=c->mutex;
-            while(1){
+            map<string,sem_t*> *map_mutex=c->map_sem;
+            /*while(1){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
@@ -252,7 +274,7 @@ void *thread_avancerSE(void *p_data){
                   perror("sem_post()");
                   exit(1);
               }
-            }
+            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr)
@@ -298,8 +320,8 @@ void *thread_avancerSO(void *p_data){
               }
               break;
           case 2:
-            sem_t* mutex=c->mutex;
-            while(1){
+            map<string,sem_t*> *map_mutex=c->map_sem;
+            /*while(1){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
@@ -323,7 +345,7 @@ void *thread_avancerSO(void *p_data){
                   perror("sem_post()");
                   exit(1);
               }
-            }
+            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr)
@@ -374,8 +396,8 @@ void *thread_avancerALONE(void *p_data){
               my_terrain.avancer(my_personne);
             break;
         case 2:
-            cout<<"case 2"<<endl;
-            sem_t* mutex=c->mutex;
+            /*cout<<"case 2"<<endl;
+            //sem_t* mutex=c->mutex;
             while(!my_personne.aFini())
             {
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
@@ -389,7 +411,7 @@ void *thread_avancerALONE(void *p_data){
                   perror("sem_post()");
                   exit(1);
               }
-            }
+            }*/
 
             /*je fais down sur la sémaphore privée du thread avant d'en sortir*/
             if (c->join != nullptr){
