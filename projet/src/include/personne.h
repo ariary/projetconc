@@ -28,12 +28,19 @@ class personne {
 		int get_pos_x();
 		int get_pos_y();
 
-		bool au_dessus_azimuth1();
-		bool au_dessous_azimuth2();
 		void changer_position(int newX,int newY);
 		void set_position(int x, int y);
 
+		bool droite_du_centre();
+		bool au_dessus_azimuth1();
+		bool au_dessous_azimuth2();
 
+		bool near_NO();
+		bool near_SO();
+		bool near_SE();
+		bool near_NE();
+		bool near_SO2();//les frontieres verticales (d'où le (2) dans la fonction)
+		bool near_NO2();//les frontieres verticales (d'où le (2) dans la fonction)
 
 };
 

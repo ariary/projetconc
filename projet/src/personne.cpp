@@ -47,3 +47,39 @@ bool personne::au_dessus_azimuth1(){
 bool personne::au_dessous_azimuth2(){
 	return this->position_x > 63;
 }
+
+bool personne::droite_du_centre(){
+	return this->position_y > 255;
+}
+
+bool personne::near_NO(){
+	if(!(au_dessous_azimuth2()) && (droite_du_centre()))
+		return this->position_y-1 == 255;
+}
+
+bool personne::near_SO(){
+	if((au_dessous_azimuth2()) && (droite_du_centre()))
+		return this->position_y-1 == 255;
+}
+
+bool personne::near_SE(){
+	if(!(au_dessous_azimuth2()) && (droite_du_centre()))
+		return this->position_x+1 == 64;
+}
+
+bool personne::near_NE(){
+	if((au_dessous_azimuth2()) && (droite_du_centre()))
+		return this->position_x-1 == 63;
+}
+
+//les frontieres verticales (d'où le (2) dans la fonction)
+bool personne::near_SO2(){
+	if(!(au_dessous_azimuth2()) && !(droite_du_centre()))
+		return this->position_x+1 == 64;
+}
+
+//les frontieres verticales (d'où le (2) dans la fonction)
+bool personne::near_NO2(){
+	if((au_dessous_azimuth2()) && !(droite_du_centre()))
+		return this->position_x-1 == 63;
+}
