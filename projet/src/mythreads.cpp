@@ -116,7 +116,8 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                     {
 
                         if (p.near_SO())
-                        {
+                        {   
+                            cout<<"j'attends SO"<<endl;
                             if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -129,8 +130,9 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
+                            cout<<"je libère SO"<<endl;
                         }else if(p.near_NO()){
-
+                            cout<<"j'attends NO"<<endl;
                             if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -143,9 +145,10 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
+                            cout<<"je libère NO"<<endl;
 
                         }else if(p.near_SE())
-                        {
+                        {   cout<<"j'attends SE"<<endl;
                             if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -158,9 +161,10 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
+                            cout<<"je libère SE"<<endl;
 
                         }else{
-
+                            cout<<"j'attends NE"<<endl;
                             if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -174,6 +178,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
+                            cout<<"je libère NE"<<endl;
                         }
                     }
                 }
