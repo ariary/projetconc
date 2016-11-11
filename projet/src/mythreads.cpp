@@ -82,26 +82,101 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
         case 2: /*Etape 2*/
             /*récupération contexte suite*/
             map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
-            sem_t *my_sem; //semaphore de la zone 
+            sem_t *my_sem,*sem_SO,*sem_SE,*sem_NO; //semaphore des zones 
 
             if (c->map_sem!=nullptr)
                 map_mutex=c->map_sem;
             else
+            {
                 cerr<<"Problème de récupération de la map"<<endl;
+                exit(1);
+            }    
             
-            if((map_mutex->find("NE")->second)!=nullptr)
+            if(((map_mutex->find("NE")->second)!=nullptr)
+                &&((map_mutex->find("SE")->second)!=nullptr)
+                &&((map_mutex->find("NO")->second)!=nullptr)
+                &&((map_mutex->find("SO")->second)!=nullptr))
+            {
                 my_sem= map_mutex->find("NE")->second;
-            else
+                sem_SO= map_mutex->find("SO")->second;
+                sem_SE= map_mutex->find("SE")->second;
+                sem_NO= map_mutex->find("NO")->second;
+            }else{
                 cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
+                exit(1);
+            }
 
             /*ACTIONS*/
             while(!t->finish())
             {
-                if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une sémaphore l'a prise
-                {
-                    perror("sem_wait() in mythread.cpp");
-                    exit(1);
-                } 
+
+                for(int i = 0; i < t->liste_personnes.size(); i++){
+                    personne& p=t->liste_personnes.at(i);
+                    if(isOnNE(p))
+                    {
+
+                        if (p.near_SO())
+                        {
+                            if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_SO)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+                        }else if(p.near_NO()){
+
+                            if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_NO)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+
+                        }else if(p.near_SE())
+                        {
+                            if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_SE)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+
+                        }else{
+
+                            if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+
+                            t->avancer(p);
+
+                            if(sem_post(my_sem)==-1) //je libère ma zone
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+                        }
+                    }
+                }
             }
             /*while(1){
 
@@ -149,7 +224,6 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
   }
 
   cout<<">> fin thread zone Nord-Est"<<endl;
-
 }
 
 
@@ -177,7 +251,104 @@ void *thread_avancerNO(void *p_data){
           break;
 
         case 2:
-            map<string,sem_t*> *map_mutex=c->map_sem;
+        /*récupération contexte suite*/
+        map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
+        sem_t *my_sem,*sem_SO,*sem_SE,*sem_NE; //semaphore des zones 
+
+        if (c->map_sem!=nullptr)
+            map_mutex=c->map_sem;
+        else
+        {
+            cerr<<"Problème de récupération de la map"<<endl;
+            exit(1);
+        }    
+        
+        if(((map_mutex->find("NO")->second)!=nullptr)
+            &&((map_mutex->find("SE")->second)!=nullptr)
+            &&((map_mutex->find("NE")->second)!=nullptr)
+            &&((map_mutex->find("SO")->second)!=nullptr))
+        {
+            my_sem= map_mutex->find("NO")->second;
+            sem_SO= map_mutex->find("SO")->second;
+            sem_SE= map_mutex->find("SE")->second;
+            sem_NE= map_mutex->find("NE")->second;
+        }else{
+            cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
+            exit(1);
+        }
+
+        /*ACTIONS*/
+        while(!t->finish())
+        {
+
+            for(int i = 0; i < t->liste_personnes.size(); i++){
+                personne& p=t->liste_personnes.at(i);
+                if(isOnNE(p))
+                {
+
+                    if (p.near_SO())
+                    {
+                        if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
+                        {
+                            perror("sem_wait() in mythread.cpp");
+                            exit(1);
+                        }
+                        t->avancer(p);
+
+                        if(sem_post(sem_SO)==-1) //je libère
+                        {
+                            perror("sem_post()");
+                            exit(1);
+                        }
+                    }else if(p.near_NE()){
+
+                        if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
+                        {
+                            perror("sem_wait() in mythread.cpp");
+                            exit(1);
+                        }
+                        t->avancer(p);
+
+                        if(sem_post(sem_NE)==-1) //je libère
+                        {
+                            perror("sem_post()");
+                            exit(1);
+                        }
+
+                    }else if(p.near_SE())
+                    {
+                        if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
+                        {
+                            perror("sem_wait() in mythread.cpp");
+                            exit(1);
+                        }
+                        t->avancer(p);
+
+                        if(sem_post(sem_SE)==-1) //je libère
+                        {
+                            perror("sem_post()");
+                            exit(1);
+                        }
+
+                    }else{
+
+                        if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
+                        {
+                            perror("sem_wait() in mythread.cpp");
+                            exit(1);
+                        }
+
+                        t->avancer(p);
+
+                        if(sem_post(my_sem)==-1) //je libère ma zone
+                        {
+                            perror("sem_post()");
+                            exit(1);
+                        }
+                    }
+                }
+            }
+        }
             /*while(1){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
@@ -249,7 +420,104 @@ void *thread_avancerSE(void *p_data){
               break; 
 
           case 2:
-            map<string,sem_t*> *map_mutex=c->map_sem;
+            /*récupération contexte suite*/
+            map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
+            sem_t *my_sem,*sem_SO,*sem_NE,*sem_NO; //semaphore des zones 
+
+            if (c->map_sem!=nullptr)
+                map_mutex=c->map_sem;
+            else
+            {
+                cerr<<"Problème de récupération de la map"<<endl;
+                exit(1);
+            }    
+            
+            if(((map_mutex->find("NE")->second)!=nullptr)
+                &&((map_mutex->find("SE")->second)!=nullptr)
+                &&((map_mutex->find("NO")->second)!=nullptr)
+                &&((map_mutex->find("SO")->second)!=nullptr))
+            {
+                my_sem= map_mutex->find("SE")->second;
+                sem_SO= map_mutex->find("SO")->second;
+                sem_NE= map_mutex->find("NE")->second;
+                sem_NO= map_mutex->find("NO")->second;
+            }else{
+                cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
+                exit(1);
+            }
+
+            /*ACTIONS*/
+            while(!t->finish())
+            {
+
+                for(int i = 0; i < t->liste_personnes.size(); i++){
+                    personne& p=t->liste_personnes.at(i);
+                    if(isOnNE(p))
+                    {
+
+                        if (p.near_SO())
+                        {
+                            if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_SO)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+                        }else if(p.near_NO()){
+
+                            if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_NO)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+
+                        }else if(p.near_NE())
+                        {
+                            if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_NE)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+
+                        }else{
+
+                            if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+
+                            t->avancer(p);
+
+                            if(sem_post(my_sem)==-1) //je libère ma zone
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+                        }
+                    }
+                }
+            }
             /*while(1){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
@@ -320,7 +588,104 @@ void *thread_avancerSO(void *p_data){
               }
               break;
           case 2:
-            map<string,sem_t*> *map_mutex=c->map_sem;
+            /*récupération contexte suite*/
+            map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
+            sem_t *my_sem,*sem_NE,*sem_SE,*sem_NO; //semaphore des zones 
+
+            if (c->map_sem!=nullptr)
+                map_mutex=c->map_sem;
+            else
+            {
+                cerr<<"Problème de récupération de la map"<<endl;
+                exit(1);
+            }    
+            
+            if(((map_mutex->find("SO")->second)!=nullptr)
+                &&((map_mutex->find("SE")->second)!=nullptr)
+                &&((map_mutex->find("NO")->second)!=nullptr)
+                &&((map_mutex->find("NE")->second)!=nullptr))
+            {
+                my_sem= map_mutex->find("SO")->second;
+                sem_NE= map_mutex->find("NE")->second;
+                sem_SE= map_mutex->find("SE")->second;
+                sem_NO= map_mutex->find("NO")->second;
+            }else{
+                cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
+                exit(1);
+            }
+
+            /*ACTIONS*/
+            while(!t->finish())
+            {
+
+                for(int i = 0; i < t->liste_personnes.size(); i++){
+                    personne& p=t->liste_personnes.at(i);
+                    if(isOnNE(p))
+                    {
+
+                        if (p.near_NE())
+                        {
+                            if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_NE)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+                        }else if(p.near_NO()){
+
+                            if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_NO)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+
+                        }else if(p.near_SE())
+                        {
+                            if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+                            t->avancer(p);
+
+                            if(sem_post(sem_SE)==-1) //je libère
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+
+                        }else{
+
+                            if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
+                            {
+                                perror("sem_wait() in mythread.cpp");
+                                exit(1);
+                            }
+
+                            t->avancer(p);
+
+                            if(sem_post(my_sem)==-1) //je libère ma zone
+                            {
+                                perror("sem_post()");
+                                exit(1);
+                            }
+                        }
+                    }
+                }
+            }
             /*while(1){
 
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
