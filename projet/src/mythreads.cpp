@@ -21,7 +21,7 @@ using namespace std;
  *  @param Le contexte associé au thread
  */
 void *thread_avancerALL (void *p_data){
-	cout<<"avancerALL()"<<endl;
+	cout<<">> lancement thread unique(-t0)"<<endl;
 	if (p_data != nullptr)
    {
     	
@@ -33,6 +33,7 @@ void *thread_avancerALL (void *p_data){
       		for(int i=0;i<t->liste_personnes.size();i++)
       			t->avancer(t->liste_personnes.at(i));
       }
+      cout<<">> fin thread unique(-t0)"<<endl;
    }else{
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t0): sortie du programme"<<endl;
     exit(1);
@@ -62,7 +63,7 @@ static void avancer_all_SE(terrain *t);
  *  @param Le contexte associé au thread
  */
 void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
-
+  cout<<">> lancement thread zone Nord-Est"<<endl;
   if (p_data != nullptr)
    {
       
@@ -125,6 +126,8 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
     exit(1);
   }
 
+  cout<<">> fin thread zone Nord-Est"<<endl;
+
 }
 
 
@@ -135,7 +138,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
  *  @param Le contexte associé au thread
  */
 void *thread_avancerNO(void *p_data){
-  
+  cout<<">> lancement thread zone Nord-Ouest"<<endl; 
   if (p_data != nullptr)
    {
       
@@ -196,6 +199,7 @@ void *thread_avancerNO(void *p_data){
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
     exit(1);
    }
+   cout<<">> fin thread zone Nord-Ouest"<<endl;
 }
 
 
@@ -206,6 +210,7 @@ void *thread_avancerNO(void *p_data){
  *  @param Le contexte associé au thread
  */
 void *thread_avancerSE(void *p_data){
+  cout<<">> lancement thread zone Sud-Est"<<endl;
   if (p_data != nullptr)
    {
       
@@ -268,6 +273,7 @@ void *thread_avancerSE(void *p_data){
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
     exit(1);
    }
+   cout<<">> fin thread zone Sud-Est"<<endl;
 }
 
 /**
@@ -277,7 +283,7 @@ void *thread_avancerSE(void *p_data){
  *  @param Le contexte associé au thread
  */
 void *thread_avancerSO(void *p_data){
- 
+  cout<<">> lancement thread zone Sud-Ouest"<<endl;
   if (p_data != nullptr)
    {
       
@@ -339,6 +345,7 @@ void *thread_avancerSO(void *p_data){
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
     exit(1);
    }
+   cout<<">> fin thread zone Sud-Ouest"<<endl;
 }
 
 /*t2*/

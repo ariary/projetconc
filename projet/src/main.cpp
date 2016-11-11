@@ -75,7 +75,7 @@ int main(int argc, char *argv[]){
         }
     }      
 
-    printf("Execution de l'étape %d: nb de personne 2^%d; scénario de threads %d; ",num_etape, nb_personne, nb_thread);
+    printf("\n>>Execution de l'étape %d: nb de personne %d; scénario de threads %d; ",num_etape, (int)pow(2,nb_personne), nb_thread);
     (time_execution)?printf("Avec mesure de temps\n\n"):printf("sans mesure de temps\n\n");
     tempsDebut = clock();
     begin= time(NULL);
@@ -98,6 +98,7 @@ int main(int argc, char *argv[]){
                 perror("pthread_create()");
                 exit(1);
             }
+
 
             if(pthread_join(t0, NULL)!=0)
             {
@@ -233,6 +234,7 @@ int main(int argc, char *argv[]){
                 vector<pthread_t> v_thread; //création pour l'attente des threads
                 
                 /*On lance un thread par personne */
+                cout<<">> lancement d'un thread par personne (-t2)"<<endl;
                 for (int i = 0; i < t.liste_personnes.size(); ++i)
                 {
                     pthread_t th_personne;
@@ -246,8 +248,11 @@ int main(int argc, char *argv[]){
                     
                     v_thread.push_back(th_personne);
                 }
+                cout<<">> tous les threads sont lancés (-t2)"<<endl;
 
                 /*On attend la fin de chaque thread */
+                int wait_t=(int)pow(2,nb_personne);
+                cout<<">> attente de "<<wait_t<<"  threads"<<endl;
                 for (pthread_t t : v_thread)
                 {
                     if (pthread_join(t, NULL))
@@ -255,6 +260,7 @@ int main(int argc, char *argv[]){
                         perror("pthread_join()");
                         exit(1);
                     }
+                    cout<<">> attente de "<<--wait_t<<"  threads"<<endl;
                     
                 }
             }else if(num_etape==2){
@@ -331,15 +337,18 @@ int main(int argc, char *argv[]){
     end = time(NULL);
     if (time_execution)
     {
-        printf("Temps processeur utilisé: %.3lf secondes\n", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC);
+        //empreinte prgm
         getrusage(RUSAGE_SELF,&r_usage);
         utime = r_usage.ru_utime;
         stime = r_usage.ru_stime;
-        printf("RUSAGE:\n");
-        printf("\tEmpreinte maximale du programme: %ld\n",r_usage.ru_maxrss);
-        printf("\tTemps CPU : \n\t\tTemps système utilisateur utilisé (ru_utime): %ld.%06ld \n\t\tTemps sytème  utilisé(ru_stime):  %ld.%06ld \n",
-        (int64_t)utime.tv_sec, (int64_t)utime.tv_usec,
-        (int64_t)stime.tv_sec, (int64_t)stime.tv_usec);
+        printf("Empreinte maximale du programme: %ld\n",r_usage.ru_maxrss);
+        //temps réel
+        printf("Temps réel: %.3lf s\n", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC);
+        //temps CPU
+        int64_t tmps_CPU_sec=utime.tv_sec+stime.tv_sec+stime.tv_sec;
+        int64_t tmps_CPU_usec =utime.tv_usec+stime.tv_sec+stime.tv_usec;
+        printf("Temps CPU: %ld.%06ld s\n", tmps_CPU_sec,tmps_CPU_usec);
+
     }
     return 0;
 
