@@ -39,8 +39,7 @@ class personne {
 		bool near_SO();
 		bool near_SE();
 		bool near_NE();
-		bool near_SO2();//les frontieres verticales (d'où le (2) dans la fonction)
-		bool near_NO2();//les frontieres verticales (d'où le (2) dans la fonction)
+		
 
 };
 

@@ -53,33 +53,41 @@ bool personne::droite_du_centre(){
 }
 
 bool personne::near_NO(){
+	//je suis en zone NE
 	if(!(au_dessous_azimuth2()) && (droite_du_centre()))
 		return this->position_y-1 == 255;
+	//je suis en zone SO
+	if((au_dessous_azimuth2()) && !(droite_du_centre()))
+		return this->position_x-1 == 63;
+
+
+	//je suis en zone SE, on doit vérifier si on est au centre de la map (croisement des zones)
+	if((au_dessous_azimuth2()) && (droite_du_centre()))
+		return this->position_x-1 == 63 && this->position_y-1 == 255;
 }
 
 bool personne::near_SO(){
+	//je suis en zone SE
 	if((au_dessous_azimuth2()) && (droite_du_centre()))
 		return this->position_y-1 == 255;
+	//je suis en zone NO
+	if(!(au_dessous_azimuth2()) && !(droite_du_centre()))
+		return this->position_x+1 == 64;
+
+
+	//je suis en zone NE
+	if(!(au_dessous_azimuth2()) && (droite_du_centre()))
+		return this->position_y-1 == 255 && this->position_x+1 == 64;
 }
 
 bool personne::near_SE(){
+	//je suis en zone NE
 	if(!(au_dessous_azimuth2()) && (droite_du_centre()))
 		return this->position_x+1 == 64;
 }
 
 bool personne::near_NE(){
+	//je suis en zone SE
 	if((au_dessous_azimuth2()) && (droite_du_centre()))
-		return this->position_x-1 == 63;
-}
-
-//les frontieres verticales (d'où le (2) dans la fonction)
-bool personne::near_SO2(){
-	if(!(au_dessous_azimuth2()) && !(droite_du_centre()))
-		return this->position_x+1 == 64;
-}
-
-//les frontieres verticales (d'où le (2) dans la fonction)
-bool personne::near_NO2(){
-	if((au_dessous_azimuth2()) && !(droite_du_centre()))
 		return this->position_x-1 == 63;
 }
