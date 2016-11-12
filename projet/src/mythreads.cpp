@@ -107,13 +107,24 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             }
 
             /*ACTIONS*/
-            while(!t->finish())
+            while(1)
             {
+                if(t->finish()){
+                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
+                  {
+                      perror("sem_post()");
+                      exit(1);
+                  }
+                  break;
+                }
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
+
                     if(isOnNE(p))
                     {
+                      cout << "NE" ;
+                      p.print_personne();
 
                         if (p.near_SO())
                         {   
@@ -283,13 +294,23 @@ void *thread_avancerNO(void *p_data){
         }
 
         /*ACTIONS*/
-        while(!t->finish())
+        while(1)
         {
+            if(t->finish()){
+                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
+                  {
+                      perror("sem_post()");
+                      exit(1);
+                  }
+                  break;
+                }
 
             for(int i = 0; i < t->liste_personnes.size(); i++){
                 personne& p=t->liste_personnes.at(i);
-                if(isOnNE(p))
+                if(isOnNO(p))
                 {
+                  cout << "NO" ;
+                  p.print_personne();
 
                     if (p.near_SO())
                     {
@@ -452,14 +473,24 @@ void *thread_avancerSE(void *p_data){
             }
 
             /*ACTIONS*/
-            while(!t->finish())
+            while(1)
             {
+              if(t->finish()){
+                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
+                  {
+                      perror("sem_post()");
+                      exit(1);
+                  }
+                  break;
+                }
+
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnNE(p))
+                    if(isOnSE(p))
                     {
-
+                      cout << "SE" ;
+                      p.print_personne();
                         if (p.near_SO())
                         {
                             if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
@@ -620,16 +651,26 @@ void *thread_avancerSO(void *p_data){
             }
 
             /*ACTIONS*/
-            while(!t->finish())
+            while(/*!t->finish()*/1)
             {
+                if(t->finish()){
+                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
+                  {
+                      perror("sem_post()");
+                      exit(1);
+                  }
+                  break;
+                }
 
+                  
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnNE(p))
+                    if(isOnSO(p))
                     {
-
-                        if (p.near_NE())
-                        {
+                      cout << "SO" ;
+                      p.print_personne();
+                      if (p.near_NE())
+                      {
                             if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");

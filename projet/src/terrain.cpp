@@ -154,14 +154,19 @@ void terrain::enlever_personne(personne& p){
 	this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+1) = 0;
 	this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+2) = 0;
 	this->matrice.at(p.get_pos_x()+3).at(p.get_pos_y()+3) = 0;
+
 	for(int i = 0; i < this->liste_personnes.size(); i++){
 		if(this->liste_personnes.at(i).get_pos_x() == p.get_pos_x() && this->liste_personnes.at(i).get_pos_y() == p.get_pos_y()){
+			cout << "suppression de :"; liste_personnes.at(i).print_personne();
 			this->liste_personnes.erase(this->liste_personnes.begin() + i);
 			break;
 		}
 	} 
 	
 	this->nb_personnes--;
+	for(int i = 0; i < liste_personnes.size();i++){
+		cout << "----->";liste_personnes.at(i).print_personne();
+	}
 }
 
 void terrain::deplacement_personne_SO(personne& p){
