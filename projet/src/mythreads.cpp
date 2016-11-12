@@ -67,7 +67,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
   if (p_data != nullptr)
    {
       
-      Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+      ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
       terrain* t=c->t;
 
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
@@ -254,7 +254,7 @@ void *thread_avancerNO(void *p_data){
   if (p_data != nullptr)
    {
       
-        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Ouest
       switch(c->_etape){
@@ -433,7 +433,7 @@ void *thread_avancerSE(void *p_data){
   if (p_data != nullptr)
    {
       
-        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Est
 
@@ -613,7 +613,7 @@ void *thread_avancerSO(void *p_data){
   if (p_data != nullptr)
    {
       
-        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Ouest
 
@@ -793,22 +793,21 @@ void *thread_avancerSO(void *p_data){
 void *thread_avancerALONE(void *p_data){
   if (p_data != nullptr)
    {
-      cout<<"debut thread"<<endl;
       
-      Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+      ContexteT2* c=(ContexteT2*) p_data;// recuperation du contexte applicatif
       terrain my_terrain=*(c->t);
       personne my_personne=*(c->_pers);
-      cout<<"before switch "<<(c->_etape)<<endl;
+      //cout<<"before switch "<<(c->_etape)<<endl;
       if (c->join != nullptr)c->_etape=2;
       switch(c->_etape){
         case 1:
-            cout<<"case 1"<<endl;
             while(!my_personne.aFini())
               my_terrain.avancer(my_personne);
             break;
-        case 2:
-            /*cout<<"case 2"<<endl;
-            //sem_t* mutex=c->mutex;
+        default:
+
+            //cout<<"case 2"<<endl;
+            sem_t* mutex=c->mutex;
             while(!my_personne.aFini())
             {
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
@@ -822,7 +821,7 @@ void *thread_avancerALONE(void *p_data){
                   perror("sem_post()");
                   exit(1);
               }
-            }*/
+            }
 
             /*je fais down sur la sémaphore privée du thread avant d'en sortir*/
             if (c->join != nullptr){
@@ -831,6 +830,7 @@ void *thread_avancerALONE(void *p_data){
                    perror("sem_post()");
                    exit(1);
                }
+               cout<<"je sors du thread"<<endl;
             }
             else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;

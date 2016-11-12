@@ -285,7 +285,7 @@ int main(int argc, char *argv[]){
                     
                 }
             }else if(num_etape==2){
-                    //ETAPE2
+                //ETAPE2
 
                 vector<sem_t*> v_private; //création pour l'attente des threads avec semaphores privées
                 sem_t sem_terrain;
@@ -325,32 +325,31 @@ int main(int argc, char *argv[]){
                     
                 }
 
-                /*On attend la fin de chaque thread */
+
+                /*On attend la fin de chaque thread */ 
+                int i=8;              
                 for (sem_t* s_private: v_private)
-                {
-                    if(sem_wait(s_private)==-1)
+                {   
+                    if (s_private!=nullptr)
                     {
-                        perror("sem_wait() in main.cpp");
-                        exit(1);
+                        if(sem_wait(s_private)==-1)
+                        {
+                            perror("sem_wait() in main.cpp");
+                            exit(1);
+                        }
+                    }else{
+                        break; //eviter segfault
                     }
-                    cout<<"liberez private"<<endl;
+                    cout<<">> attente de "<<i--<<" threads"<<endl;
 
                     if (sem_destroy(s_private)==-1)
                     {
                         perror("sem_destroy()");
                         exit(1);
                     }
-                    
-                }
-                //PB DANS LA MANIERE DATTENDRE
-
-                if(sem_destroy(&sem_terrain)==-1)
-                {
-                    perror("sem_destroy()");
-                    exit(1);
-                }
+                    v_private.pop_back();
+                } 
             }
-
         }   
     
 
