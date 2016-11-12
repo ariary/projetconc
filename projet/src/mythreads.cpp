@@ -766,6 +766,7 @@ void *thread_avancerALONE(void *p_data){
             sem_t* mutex=c->mutex;
             while(!my_personne.aFini())
             {
+              cout<<"wait"<<endl;
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
                 perror("sem_wait() in mythread.cpp");
@@ -777,6 +778,7 @@ void *thread_avancerALONE(void *p_data){
                   perror("sem_post()");
                   exit(1);
               }
+              cout<<"libère"<<endl;
             }
 
             /*je fais down sur la sémaphore privée du thread avant d'en sortir*/

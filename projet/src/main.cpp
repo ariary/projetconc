@@ -322,7 +322,7 @@ int main(int argc, char *argv[]){
                     }
                     
                 }
-
+                cout<<">> Début de l'attente"<<endl;
 
                 /*On attend la fin de chaque thread */ 
                 int i=pow(2,nb_personne);              
