@@ -330,9 +330,6 @@ void terrain::deplacement_personne_O(personne& p){
 	}
 }
 
-bool terrain::arrive(personne& p){
-	return p.get_pos_y() == 0 && (p.get_pos_x() >= 60 && p.get_pos_x() <= 68);
-}
 
 void terrain::refresh_vector_personnesNE(){
 	liste_personnesNE.clear();

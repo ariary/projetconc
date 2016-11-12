@@ -46,7 +46,6 @@ class terrain {
 		void deplacement_personne_NO(personne& p);
 		void deplacement_personne_N(personne& p);
 		void deplacement_personne_O(personne& p);
-		bool arrive(personne& p);
 
 		void refresh_vector_personnesNE();
 		void refresh_vector_personnesSE();
