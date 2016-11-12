@@ -70,7 +70,7 @@ int main(int argc, char *argv[]){
             }
           break;
         case '?':
-          printf("pb \n");
+          printf("/!\\ Option inconnue\n");
           break;
         }
     }      
@@ -295,6 +295,7 @@ int main(int argc, char *argv[]){
                     exit(1);
                 }
 
+
                 /*On lance un thread par personne */
                 for (int i = 0; i < t.liste_personnes.size(); ++i)
                 {
@@ -309,7 +310,7 @@ int main(int argc, char *argv[]){
 
                     v_private.push_back(&s_private);
                     Contexte my_contexte(2,&t,nullptr,&s_private,&(t.liste_personnes[i]));
-                    cout<<my_contexte._etape<<endl;
+                    my_contexte.mutex=&sem_terrain;
 
                     //lancement thread
                     pthread_t th_personne;
@@ -319,15 +320,12 @@ int main(int argc, char *argv[]){
                         perror("pthread_create()");
                         exit(1);
                     }
-
-                    cout<<"je lance un thread"<<endl;
-
                     
                 }
 
 
                 /*On attend la fin de chaque thread */ 
-                int i=8;              
+                int i=pow(2,nb_personne);              
                 for (sem_t* s_private: v_private)
                 {   
                     if (s_private!=nullptr)
@@ -348,7 +346,8 @@ int main(int argc, char *argv[]){
                         exit(1);
                     }
                     v_private.pop_back();
-                } 
+                }
+                cout<<">> Tous les threads sont terminés (-t2)"<<endl; 
             }
         }   
     
@@ -361,7 +360,7 @@ int main(int argc, char *argv[]){
         getrusage(RUSAGE_SELF,&r_usage);
         utime = r_usage.ru_utime;
         stime = r_usage.ru_stime;
-        printf("Empreinte maximale du programme: %ld\n",r_usage.ru_maxrss);
+        printf("\nEmpreinte maximale du programme: %ld\n",r_usage.ru_maxrss);
         //temps réel
         printf("Temps réel: %.3lf s\n", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC);
         //temps CPU

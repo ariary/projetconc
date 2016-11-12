@@ -9,10 +9,11 @@
  #include "include/contexte.h"
 
 
-Contexte::Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem,sem_t* join,personne* pers){
+Contexte::Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem,sem_t* join,personne* pers,sem_t* mutex){
 	this->_etape=num_etap;
 	this->t=ter;
 	this->map_sem=map_sem;
 	this->_pers=pers;
 	this->join=join;
+	this->mutex=mutex;
 }

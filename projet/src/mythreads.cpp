@@ -67,7 +67,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
   if (p_data != nullptr)
    {
       
-      ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
+      Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
       terrain* t=c->t;
 
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Est
@@ -107,24 +107,13 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             }
 
             /*ACTIONS*/
-            while(1)
+            while(!t->finish())
             {
-                if(t->finish()){
-                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
-                  {
-                      perror("sem_post()");
-                      exit(1);
-                  }
-                  break;
-                }
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-
                     if(isOnNE(p))
                     {
-                      cout << "NE" ;
-                      p.print_personne();
 
                         if (p.near_SO())
                         {   
@@ -254,7 +243,7 @@ void *thread_avancerNO(void *p_data){
   if (p_data != nullptr)
    {
       
-        ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
       //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Ouest
       switch(c->_etape){
@@ -294,23 +283,13 @@ void *thread_avancerNO(void *p_data){
         }
 
         /*ACTIONS*/
-        while(1)
+        while(!t->finish())
         {
-            if(t->finish()){
-                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
-                  {
-                      perror("sem_post()");
-                      exit(1);
-                  }
-                  break;
-                }
 
             for(int i = 0; i < t->liste_personnes.size(); i++){
                 personne& p=t->liste_personnes.at(i);
-                if(isOnNO(p))
+                if(isOnNE(p))
                 {
-                  cout << "NO" ;
-                  p.print_personne();
 
                     if (p.near_SO())
                     {
@@ -433,7 +412,7 @@ void *thread_avancerSE(void *p_data){
   if (p_data != nullptr)
    {
       
-        ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Est
 
@@ -473,24 +452,14 @@ void *thread_avancerSE(void *p_data){
             }
 
             /*ACTIONS*/
-            while(1)
+            while(!t->finish())
             {
-              if(t->finish()){
-                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
-                  {
-                      perror("sem_post()");
-                      exit(1);
-                  }
-                  break;
-                }
-
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnSE(p))
+                    if(isOnNE(p))
                     {
-                      cout << "SE" ;
-                      p.print_personne();
+
                         if (p.near_SO())
                         {
                             if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
@@ -613,7 +582,7 @@ void *thread_avancerSO(void *p_data){
   if (p_data != nullptr)
    {
       
-        ContexteT1* c=(ContexteT1*) p_data;// recuperation du contexte applicatif
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
         //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Ouest
 
@@ -651,26 +620,16 @@ void *thread_avancerSO(void *p_data){
             }
 
             /*ACTIONS*/
-            while(/*!t->finish()*/1)
+            while(!t->finish())
             {
-                if(t->finish()){
-                  if(sem_post(my_sem)==-1) //je libère la sémaphore avant de quitter le thread
-                  {
-                      perror("sem_post()");
-                      exit(1);
-                  }
-                  break;
-                }
 
-                  
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnSO(p))
+                    if(isOnNE(p))
                     {
-                      cout << "SO" ;
-                      p.print_personne();
-                      if (p.near_NE())
-                      {
+
+                        if (p.near_NE())
+                        {
                             if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -794,10 +753,9 @@ void *thread_avancerALONE(void *p_data){
   if (p_data != nullptr)
    {
       
-      ContexteT2* c=(ContexteT2*) p_data;// recuperation du contexte applicatif
+      Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
       terrain my_terrain=*(c->t);
       personne my_personne=*(c->_pers);
-      //cout<<"before switch "<<(c->_etape)<<endl;
       if (c->join != nullptr)c->_etape=2;
       switch(c->_etape){
         case 1:
@@ -805,8 +763,6 @@ void *thread_avancerALONE(void *p_data){
               my_terrain.avancer(my_personne);
             break;
         default:
-
-            //cout<<"case 2"<<endl;
             sem_t* mutex=c->mutex;
             while(!my_personne.aFini())
             {
@@ -830,13 +786,11 @@ void *thread_avancerALONE(void *p_data){
                    perror("sem_post()");
                    exit(1);
                }
-               cout<<"je sors du thread"<<endl;
             }
             else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }    
-            cout<<"fin thread"<<endl;
             break;            
       }
 
