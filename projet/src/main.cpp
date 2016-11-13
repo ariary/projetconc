@@ -342,7 +342,7 @@ int main(int argc, char *argv[]){
                     }
                     v_private.pop_back();
                 }
-                cout<<">> Tous les threads sont terminés (-t2)"<<endl; 
+                cout<<">> Tous les threads sont terminés (-t2)"<<endl;
             }
         }   
     

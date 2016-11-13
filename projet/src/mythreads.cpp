@@ -672,6 +672,7 @@ void *thread_avancerALONE(void *p_data){
               cout<<"libère"<<endl;
             }
 
+
             /*je fais down sur la sémaphore privée du thread avant d'en sortir*/
             if (c->join != nullptr){
                if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
