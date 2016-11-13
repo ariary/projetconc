@@ -137,13 +137,8 @@ int main(int argc, char *argv[]){
 
             }else if(num_etape==2){
                 //ETAPE 2
-                //on affiche les pos des personnes
-                int test;
-                for (int i = 0; i < t.liste_personnes.size(); ++i)
-                {
-                    t.liste_personnes.at(i).print_personne();
-                }
-                cin >> test;
+                
+               
                 /*Initialisation d'une sémaphore par zone*/
                 sem_t sem_NO,sem_SE,sem_SO,sem_NE;
                 if(   (sem_init(&sem_NO, 0, 1)==-1)
