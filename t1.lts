@@ -1,0 +1,12 @@
+const Max = 1
+range Int = 0..Max
+const NBPERSONNE=8
+
+THREAD = (my_mutex.down->AVANCER),
+AVANCER = (avancer ->my_mutex.up-> THREAD
+		   |other_mutex[i:1..3].down->avancer->other_mutex[i].up->my_mutex.up->THREAD).
+SEMAPHORE(N=0) = SEMA[N],
+SEMA[v:Int] = (up->SEMA[v+1]
+			   |when(v>0) down->SEMA[v-1]),
+SEMA[Max+1] = ERROR.
+||SEMADEMO = (p[1..NBPERSONNE]:THREAD || {p[1..NBPERSONNE]}::mutex:SEMAPHORE(1)).
