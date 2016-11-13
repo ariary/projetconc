@@ -77,6 +77,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             while (!t->finish()){
               avancer_all_NE(t);
             }
+            cout<<">> fin thread zone Nord-Est"<<endl;
             break;
 
         case 2: /*Etape 2*/
@@ -114,10 +115,8 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                     personne& p=t->liste_personnes.at(i);
                     if(isOnNE(p))
                     {
-                        cout << "NE"; p.print_personne();
                         if (p.near_SO())
-                        {   
-                            cout<<"j'attends SO"<<endl;
+                        {
                             if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -130,9 +129,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
-                            cout<<"je libère SO"<<endl;
                         }else if(p.near_NO()){
-                            cout<<"j'attends NO"<<endl;
                             if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -145,10 +142,9 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
-                            cout<<"je libère NO"<<endl;
 
                         }else if(p.near_SE())
-                        {   cout<<"j'attends SE"<<endl;
+                        {   
                             if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -161,10 +157,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
-                            cout<<"je libère SE"<<endl;
-
                         }else{
-                            cout<<"j'attends NE"<<endl;
                             if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
                             {
                                 perror("sem_wait() in mythread.cpp");
@@ -178,36 +171,10 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                                 perror("sem_post()");
                                 exit(1);
                             }
-                            cout<<"je libère NE"<<endl;
                         }
                     }
                 }
             }
-            /*while(1){
-
-              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
-              {
-                  perror("sem_wait() in mythread.cpp");
-                  exit(1);
-              } 
-
-              if (t->finish()){
-                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
-                {
-                    perror("sem_post()");
-                    exit(1);
-                }
-                break;
-              }
-
-              avancer_all_NE(t);
-
-              if(sem_post(mutex)==-1) //je libère le terraind
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
-            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr){
@@ -219,7 +186,8 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
-            }          
+            }      
+            cout<<">> fin thread zone Nord-Est"<<endl;    
             break;
     }
 
@@ -227,8 +195,6 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
     exit(1);
   }
-
-  cout<<">> fin thread zone Nord-Est"<<endl;
 }
 
 
@@ -252,7 +218,7 @@ void *thread_avancerNO(void *p_data){
           while (!t->finish()){
             avancer_all_NO(t);
           }
-
+          cout<<">> fin thread zone Nord-Ouest"<<endl;
           break;
 
         case 2:
@@ -290,7 +256,6 @@ void *thread_avancerNO(void *p_data){
                 personne& p=t->liste_personnes.at(i);
                 if(isOnNO(p))
                 {
-                    cout << "NO"; p.print_personne();
                     if (p.near_SO())
                     {
                         if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
@@ -354,30 +319,6 @@ void *thread_avancerNO(void *p_data){
                 }
             }
         }
-            /*while(1){
-
-              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
-              {
-                  perror("sem_wait() in mythread.cpp");
-                  exit(1);
-              }
-              if (t->finish()){
-                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
-                {
-                    perror("sem_post()");
-                    exit(1);
-                }
-                break;
-              }
-
-              avancer_all_NO(t);
-
-              if(sem_post(mutex)==-1) //je libère le terrain
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
-            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr){
@@ -390,6 +331,7 @@ void *thread_avancerNO(void *p_data){
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }
+            cout<<">> fin thread zone Nord-Ouest"<<endl;
             break;
       }
 
@@ -397,7 +339,6 @@ void *thread_avancerNO(void *p_data){
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
     exit(1);
    }
-   cout<<">> fin thread zone Nord-Ouest"<<endl;
 }
 
 
@@ -422,6 +363,7 @@ void *thread_avancerSE(void *p_data){
               while (!t->finish()){
                 avancer_all_SE(t);
               }
+              cout<<">> fin thread zone Sud-Est"<<endl;
               break; 
 
           case 2:
@@ -459,7 +401,6 @@ void *thread_avancerSE(void *p_data){
                     personne& p=t->liste_personnes.at(i);
                     if(isOnSE(p))
                     {
-                        cout << "SE"; p.print_personne();
                         if (p.near_SO())
                         {
                             if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
@@ -523,31 +464,6 @@ void *thread_avancerSE(void *p_data){
                     }
                 }
             }
-            /*while(1){
-
-              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
-              {
-                  perror("sem_wait() in mythread.cpp");
-                  exit(1);
-              }
-              
-              if (t->finish()){
-                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
-                {
-                    perror("sem_post()");
-                    exit(1);
-                }
-                break;
-              }
-
-              avancer_all_SE(t);
-
-              if(sem_post(mutex)==-1) //je libère le terrain
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
-            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr)
@@ -560,7 +476,8 @@ void *thread_avancerSE(void *p_data){
             }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
-            }            
+            } 
+            cout<<">> fin thread zone Sud-Est"<<endl;           
             break;
         }
 
@@ -568,7 +485,6 @@ void *thread_avancerSE(void *p_data){
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
     exit(1);
    }
-   cout<<">> fin thread zone Sud-Est"<<endl;
 }
 
 /**
@@ -591,6 +507,7 @@ void *thread_avancerSO(void *p_data){
               while (!t->finish()){
                 avancer_all_SO(t);
               }
+              cout<<">> fin thread zone Sud-Ouest"<<endl;
               break;
           case 2:
             /*récupération contexte suite*/
@@ -626,9 +543,7 @@ void *thread_avancerSO(void *p_data){
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
                     if(isOnSO(p))
-                    { 
-                        cout << "SO"; p.print_personne();
-
+                    {
                         if (p.near_NE())
                         {
                             if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
@@ -692,31 +607,6 @@ void *thread_avancerSO(void *p_data){
                     }
                 }
             }
-            /*while(1){
-
-              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
-              {
-                  perror("sem_wait() in mythread.cpp");
-                  exit(1);
-              }
-
-              if (t->finish()){
-                if(sem_post(mutex)==-1) //je libère la sémaphore avant de quitter le thread
-                {
-                    perror("sem_post()");
-                    exit(1);
-                }
-                break;
-              }
-
-              avancer_all_SO(t);
-
-              if(sem_post(mutex)==-1) //je libère le terrain
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
-            }*/
 
             /*je fais down sur la sémaphore du thread avant d'en sortir*/
             if (c->join != nullptr)
@@ -729,7 +619,8 @@ void *thread_avancerSO(void *p_data){
             }else{
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
-            }            
+            }  
+            cout<<">> fin thread zone Sud-Ouest"<<endl;         
             break;
 
         }
@@ -738,7 +629,6 @@ void *thread_avancerSO(void *p_data){
     cerr<< "problème dans la récupération du contexte applicatif du thread (-t1): sortie du programme"<<endl;
     exit(1);
    }
-   cout<<">> fin thread zone Sud-Ouest"<<endl;
 }
 
 /*t2*/

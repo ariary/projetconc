@@ -36,6 +36,10 @@ void personne::changer_position(int newX, int newY){
 
 }
 
+/*
+ * cette fonction affiche les coordonnées d'une personne
+ * utilisée pour debbuger
+ */
 void personne::print_personne(){
 	std::cout << "(" << this->position_x << ", " << this->position_y << ")" << std::endl;
 }

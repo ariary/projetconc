@@ -357,7 +357,7 @@ int main(int argc, char *argv[]){
         stime = r_usage.ru_stime;
         printf("\nEmpreinte maximale du programme: %ld\n",r_usage.ru_maxrss);
         //temps réel
-        printf("Temps réel: %.3lf s\n", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC);
+        printf("Temps de réponse: %.3lf s\n", (double)(tempsFin - tempsDebut) / CLOCKS_PER_SEC);
         //temps CPU
         int64_t tmps_CPU_sec=utime.tv_sec+stime.tv_sec+stime.tv_sec;
         int64_t tmps_CPU_usec =utime.tv_usec+stime.tv_sec+stime.tv_usec;
