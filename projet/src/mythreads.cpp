@@ -114,7 +114,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                     personne& p=t->liste_personnes.at(i);
                     if(isOnNE(p))
                     {
-
+                        cout << "NE"; p.print_personne();
                         if (p.near_SO())
                         {   
                             cout<<"j'attends SO"<<endl;
@@ -288,9 +288,9 @@ void *thread_avancerNO(void *p_data){
 
             for(int i = 0; i < t->liste_personnes.size(); i++){
                 personne& p=t->liste_personnes.at(i);
-                if(isOnNE(p))
+                if(isOnNO(p))
                 {
-
+                    cout << "NO"; p.print_personne();
                     if (p.near_SO())
                     {
                         if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
@@ -457,9 +457,9 @@ void *thread_avancerSE(void *p_data){
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnNE(p))
+                    if(isOnSE(p))
                     {
-
+                        cout << "SE"; p.print_personne();
                         if (p.near_SO())
                         {
                             if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
@@ -625,8 +625,9 @@ void *thread_avancerSO(void *p_data){
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnNE(p))
-                    {
+                    if(isOnSO(p))
+                    { 
+                        cout << "SO"; p.print_personne();
 
                         if (p.near_NE())
                         {
@@ -809,28 +810,28 @@ void *thread_avancerALONE(void *p_data){
  * Permet de determiner si une personne est dans la zone NE
  */
 bool isOnNE(personne p){
-  return p.get_pos_y() >= 255 && p.get_pos_x() <=63;
+  return p.get_pos_y() >= 255 && p.get_pos_x() <=63 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
 }
 
 /*
  * Permet de determiner si une personne est dans la zone NO
  */
 bool isOnNO(personne p){;
-  return p.get_pos_y() < 256 && p.get_pos_x() < 64;
+  return p.get_pos_y() < 256 && p.get_pos_x() < 64 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
 }
 
 /*
  * Permet de determiner si une personne est dans la zone SE
  */
 bool isOnSE(personne p){
-  return p.get_pos_y() >= 255 && p.get_pos_x() > 63;
+  return p.get_pos_y() >= 255 && p.get_pos_x() > 63 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
 }
 
 /*
  * Permet de determiner si une personne est dans la zone SO
  */
 bool isOnSO(personne p){
-  return p.get_pos_y() < 256 && p.get_pos_x() > 63;
+  return p.get_pos_y() < 256 && p.get_pos_x() > 63 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
 }
 
 
