@@ -262,6 +262,8 @@ int main(int argc, char *argv[]){
                     exit(1);
                 }
             }else{ // -t1 -e3
+
+                cout<<"e3"<<endl;
                 /*Initialisation du moniteur*/
                 //condition
                 pthread_cond_t zoneNE;

@@ -22,17 +22,17 @@ using namespace std;
  *  @param Le contexte associé au thread
  */
 void *thread_avancerALL (void *p_data){
-	cout<<">> lancement thread unique(-t0)"<<endl;
-	if (p_data != nullptr)
+    cout<<">> lancement thread unique(-t0)"<<endl;
+    if (p_data != nullptr)
    {
-    	
-      	Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+        
+        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
 
 
-    	  while(!t->finish()){
-      		for(int i=0;i<t->liste_personnes.size();i++)
-      			t->avancer(t->liste_personnes.at(i));
+          while(!t->finish()){
+            for(int i=0;i<t->liste_personnes.size();i++)
+                t->avancer(t->liste_personnes.at(i));
       }
       cout<<">> fin thread unique(-t0)"<<endl;
    }else{
@@ -76,8 +76,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
       {
         case 1: /*Etape 1*/
             while (!t->finish()){
-              usleep(50000);
-              cout << "NE" << endl;
+                usleep(50000);
               avancer_all_NE(t);
             }
             cout<<">> fin thread zone Nord-Est"<<endl;
@@ -118,7 +117,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             /*ACTIONS*/
             while(!t->finish())
             {
-               
+
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
                     if(isOnNE(p))
@@ -246,7 +245,6 @@ void *thread_avancerNO(void *p_data){
 
           while (!t->finish()){
             usleep(50000);
-            cout << "NO" << endl;
             avancer_all_NO(t);
           }
           cout<<">> fin thread zone Nord-Ouest"<<endl;
@@ -403,7 +401,6 @@ void *thread_avancerSE(void *p_data){
 
               while (!t->finish()){
                 usleep(50000);
-                cout << "SE" << endl;
                 avancer_all_SE(t);
               }
               cout<<">> fin thread zone Sud-Est"<<endl;
@@ -558,7 +555,6 @@ void *thread_avancerSO(void *p_data){
           case 1:
               while (!t->finish()){
                 usleep(50000);
-                cout << "SO" << endl;
                 avancer_all_SO(t);
               }
               cout<<">> fin thread zone Sud-Ouest"<<endl;
