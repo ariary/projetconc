@@ -189,6 +189,9 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             }      
             cout<<">> fin thread zone Nord-Est"<<endl;    
             break;
+        case 3:
+            cout<<">> fin thread zone Nord-Est"<<endl; 
+            break;
     }
 
   }else{
@@ -331,6 +334,9 @@ void *thread_avancerNO(void *p_data){
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }
+            cout<<">> fin thread zone Nord-Ouest"<<endl;
+            break;
+        case 3:
             cout<<">> fin thread zone Nord-Ouest"<<endl;
             break;
       }
@@ -479,6 +485,10 @@ void *thread_avancerSE(void *p_data){
             } 
             cout<<">> fin thread zone Sud-Est"<<endl;           
             break;
+
+        case 3:
+            cout<<">> fin thread zone Sud-Est"<<endl; 
+            break;
         }
 
    }else{
@@ -621,6 +631,9 @@ void *thread_avancerSO(void *p_data){
               exit(1);
             }  
             cout<<">> fin thread zone Sud-Ouest"<<endl;         
+            break;
+        case 3:
+            cout<<">> fin thread zone Sud-Ouest"<<endl;
             break;
 
         }

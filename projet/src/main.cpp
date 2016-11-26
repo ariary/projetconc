@@ -240,6 +240,8 @@ int main(int argc, char *argv[]){
                     exit(1);
                 }
             }else{ // -t1 -e3
+
+                cout<<"e3"<<endl;
                 /*Initialisation du moniteur*/
                 //condition
                 pthread_cond_t zoneNE;
@@ -253,9 +255,29 @@ int main(int argc, char *argv[]){
                 pthread_mutex_t mutex;
                 Moniteur my_moniteur(cond,mutex);
 
-                Contexte my_contexte(1,&t);
+                /*initialisation du contexte*/
+                Contexte my_contexte(3,&t);
                 my_contexte.setMoniteur(&my_moniteur);
 
+                /*Lancement des threads*/
+                if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
+                    || (pthread_create(&t2, NULL, thread_avancerNO, &my_contexte)!=0)
+                    || (pthread_create(&t3, NULL, thread_avancerSE, &my_contexte)!=0)
+                    || (pthread_create(&t4, NULL, thread_avancerSO, &my_contexte)!=0))
+                {
+                    perror("pthread_create()");
+                    exit(1);
+                }
+
+                /*attente de la fin des threads*/
+                if (  (pthread_join(t1, NULL))
+                    ||(pthread_join(t2, NULL))
+                    ||(pthread_join(t3, NULL))
+                    ||(pthread_join(t4, NULL)))
+                {
+                    perror("pthread_join()");
+                    exit(1);
+                }
 
 
 
