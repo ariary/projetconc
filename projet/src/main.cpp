@@ -239,6 +239,26 @@ int main(int argc, char *argv[]){
                     perror("sem_destroy()");
                     exit(1);
                 }
+            }else{ // -t1 -e3
+                /*Initialisation du moniteur*/
+                //condition
+                pthread_cond_t zoneNE;
+                pthread_cond_t zoneNO;
+                pthread_cond_t zoneSO;
+                pthread_cond_t zoneSE;
+                //Tableau de conditions
+                pthread_cond_t cond[4];
+                cond[0]=zoneNE;cond[1]=zoneNO;cond[2]=zoneSO;cond[3]=zoneSE;
+                //mutex
+                pthread_mutex_t mutex;
+                Moniteur my_moniteur(cond,mutex);
+
+                Contexte my_contexte(1,&t);
+                my_contexte.setMoniteur(&my_moniteur);
+
+
+
+
             }
 
         }else{//nb_thread=4

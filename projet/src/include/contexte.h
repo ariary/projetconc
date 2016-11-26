@@ -22,17 +22,29 @@
 
 using namespace std;
 
+class Moniteur
+{
+	public:
+		pthread_cond_t* cond; //tableau de condition
+		pthread_mutex_t mutex;
+
+		Moniteur(pthread_cond_t* cond,pthread_mutex_t& mutex);
+};
+
 class Contexte {
 
-public:
-	int _etape; //utilisé dans mythread.cpp
-	terrain* t; //pointeur sur terrain car : pas le terrain n'a pas le même cycle de vie que le contexte et je ne veux pas une copie
-	map<string,sem_t*> *map_sem; //map avec un mutex pour chaque zone
-	sem_t *join;
-	sem_t *mutex;
-	personne *_pers;
+	public:
+		int _etape; //utilisé dans mythread.cpp
+		terrain* t; //pointeur sur terrain car : pas le terrain n'a pas le même cycle de vie que le contexte et je ne veux pas une copie
+		map<string,sem_t*> *map_sem; //map avec un mutex pour chaque zone
+		sem_t *join;
+		sem_t *mutex;
+		personne *_pers;
+		Moniteur* m;
 
-	Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem=nullptr,sem_t* join=nullptr,personne* pers=nullptr,sem_t* mutex=nullptr);
+		Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem=nullptr,sem_t* join=nullptr,personne* pers=nullptr,sem_t* mutex=nullptr);
+
+		void setMoniteur(Moniteur* m);
 };
 
 #endif
