@@ -29,7 +29,7 @@ INC_PATHS= -I
 OBJ = $(COMPILER) -c -I ./src/include
 
 #extra libs used in the project (for instance -lpthread)
-LIBS	= -lpthread -lrt
+LIBS	= -lpthread -ll
 
 
 sans: $(EXE_NAME)
