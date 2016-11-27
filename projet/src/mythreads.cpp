@@ -190,6 +190,23 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             cout<<">> fin thread zone Nord-Est"<<endl;    
             break;
         case 3:
+            Moniteur* moniteur=c->m;
+            while(!t->finish()){
+                for(int i = 0; i < t->liste_personnes.size(); i++){
+                    personne& p=t->liste_personnes.at(i);
+                    if(isOnNE(p))
+                    {
+                        if(pthread_mutex_lock(&(moniteur->mutex))!=0){
+                            perror("pthread_mutex_lock");
+                        }
+                        while(!moniteur->cond+0) wait();//cond+0 condition NE
+                        t->avancer(p);
+                        //notify all
+                        //unlock
+                        //si proche d'une zone faire faire pareil avec cond différent
+                    }
+                }
+            }
             cout<<">> fin thread zone Nord-Est"<<endl; 
             break;
     }
@@ -337,6 +354,7 @@ void *thread_avancerNO(void *p_data){
             cout<<">> fin thread zone Nord-Ouest"<<endl;
             break;
         case 3:
+            Moniteur* moniteur=c->m; //recuperation du moniteur
             cout<<">> fin thread zone Nord-Ouest"<<endl;
             break;
       }
