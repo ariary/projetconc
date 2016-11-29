@@ -81,6 +81,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             break;
 
         case 2: /*Etape 2*/
+            {
             /*récupération contexte suite*/
             map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
             sem_t *my_sem,*sem_SO,*sem_SE,*sem_NO; //semaphore des zones 
@@ -93,10 +94,14 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                 exit(1);
             }    
             
-            if(((map_mutex->find("NE")->second)!=nullptr)
-                &&((map_mutex->find("SE")->second)!=nullptr)
-                &&((map_mutex->find("NO")->second)!=nullptr)
-                &&((map_mutex->find("SO")->second)!=nullptr))
+            map<string,sem_t*>::iterator it1=map_mutex->find("NO");
+            map<string,sem_t*>::iterator it2=map_mutex->find("SE");
+            map<string,sem_t*>::iterator it3=map_mutex->find("NE");
+            map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+            if ((it1!=map_mutex->end())
+                 && (it2!=map_mutex->end())
+                 && (it3!=map_mutex->end())
+                 && (it4!=map_mutex->end()))
             {
                 my_sem= map_mutex->find("NE")->second;
                 sem_SO= map_mutex->find("SO")->second;
@@ -189,6 +194,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             }      
             cout<<">> fin thread zone Nord-Est"<<endl;    
             break;
+        }
         case 3:
             Moniteur* moniteur=c->m;
             while(!t->finish()){
@@ -243,6 +249,7 @@ void *thread_avancerNO(void *p_data){
 
         case 2:
         /*récupération contexte suite*/
+        {
         map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
         sem_t *my_sem,*sem_SO,*sem_SE,*sem_NE; //semaphore des zones 
 
@@ -253,11 +260,16 @@ void *thread_avancerNO(void *p_data){
             cerr<<"Problème de récupération de la map"<<endl;
             exit(1);
         }    
-        
-        if(((map_mutex->find("NO")->second)!=nullptr)
-            &&((map_mutex->find("SE")->second)!=nullptr)
-            &&((map_mutex->find("NE")->second)!=nullptr)
-            &&((map_mutex->find("SO")->second)!=nullptr))
+                
+
+        map<string,sem_t*>::iterator it1=map_mutex->find("NO");
+        map<string,sem_t*>::iterator it2=map_mutex->find("SE");
+        map<string,sem_t*>::iterator it3=map_mutex->find("NE");
+        map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+        if ((it1!=map_mutex->end())
+             && (it2!=map_mutex->end())
+             && (it3!=map_mutex->end())
+             && (it4!=map_mutex->end()))
         {
             my_sem= map_mutex->find("NO")->second;
             sem_SO= map_mutex->find("SO")->second;
@@ -351,7 +363,7 @@ void *thread_avancerNO(void *p_data){
               cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
               exit(1);
             }
-            cout<<">> fin thread zone Nord-Ouest"<<endl;
+            cout<<">> fin thread zone Nord-Ouest"<<endl;}
             break;
         case 3:
             Moniteur* moniteur=c->m; //recuperation du moniteur
@@ -391,6 +403,7 @@ void *thread_avancerSE(void *p_data){
               break; 
 
           case 2:
+            {
             /*récupération contexte suite*/
             map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
             sem_t *my_sem,*sem_SO,*sem_NE,*sem_NO; //semaphore des zones 
@@ -403,10 +416,14 @@ void *thread_avancerSE(void *p_data){
                 exit(1);
             }    
             
-            if(((map_mutex->find("NE")->second)!=nullptr)
-                &&((map_mutex->find("SE")->second)!=nullptr)
-                &&((map_mutex->find("NO")->second)!=nullptr)
-                &&((map_mutex->find("SO")->second)!=nullptr))
+            map<string,sem_t*>::iterator it1=map_mutex->find("NO");
+            map<string,sem_t*>::iterator it2=map_mutex->find("SE");
+            map<string,sem_t*>::iterator it3=map_mutex->find("NE");
+            map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+            if ((it1!=map_mutex->end())
+                 && (it2!=map_mutex->end())
+                 && (it3!=map_mutex->end())
+                 && (it4!=map_mutex->end()))
             {
                 my_sem= map_mutex->find("SE")->second;
                 sem_SO= map_mutex->find("SO")->second;
@@ -503,7 +520,7 @@ void *thread_avancerSE(void *p_data){
             } 
             cout<<">> fin thread zone Sud-Est"<<endl;           
             break;
-
+        }
         case 3:
             cout<<">> fin thread zone Sud-Est"<<endl; 
             break;
@@ -539,6 +556,7 @@ void *thread_avancerSO(void *p_data){
               break;
           case 2:
             /*récupération contexte suite*/
+            {
             map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
             sem_t *my_sem,*sem_NE,*sem_SE,*sem_NO; //semaphore des zones 
 
@@ -550,10 +568,14 @@ void *thread_avancerSO(void *p_data){
                 exit(1);
             }    
             
-            if(((map_mutex->find("SO")->second)!=nullptr)
-                &&((map_mutex->find("SE")->second)!=nullptr)
-                &&((map_mutex->find("NO")->second)!=nullptr)
-                &&((map_mutex->find("NE")->second)!=nullptr))
+            map<string,sem_t*>::iterator it1=map_mutex->find("NO");
+            map<string,sem_t*>::iterator it2=map_mutex->find("SE");
+            map<string,sem_t*>::iterator it3=map_mutex->find("NE");
+            map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+            if ((it1!=map_mutex->end())
+                 && (it2!=map_mutex->end())
+                 && (it3!=map_mutex->end())
+                 && (it4!=map_mutex->end()))
             {
                 my_sem= map_mutex->find("SO")->second;
                 sem_NE= map_mutex->find("NE")->second;
@@ -650,6 +672,7 @@ void *thread_avancerSO(void *p_data){
             }  
             cout<<">> fin thread zone Sud-Ouest"<<endl;         
             break;
+        }
         case 3:
             cout<<">> fin thread zone Sud-Ouest"<<endl;
             break;
