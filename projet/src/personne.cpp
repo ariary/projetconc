@@ -95,3 +95,8 @@ bool personne::near_NE(){
 	if((au_dessous_azimuth2()) && (droite_du_centre()))
 		return this->position_x-1 == 63;
 }
+
+
+bool personne::isOut(){
+	return position_x == -1 && position_y == -1;
+}

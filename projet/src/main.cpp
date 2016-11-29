@@ -96,25 +96,30 @@ int main(int argc, char *argv[]){
         {
             Contexte my_contexte(1,&t);
             pthread_t t0;
-            // pthread_t tGraph;
-            // if(pthread_create(&tGraph, NULL, afficher, &my_contexte)!=0)
-            // {
-            //     perror("pthread_create() du graphe");
-            //     exit(1);
-            // }
+            pthread_t tGraph;
+            if(pthread_create(&tGraph, NULL, afficher, &my_contexte)!=0)
+            {
+                perror("pthread_create() du graphe");
+                exit(1);
+            }
 
             if(pthread_create(&t0, NULL, thread_avancerALL, &my_contexte)!=0)
             {
                 perror("pthread_create()");
                 exit(1);
             }
-
+             if(pthread_join(tGraph, NULL)!=0)
+            {
+                perror("pthread_join() graphique");
+                exit(1);
+            }
 
             if(pthread_join(t0, NULL)!=0)
             {
                 perror("pthread_join()");
                 exit(1);
             }
+
             
         }else if(nb_thread==1){
             pthread_t t1; //NE

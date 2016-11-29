@@ -7,7 +7,7 @@ using namespace std;
 
 
 void *afficher (void *p_data){
-	cout << "debut thread graphique" <<endl;
+	cout << ">> debut thread graphique" <<endl;
 	if (p_data != nullptr){
       	Contexte* ptr_contexte =(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=ptr_contexte->t;
@@ -21,7 +21,7 @@ void *afficher (void *p_data){
 		      	while (window.isOpen() || !t->finish()){
 		      			//cout << "salutxxx" <<endl;
                     if(t->finish()){
-                        cout << "finish" << endl;
+                        
                         break;
                     }
 
@@ -52,7 +52,7 @@ void *afficher (void *p_data){
    }else{
    		cout<< "problème dans la récupération du contexte applicatif du thread (affichage graphique)"<<endl;
    }
-   cout << "fin du thread graphique" <<endl;
+   cout << ">> fin du thread graphique" <<endl;
 } 
 
 

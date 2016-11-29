@@ -39,6 +39,8 @@ class personne {
 		bool near_SO();
 		bool near_SE();
 		bool near_NE();
+
+		bool isOut();
 		
 
 };

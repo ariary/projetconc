@@ -31,8 +31,13 @@ void *thread_avancerALL (void *p_data){
 
 
           while(!t->finish()){
-            for(int i=0;i<t->liste_personnes.size();i++)
+            for(int i=0;i<t->liste_personnes.size();i++){
+                usleep(5000);
+               //pour l'instant on ignore ceux qui sont deja arrivés
+                if(t->liste_personnes.at(i).isOut())
+                    continue;
                 t->avancer(t->liste_personnes.at(i));
+            }
       }
       cout<<">> fin thread unique(-t0)"<<endl;
    }else{
