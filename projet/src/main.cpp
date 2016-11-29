@@ -20,6 +20,9 @@
 #include <math.h> //pow
 #include <pthread.h>
 #include <semaphore.h> //utilisation sémarphore
+#include "include/graphique.h"
+ #include <unistd.h>
+
 
 
 using namespace std;
@@ -93,6 +96,13 @@ int main(int argc, char *argv[]){
         {
             Contexte my_contexte(1,&t);
             pthread_t t0;
+            // pthread_t tGraph;
+            // if(pthread_create(&tGraph, NULL, afficher, &my_contexte)!=0)
+            // {
+            //     perror("pthread_create() du graphe");
+            //     exit(1);
+            // }
+
             if(pthread_create(&t0, NULL, thread_avancerALL, &my_contexte)!=0)
             {
                 perror("pthread_create()");
@@ -111,12 +121,18 @@ int main(int argc, char *argv[]){
             pthread_t t2; //NO
             pthread_t t3; //SE
             pthread_t t4; //SO
-
+            pthread_t tGraph;
+            
             if (num_etape==1)
             {  //ETAPE 1
 
                 Contexte my_contexte(1,&t);
-
+                if(pthread_create(&tGraph, NULL, afficher, &my_contexte)!=0)
+                {
+                    perror("pthread_create() du graphe");
+                    exit(1);
+                }
+                usleep(5000);
                 if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
                     || (pthread_create(&t2, NULL, thread_avancerNO, &my_contexte)!=0)
                     || (pthread_create(&t3, NULL, thread_avancerSE, &my_contexte)!=0)
@@ -125,7 +141,12 @@ int main(int argc, char *argv[]){
                     perror("pthread_create()");
                     exit(1);
                 }
-
+                
+                if(pthread_join(tGraph, NULL)!=0)
+                {
+                    perror("pthread_join()");
+                    exit(1);
+                }
                 if (  (pthread_join(t1, NULL))
                     ||(pthread_join(t2, NULL))
                     ||(pthread_join(t3, NULL))
@@ -135,6 +156,7 @@ int main(int argc, char *argv[]){
                     exit(1);
                 }
 
+                
             }else if(num_etape==2){
                 //ETAPE 2
                 

@@ -31,26 +31,30 @@ OBJ = $(COMPILER) -c -I ./src/include
 #extra libs used in the project (for instance -lpthread)
 LIBS	= -lpthread -ll
 
+GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
 
 sans: $(EXE_NAME)
 
 $(EXE_NAME): main.o
-	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(FLAGS)
+	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(GRAPH) $(FLAGS)
 
-main.o: terrain.o personne.o mythreads.o contexte.o
+main.o: terrain.o personne.o mythreads.o contexte.o graphique.o
 	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp --std=c++11
 
 terrain.o: personne.o 
-	$(OBJ) -o $(BINDIR)/terrain.o $(SRCDIR)/terrain.cpp
+	$(OBJ) -o $(BINDIR)/terrain.o $(SRCDIR)/terrain.cpp --std=c++11
 
 personne.o:
-	$(OBJ) -o $(BINDIR)/personne.o $(SRCDIR)/personne.cpp
+	$(OBJ) -o $(BINDIR)/personne.o $(SRCDIR)/personne.cpp --std=c++11
 
 mythreads.o:
 	$(OBJ) -o $(BINDIR)/mythreads.o $(SRCDIR)/mythreads.cpp --std=c++11
 
 contexte.o:
-	$(OBJ) -std=c++11 -o $(BINDIR)/contexte.o $(SRCDIR)/contexte.cpp
+	$(OBJ) -std=c++11 -o $(BINDIR)/contexte.o $(SRCDIR)/contexte.cpp --std=c++11
+
+graphique.o:
+	$(OBJ) -o $(BINDIR)/graphique.o $(SRCDIR)/graphique.cpp --std=c++11
 
 clean:
 	rm -f $(BINDIR)/*.o $(BINDIR)/$(EXE_NAME)

@@ -10,6 +10,7 @@
 #include "include/mythreads.h"
 #include <iostream>
 #include "include/contexte.h"
+#include <unistd.h>
 
 using namespace std;
 /*t0*/
@@ -75,6 +76,8 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
       {
         case 1: /*Etape 1*/
             while (!t->finish()){
+              usleep(50000);
+              cout << "NE" << endl;
               avancer_all_NE(t);
             }
             cout<<">> fin thread zone Nord-Est"<<endl;
@@ -115,7 +118,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             /*ACTIONS*/
             while(!t->finish())
             {
-
+               
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
                     if(isOnNE(p))
@@ -242,6 +245,8 @@ void *thread_avancerNO(void *p_data){
         case 1:
 
           while (!t->finish()){
+            usleep(50000);
+            cout << "NO" << endl;
             avancer_all_NO(t);
           }
           cout<<">> fin thread zone Nord-Ouest"<<endl;
@@ -397,6 +402,8 @@ void *thread_avancerSE(void *p_data){
           case 1:
 
               while (!t->finish()){
+                usleep(50000);
+                cout << "SE" << endl;
                 avancer_all_SE(t);
               }
               cout<<">> fin thread zone Sud-Est"<<endl;
@@ -550,6 +557,8 @@ void *thread_avancerSO(void *p_data){
         switch(c->_etape){
           case 1:
               while (!t->finish()){
+                usleep(50000);
+                cout << "SO" << endl;
                 avancer_all_SO(t);
               }
               cout<<">> fin thread zone Sud-Ouest"<<endl;
