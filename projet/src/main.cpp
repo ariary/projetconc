@@ -229,7 +229,7 @@ int main(int argc, char *argv[]){
             /*attente de la fin des threads*/
             barrier.block();
 
-
+            cout<<">> Tous les threads sont terminés (-t1)"<<endl;
 
         }
 

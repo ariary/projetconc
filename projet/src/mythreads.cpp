@@ -203,7 +203,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
         }
         case 3:
             Moniteur* moniteur=c->m;
-            while(!t->finish()){
+            /*while(!t->finish()){
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
                     if(isOnNE(p))
@@ -218,7 +218,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                         //si proche d'une zone faire faire pareil avec cond différent
                     }
                 }
-            }
+            }*/
             
             /*thread arrivé à son terme (devant la barrière)*/
             if (c->barrier!=nullptr)
