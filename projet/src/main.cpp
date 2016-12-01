@@ -202,40 +202,8 @@ int main(int argc, char *argv[]){
             pthread_cond_t cond[4];
             cond[0]=zoneNE;cond[1]=zoneNO;cond[2]=zoneSO;cond[3]=zoneSE;
 
-            /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
-            //NO
-            sem_t join_NO;
-            if(sem_init(&join_NO, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
+            CyclicBarrier barrier(4);
 
-            //SO
-            sem_t join_SO;
-            if(sem_init(&join_SO, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
-
-
-            //NE
-            sem_t join_NE;
-            if(sem_init(&join_NE, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
-
-
-            //SE
-            sem_t join_SE;
-            if(sem_init(&join_SE, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
 
             //mutex
             pthread_mutex_t mutex;
@@ -244,32 +212,14 @@ int main(int argc, char *argv[]){
             /*initialisation du contexte*/
             Contexte my_contexte(3,&t);
             my_contexte.setMoniteur(&my_moniteur);
-            my_contexte.setJoin(&join_NE);
+            my_contexte.setCyclicBarrier(&barrier);
 
 
             /*Lancement des threads*/
-            if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0))
-            {
-                perror("pthread_create()");
-                exit(1);
-            }
-
-            my_contexte.setJoin(&join_SE);
-            if(    (pthread_create(&t1, NULL, thread_avancerSE, &my_contexte)!=0))
-            {
-                perror("pthread_create()");
-                exit(1);
-            }
-
-            my_contexte.setJoin(&join_NO);
-            if(    (pthread_create(&t1, NULL, thread_avancerNO, &my_contexte)!=0))
-            {
-                perror("pthread_create()");
-                exit(1);
-            }
-
-            my_contexte.setJoin(&join_SO);
-            if(    (pthread_create(&t1, NULL, thread_avancerSO, &my_contexte)!=0))
+            if((pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
+              ||(pthread_create(&t2, NULL, thread_avancerSE, &my_contexte)!=0)
+              ||(pthread_create(&t3, NULL, thread_avancerNO, &my_contexte)!=0)
+              ||(pthread_create(&t4, NULL, thread_avancerSO, &my_contexte)!=0))
             {
                 perror("pthread_create()");
                 exit(1);
@@ -277,14 +227,7 @@ int main(int argc, char *argv[]){
 
 
             /*attente de la fin des threads*/
-            if (  (pthread_join(t1, NULL))
-                ||(pthread_join(t2, NULL))
-                ||(pthread_join(t3, NULL))
-                ||(pthread_join(t4, NULL)))
-            {
-                perror("pthread_join()");
-                exit(1);
-            }
+            barrier.block();
 
 
 

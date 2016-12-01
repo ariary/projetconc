@@ -11,12 +11,11 @@
 //-----------------------------
 //			CONTEXTE
 //-----------------------------
-Contexte::Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem,sem_t* join,personne* pers,sem_t* mutex){
+Contexte::Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem,personne* pers,sem_t* mutex){
 	this->_etape=num_etap;
 	this->t=ter;
 	this->map_sem=map_sem;
 	this->_pers=pers;
-	this->join=join;
 	this->mutex=mutex;
 }
 
@@ -33,9 +32,6 @@ void Contexte::setMoniteur(Moniteur* m){
 	this->m=m;
 }
 
-void Contexte::setJoin(sem_t *join){
-	this->join=join;
-}
 
 void Contexte::setCyclicBarrier(CyclicBarrier* barrier){
 	this->barrier=barrier;

@@ -197,7 +197,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
-                 
+
             cout<<">> fin thread zone Nord-Est"<<endl;    
             break;
         }
@@ -219,18 +219,15 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                     }
                 }
             }
-            /*je fais down sur la sémaphore du thread avant d'en sortir*/
-            if (c->join != nullptr)
+            
+            /*thread arrivé à son terme (devant la barrière)*/
+            if (c->barrier!=nullptr)
             {
-              if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
+              c->barrier->await();
             }else{
-              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
-            } 
+            }
             cout<<">> fin thread zone Nord-Est"<<endl; 
             break;
     }
@@ -385,18 +382,15 @@ void *thread_avancerNO(void *p_data){
             break;
         case 3:
             Moniteur* moniteur=c->m; //recuperation du moniteur
-            /*je fais down sur la sémaphore du thread avant d'en sortir*/
-            if (c->join != nullptr)
+            
+            /*thread arrivé à son terme (devant la barrière)*/
+            if (c->barrier!=nullptr)
             {
-              if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
+              c->barrier->await();
             }else{
-              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
-            } 
+            }
             cout<<">> fin thread zone Nord-Ouest"<<endl;
             break;
       }
@@ -551,18 +545,14 @@ void *thread_avancerSE(void *p_data){
             break;
         }
         case 3:
-            /*je fais down sur la sémaphore du thread avant d'en sortir*/
-            if (c->join != nullptr)
+            /*thread arrivé à son terme (devant la barrière)*/
+            if (c->barrier!=nullptr)
             {
-              if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
+              c->barrier->await();
             }else{
-              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
-            } 
+            }
             cout<<">> fin thread zone Sud-Est"<<endl; 
             break;
         }
@@ -713,18 +703,14 @@ void *thread_avancerSO(void *p_data){
             break;
         }
         case 3:
-            /*je fais down sur la sémaphore du thread avant d'en sortir*/
-            if (c->join != nullptr)
+            /*thread arrivé à son terme (devant la barrière)*/
+            if (c->barrier!=nullptr)
             {
-              if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
+              c->barrier->await();
             }else{
-              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
+              cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
-            } 
+            }
 
             cout<<">> fin thread zone Sud-Ouest"<<endl;
             break;

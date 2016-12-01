@@ -37,17 +37,15 @@ class Contexte {
 		int _etape; //utilisé dans mythread.cpp
 		terrain* t; //pointeur sur terrain car : pas le terrain n'a pas le même cycle de vie que le contexte et je ne veux pas une copie
 		map<string,sem_t*> *map_sem; //map avec un mutex pour chaque zone
-		sem_t *join; //etape2
 		sem_t *mutex;
 		personne *_pers;
 		Moniteur* m;
 		CyclicBarrier* barrier;
 
 
-		Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem=nullptr,sem_t* join=nullptr,personne* pers=nullptr,sem_t* mutex=nullptr);
+		Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem=nullptr,personne* pers=nullptr,sem_t* mutex=nullptr);
 
 		void setMoniteur(Moniteur* m);
-		void setJoin(sem_t *join);
 		void setCyclicBarrier(CyclicBarrier* barrier);
 		void setSemaphore(sem_t* mutex);
 		void setPersonne(personne* p);
