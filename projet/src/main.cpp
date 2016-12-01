@@ -310,6 +310,40 @@ int main(int argc, char *argv[]){
             barrier.block();//appel bloquant
             cout<<">> Tous les threads sont terminés (-t2)"<<endl;
            
+        }else if (num_etape==3)
+        {
+            CyclicBarrier barrier(pow(2,nb_personne));
+            //mutex
+            pthread_mutex_t mutex;
+            pthread_cond_t cond;
+            Moniteur my_moniteur(&cond,mutex);
+
+
+
+            Contexte my_contexte(2,&t);
+            my_contexte.setMoniteur(&my_moniteur);     
+            my_contexte.setCyclicBarrier(&barrier);
+
+            /*On lance un thread par personne */
+            for (int i = 0; i < t.liste_personnes.size(); ++i)
+            {
+
+                //Mise en place contexe
+                my_contexte.setPersonne(&(t.liste_personnes[i]));
+
+                //lancement thread
+                pthread_t th_personne;
+                
+                if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
+                {
+                    perror("pthread_create()");
+                    exit(1);
+                }
+                
+            }
+            cout<<">> Début de l'attente"<<endl;
+            barrier.block();//appel bloquant
+            cout<<">> Tous les threads sont terminés (-t2)"<<endl;
         }
     }   
 #ifdef GRAPH

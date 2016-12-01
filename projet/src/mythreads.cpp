@@ -704,8 +704,7 @@ void *thread_avancerSO(void *p_data){
         }
         case 3:
             /*thread arrivé à son terme (devant la barrière)*/
-            if (c->barrier!=nullptr)
-            {
+            if(c->barrier!=nullptr){
               c->barrier->await();
             }else{
               cout<<">> probleme de récupération de la barrière"<<endl;
@@ -742,33 +741,61 @@ void *thread_avancerALONE(void *p_data){
       if (c->barrier!= nullptr)c->_etape=2;
       switch(c->_etape){
         case 1:
+
             while(!my_personne.aFini())
               my_terrain.avancer(my_personne);
             break;
-        default:
-
-            sem_t* mutex=c->mutex;
-            CyclicBarrier* barrier=c->barrier;
-            while(!my_personne.aFini())
+        case 2:
             {
-              usleep(5000);
-              if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
-              {
-                perror("sem_wait() in mythread.cpp");
-                exit(1);
+              sem_t* mutex=c->mutex;
+              if (c->barrier!=nullptr){
+                  CyclicBarrier* barrier=c->barrier;
+              
+                  while(!my_personne.aFini())
+                  {
+                    usleep(5000);
+                    if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
+                    {
+                      perror("sem_wait() in mythread.cpp");
+                      exit(1);
+                    }
+                    my_terrain.avancer(my_personne);
+                    if(sem_post(mutex)==-1)// je rends le terrain
+                    {
+                        perror("sem_post()");
+                        exit(1);
+                    }
+                  }
+
+
+                  // je signale que je suis devant la barrière avant de sortir
+                  barrier->await();
+              }else{
+                  cerr<<"problème de récupération de la barrière (-t2)"<<endl;
               }
-              my_terrain.avancer(my_personne);
-              if(sem_post(mutex)==-1)// je rends le terrain
-              {
-                  perror("sem_post()");
-                  exit(1);
-              }
+              break;
+          }
+        case 3:
+            /*récupération barrière*/
+            if (c->barrier!=nullptr){
+                CyclicBarrier* barrier=c->barrier;
+
+                /*récupération Moniteur*/
+                Moniteur* moniteur=c->m;
+
+                while(!my_personne.aFini()){
+                    pthread_mutex_lock(&(moniteur->mutex));
+                    if(1) pthread_cond_wait(moniteur->cond, &(moniteur->mutex)); //A CHANGER
+                    my_terrain.avancer(my_personne);
+                    pthread_cond_signal(moniteur->cond);
+                    pthread_mutex_unlock(&(moniteur->mutex));
+                }
+                barrier->await();
+            }else{
+                cerr<<"problème de récupération de la barrière (-t2)"<<endl;
             }
+            break;
 
-
-            // je signale que je suis devant la barrière avant de sortir
-            barrier->await();
-            break;            
       }
 
 
