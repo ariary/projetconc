@@ -6,11 +6,11 @@
 using namespace std;
 
 
-void *afficher (void *p_data){
+void *afficher (void *t){
 	cout << ">> debut thread graphique" <<endl;
-	if (p_data != nullptr){
-      	Contexte* ptr_contexte =(Contexte*) p_data;// recuperation du contexte applicatif
-        terrain* t=ptr_contexte->t;
+	if (t != nullptr){
+      	terrain* ptr_terrain =(terrain*) t;// recuperation du contexte applicatif
+        //terrain* t=ptr_terrain;
         //if(ptr_contexte->_etape != 1){
 		        sf::RenderWindow window(sf::VideoMode(512, 128), "Titre");
 		   		window.clear(sf::Color(214,214,214));
@@ -18,9 +18,13 @@ void *afficher (void *p_data){
 			    sf::Color white = sf::Color::White;
 			    sf::Color red = sf::Color::Red;
 		    	
-		      	while (window.isOpen() || !t->finish()){
+		      	while (window.isOpen() || !ptr_terrain->finish()){
 		      			//cout << "salutxxx" <<endl;
-                    if(t->finish()){
+                    for (int i = 0; i < ptr_terrain->liste_personnes.size(); ++i)
+                    {
+                        ptr_terrain->liste_personnes.at(i).print_personne(); 
+                    }
+                    if(ptr_terrain->finish()){
                         
                         break;
                     }
@@ -32,7 +36,7 @@ void *afficher (void *p_data){
 				                rectangle.setSize(sf::Vector2f(1, 1)); // Taille (1x1)
 				                rectangle.setPosition(j, i); //Position sur l'écran");
 				                //sa couleur : 
-				                switch(t->matrice.at(i).at(j)){
+				                switch(ptr_terrain->matrice.at(i).at(j)){
 				                    case 2 : rectangle.setFillColor(black);
 				                            break;
 				                    case 1 : rectangle.setFillColor(red);
@@ -44,6 +48,7 @@ void *afficher (void *p_data){
 				            }
 				        }
 				        window.display();
+
                         
 		        }
 		   	 		cout << "la simulation est terminée" << endl;

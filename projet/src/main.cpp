@@ -87,7 +87,12 @@ int main(int argc, char *argv[]){
 
     /*lancement du programme*/
     terrain t = terrain((int)pow(2,nb_personne)) ;
-
+    pthread_t tGraph;
+    if(pthread_create(&tGraph, NULL, afficher, &t)!=0)
+    {
+        perror("pthread_create() du graphe");
+        exit(1);
+    }
 
 
 
@@ -96,23 +101,14 @@ int main(int argc, char *argv[]){
         {
             Contexte my_contexte(1,&t);
             pthread_t t0;
-            pthread_t tGraph;
-            if(pthread_create(&tGraph, NULL, afficher, &my_contexte)!=0)
-            {
-                perror("pthread_create() du graphe");
-                exit(1);
-            }
+            
 
             if(pthread_create(&t0, NULL, thread_avancerALL, &my_contexte)!=0)
             {
                 perror("pthread_create()");
                 exit(1);
             }
-             if(pthread_join(tGraph, NULL)!=0)
-            {
-                perror("pthread_join() graphique");
-                exit(1);
-            }
+             
 
             if(pthread_join(t0, NULL)!=0)
             {
@@ -126,18 +122,11 @@ int main(int argc, char *argv[]){
             pthread_t t2; //NO
             pthread_t t3; //SE
             pthread_t t4; //SO
-            pthread_t tGraph;
             
             if (num_etape==1)
             {  //ETAPE 1
 
                 Contexte my_contexte(1,&t);
-                if(pthread_create(&tGraph, NULL, afficher, &my_contexte)!=0)
-                {
-                    perror("pthread_create() du graphe");
-                    exit(1);
-                }
-                usleep(5000);
                 if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
                     || (pthread_create(&t2, NULL, thread_avancerNO, &my_contexte)!=0)
                     || (pthread_create(&t3, NULL, thread_avancerSE, &my_contexte)!=0)
@@ -147,11 +136,6 @@ int main(int argc, char *argv[]){
                     exit(1);
                 }
                 
-                if(pthread_join(tGraph, NULL)!=0)
-                {
-                    perror("pthread_join()");
-                    exit(1);
-                }
                 if (  (pthread_join(t1, NULL))
                     ||(pthread_join(t2, NULL))
                     ||(pthread_join(t3, NULL))
@@ -160,18 +144,8 @@ int main(int argc, char *argv[]){
                     perror("pthread_join()");
                     exit(1);
                 }
-
-                
             }else if(num_etape==2){
-                //ETAPE 2
-                // pthread_t tGraph;
-                // Contexte my_contexteGraphique(1,&t);
-                // if(pthread_create(&tGraph, NULL, afficher, &my_contexteGraphique)!=0)
-                // {
-                //     perror("pthread_create() du graphe");
-                //     exit(1);
-                // }
-               
+                //ETAPE 2               
                 /*Initialisation d'une sémaphore par zone*/
                 sem_t sem_NO,sem_SE,sem_SO,sem_NE;
                 if(   (sem_init(&sem_NO, 0, 1)==-1)
@@ -190,11 +164,6 @@ int main(int argc, char *argv[]){
                 m_sem.insert (pair<string,sem_t*>("SO",&sem_SO) );
                 m_sem.insert (pair<string,sem_t*>("NE",&sem_NE) );
 
-                // if(pthread_join(tGraph, NULL)!=0)
-                // {
-                //     perror("pthread_join()");
-                //     exit(1);
-                // }
 
                 /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
                 //NO
@@ -277,7 +246,6 @@ int main(int argc, char *argv[]){
                     exit(1);
                 }
             }else{ // -t1 -e3
-
                 cout<<"e3"<<endl;
                 /*Initialisation du moniteur*/
                 //condition
@@ -323,7 +291,7 @@ int main(int argc, char *argv[]){
                     perror("sem_init()");
                     exit(1);
                 }
-
+                cout << "coucou" << endl;
                 //mutex
                 pthread_mutex_t mutex;
                 Moniteur my_moniteur(cond,mutex);
@@ -377,38 +345,28 @@ int main(int argc, char *argv[]){
 
             }
 
-        }else{//nb_thread=4
+        }else{//nb_thread=2
 
             if (num_etape==1)
             {   //ETAPE 1
 
                 Contexte my_contexte(1,&t);
                 vector<pthread_t> v_thread; //création pour l'attente des threads
-                pthread_t tGraph;
-                if (pthread_create(&tGraph, NULL, afficher, &my_contexte)!=0)
-                {
-                    perror("pthread_create()");
-                    exit(1);
-                }
-                if (pthread_join(tGraph, NULL))
-                    {
-                        perror("pthread_join()");
-                        exit(1);
-                    }
                 /*On lance un thread par personne */
                 cout<<">> lancement d'un thread par personne (-t2)"<<endl;
+                usleep(5000);
                 for (int i = 0; i < t.liste_personnes.size(); ++i)
                 {
                     pthread_t th_personne;
                     my_contexte._pers=&(t.liste_personnes[i]);
-
+                    v_thread.push_back(th_personne);
                     if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
                     {
                         perror("pthread_create()");
                         exit(1);
                     }
                     
-                    v_thread.push_back(th_personne);
+                    
                 }
                 cout<<">> tous les threads sont lancés (-t2)"<<endl;
 
@@ -434,8 +392,7 @@ int main(int argc, char *argv[]){
                 {
                     perror("sem_init()");
                     exit(1);
-                }
-
+                }     
 
                 /*On lance un thread par personne */
                 for (int i = 0; i < t.liste_personnes.size(); ++i)
@@ -455,18 +412,7 @@ int main(int argc, char *argv[]){
 
                     //lancement thread
                     pthread_t th_personne;
-                    // pthread_t tGraph2;
-                    // if (pthread_create(&tGraph2, NULL, afficher, &my_contexte)!=0)
-                    // {
-                    //     perror("pthread_create()");
-                    //     exit(1);
-                    // }
-
-                    // if (pthread_join(tGraph2, NULL))
-                    // {
-                    //     perror("pthread_join()");
-                    //     exit(1);
-                    // }
+                    
                     if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
                     {
                         perror("pthread_create()");
@@ -500,10 +446,15 @@ int main(int argc, char *argv[]){
                     v_private.pop_back();
                 }
                 cout<<">> Tous les threads sont terminés (-t2)"<<endl;
+               
             }
         }   
     
-
+    if(pthread_join(tGraph, NULL)!=0)
+    {
+        perror("pthread_join() graphique");
+        exit(1);
+    }
     tempsFin = clock();
     end = time(NULL);
     if (time_execution)
