@@ -24,6 +24,10 @@ void Contexte::setMoniteur(Moniteur* m){
 	this->m=m;
 }
 
+void Contexte::setJoin(sem_t *join){
+	this->join=join;
+}
+
 
 //-----------------------------
 //			MONITEUR
