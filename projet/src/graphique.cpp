@@ -1,3 +1,12 @@
+/*
+ *
+ * File: graphique.cpp
+ * Author: Adrien Prestini & Antoine Rabenandrasana
+ * 
+ * Version: dernier rendu
+ * 
+ */
+
 #include "include/graphique.h"
 #include <iostream>
 #include "include/contexte.h"
@@ -6,12 +15,13 @@
 using namespace std;
 
 
-void *afficher (void *t){
+void *afficher (void *p_data){
 	cout << ">> debut thread graphique" <<endl;
-	if (t != nullptr){
-      	terrain* ptr_terrain =(terrain*) t;// recuperation du contexte applicatif
-        //terrain* t=ptr_terrain;
-        //if(ptr_contexte->_etape != 1){
+	if (p_data != nullptr){
+      	// Contexte* ptr_contexte =(Contexte*) t;// recuperation du contexte applicatif
+       //  terrain* ptr_terrain=ptr_contexte->t;
+        terrain* ptr_terrain=(terrain*) p_data;
+
 		        sf::RenderWindow window(sf::VideoMode(512, 128), "Titre");
 		   		window.clear(sf::Color(214,214,214));
 			    sf::Color black = sf::Color::Black;
@@ -19,7 +29,12 @@ void *afficher (void *t){
 			    sf::Color red = sf::Color::Red;
 		    	
 		      	while (window.isOpen() || !ptr_terrain->finish()){
-		      			//cout << "salutxxx" <<endl;
+		      		// if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
+          //           {
+          //             perror("sem_wait() in graphique.cpp");
+          //             exit(1);
+          //           }
+
                     for (int i = 0; i < ptr_terrain->liste_personnes.size(); ++i)
                     {
                         ptr_terrain->liste_personnes.at(i).print_personne(); 
@@ -49,7 +64,11 @@ void *afficher (void *t){
 				        }
 				        window.display();
 
-                        
+                        // if(sem_post(mutex)==-1)// je rends le terrain
+                        // {
+                        //     perror("sem_post() in graphique.cpp");
+                        //     exit(1);
+                        // }                        
 		        }
 		   	 		cout << "la simulation est terminée" << endl;
 				    window.close();

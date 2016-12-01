@@ -3,8 +3,7 @@
  * File: main.cpp
  * Author: Adrien Prestini & Antoine Rabenandrasana
  * 
- * Version: rendu du 10 octobre 2016
- * Moidifications: rencu du 7 novembre 2016
+ * Version: dernier rendu
  */
 
 #include <stdio.h>
@@ -94,335 +93,332 @@ int main(int argc, char *argv[]){
         exit(1);
     }
 
+    if (nb_thread==0)
+    {
+        Contexte my_contexte(1,&t);
+        pthread_t t0;
+        
 
-
-
-        if (nb_thread==0)
+        if(pthread_create(&t0, NULL, thread_avancerALL, &my_contexte)!=0)
         {
-            Contexte my_contexte(1,&t);
-            pthread_t t0;
-            
+            perror("pthread_create()");
+            exit(1);
+        }
+         
 
-            if(pthread_create(&t0, NULL, thread_avancerALL, &my_contexte)!=0)
+        if(pthread_join(t0, NULL)!=0)
+        {
+            perror("pthread_join()");
+            exit(1);
+        }
+
+        
+    }else if(nb_thread==1){
+        pthread_t t1; //NE
+        pthread_t t2; //NO
+        pthread_t t3; //SE
+        pthread_t t4; //SO
+        
+        if (num_etape==1)
+        {  //ETAPE 1
+
+            Contexte my_contexte(1,&t);
+            if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
+                || (pthread_create(&t2, NULL, thread_avancerNO, &my_contexte)!=0)
+                || (pthread_create(&t3, NULL, thread_avancerSE, &my_contexte)!=0)
+                || (pthread_create(&t4, NULL, thread_avancerSO, &my_contexte)!=0))
             {
                 perror("pthread_create()");
                 exit(1);
             }
-             
+            
+            if (  (pthread_join(t1, NULL))
+                ||(pthread_join(t2, NULL))
+                ||(pthread_join(t3, NULL))
+                ||(pthread_join(t4, NULL)))
+            {
+                perror("pthread_join()");
+                exit(1);
+            }
+        }else if(num_etape==2){
+            //ETAPE 2               
+            /*Initialisation d'une sémaphore par zone*/
+            sem_t sem_NO,sem_SE,sem_SO,sem_NE;
+            if(   (sem_init(&sem_NO, 0, 1)==-1)
+                ||(sem_init(&sem_SE, 0, 1)==-1)
+                ||(sem_init(&sem_SO, 0, 1)==-1)
+                ||(sem_init(&sem_NE, 0, 1)==-1) )
+            {
+                perror("sem_init()");
+                exit(1);
+            }
 
-            if(pthread_join(t0, NULL)!=0)
+            /*Insertion des semaphore dans la map*/
+            map<string,sem_t*> m_sem;
+            m_sem.insert (pair<string,sem_t*>("NO",&sem_NO) );
+            m_sem.insert (pair<string,sem_t*>("SE",&sem_SE) );
+            m_sem.insert (pair<string,sem_t*>("SO",&sem_SO) );
+            m_sem.insert (pair<string,sem_t*>("NE",&sem_NE) );
+
+
+            /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
+            //NO
+            sem_t join_NO;
+            if(sem_init(&join_NO, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+            //SO
+            sem_t join_SO;
+            if(sem_init(&join_SO, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+
+            //NE
+            sem_t join_NE;
+            if(sem_init(&join_NE, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+
+            //SE
+            sem_t join_SE;
+            if(sem_init(&join_SE, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+
+            /*Initialisation des Contextes*/
+
+            //NO
+            Contexte contexte_NO(2,&t,&m_sem,&join_NO);
+            //SO
+            Contexte contexte_SO(2,&t,&m_sem,&join_SO);
+            //NE
+            Contexte contexte_NE(2,&t,&m_sem,&join_NE);
+            //SE
+            Contexte contexte_SE(2,&t,&m_sem,&join_SE);
+
+            /*lancement des threads*/
+            if(    (pthread_create(&t2, NULL, thread_avancerNE, &contexte_NO)!=0)
+                || (pthread_create(&t4, NULL, thread_avancerNO, &contexte_SO)!=0)
+                || (pthread_create(&t1, NULL, thread_avancerSE, &contexte_NE)!=0)
+                || (pthread_create(&t3, NULL, thread_avancerSO, &contexte_SE)!=0))
+            {
+                perror("pthread_create()");
+                exit(1);
+            }
+            
+            /*up sur les semaphore des threads (bis) logiquement bloqué si la thread est active*/
+            if(   (sem_wait(&join_NO)==-1)
+                ||(sem_wait(&join_SO)==-1)
+                ||(sem_wait(&join_NE)==-1)
+                ||(sem_wait(&join_SE)==-1))
+            {
+                perror("sem_wait() in main.cpp");
+                exit(1);
+            }
+
+            /*destruction des sémaphores*/
+            if ((sem_destroy(&sem_NE)==-1)
+                ||(sem_destroy(&sem_SE)==-1)
+                ||(sem_destroy(&sem_NO)==-1)
+                ||(sem_destroy(&sem_SO)==-1)
+                ||(sem_destroy(&join_NO)==-1)
+                ||(sem_destroy(&join_SO)==-1)
+                ||(sem_destroy(&join_NE)==-1)
+                ||(sem_destroy(&join_SE)==-1))
+            {
+                perror("sem_destroy()");
+                exit(1);
+            }
+        }else{ // -t1 -e3
+            cout<<"e3"<<endl;
+            /*Initialisation du moniteur*/
+            //condition
+            pthread_cond_t zoneNE;
+            pthread_cond_t zoneNO;
+            pthread_cond_t zoneSO;
+            pthread_cond_t zoneSE;
+            //Tableau de conditions
+            pthread_cond_t cond[4];
+            cond[0]=zoneNE;cond[1]=zoneNO;cond[2]=zoneSO;cond[3]=zoneSE;
+
+            /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
+            //NO
+            sem_t join_NO;
+            if(sem_init(&join_NO, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+            //SO
+            sem_t join_SO;
+            if(sem_init(&join_SO, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+
+            //NE
+            sem_t join_NE;
+            if(sem_init(&join_NE, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+
+            //SE
+            sem_t join_SE;
+            if(sem_init(&join_SE, 0, 0)) //sémaphore privée
+            {
+                perror("sem_init()");
+                exit(1);
+            }
+
+            //mutex
+            pthread_mutex_t mutex;
+            Moniteur my_moniteur(cond,mutex);
+
+            /*initialisation du contexte*/
+            Contexte my_contexte(3,&t);
+            my_contexte.setMoniteur(&my_moniteur);
+            my_contexte.setJoin(&join_NE);
+
+
+            /*Lancement des threads*/
+            if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0))
+            {
+                perror("pthread_create()");
+                exit(1);
+            }
+
+            my_contexte.setJoin(&join_SE);
+            if(    (pthread_create(&t1, NULL, thread_avancerSE, &my_contexte)!=0))
+            {
+                perror("pthread_create()");
+                exit(1);
+            }
+
+            my_contexte.setJoin(&join_NO);
+            if(    (pthread_create(&t1, NULL, thread_avancerNO, &my_contexte)!=0))
+            {
+                perror("pthread_create()");
+                exit(1);
+            }
+
+            my_contexte.setJoin(&join_SO);
+            if(    (pthread_create(&t1, NULL, thread_avancerSO, &my_contexte)!=0))
+            {
+                perror("pthread_create()");
+                exit(1);
+            }
+
+
+            /*attente de la fin des threads*/
+            if (  (pthread_join(t1, NULL))
+                ||(pthread_join(t2, NULL))
+                ||(pthread_join(t3, NULL))
+                ||(pthread_join(t4, NULL)))
             {
                 perror("pthread_join()");
                 exit(1);
             }
 
-            
-        }else if(nb_thread==1){
-            pthread_t t1; //NE
-            pthread_t t2; //NO
-            pthread_t t3; //SE
-            pthread_t t4; //SO
-            
-            if (num_etape==1)
-            {  //ETAPE 1
 
-                Contexte my_contexte(1,&t);
-                if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
-                    || (pthread_create(&t2, NULL, thread_avancerNO, &my_contexte)!=0)
-                    || (pthread_create(&t3, NULL, thread_avancerSE, &my_contexte)!=0)
-                    || (pthread_create(&t4, NULL, thread_avancerSO, &my_contexte)!=0))
+
+        }
+
+    }else{//nb_thread=2
+
+        if (num_etape==1)
+        {   //ETAPE 1
+
+            Contexte my_contexte(1,&t);
+            vector<pthread_t> v_thread; //création pour l'attente des threads
+            /*On lance un thread par personne */
+            cout<<">> lancement d'un thread par personne (-t2)"<<endl;
+            usleep(5000);
+            for (int i = 0; i < t.liste_personnes.size(); ++i)
+            {
+                pthread_t th_personne;
+                my_contexte._pers=&(t.liste_personnes[i]);
+                v_thread.push_back(th_personne);
+                if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
                 {
                     perror("pthread_create()");
                     exit(1);
                 }
                 
-                if (  (pthread_join(t1, NULL))
-                    ||(pthread_join(t2, NULL))
-                    ||(pthread_join(t3, NULL))
-                    ||(pthread_join(t4, NULL)))
+                
+            }
+            cout<<">> tous les threads sont lancés (-t2)"<<endl;
+
+            /*On attend la fin de chaque thread */
+            int wait_t=(int)pow(2,nb_personne);
+            cout<<">> attente de "<<wait_t<<"  threads"<<endl;
+            for (pthread_t t : v_thread)
+            {
+                if (pthread_join(t, NULL))
                 {
                     perror("pthread_join()");
                     exit(1);
                 }
-            }else if(num_etape==2){
-                //ETAPE 2               
-                /*Initialisation d'une sémaphore par zone*/
-                sem_t sem_NO,sem_SE,sem_SO,sem_NE;
-                if(   (sem_init(&sem_NO, 0, 1)==-1)
-                    ||(sem_init(&sem_SE, 0, 1)==-1)
-                    ||(sem_init(&sem_SO, 0, 1)==-1)
-                    ||(sem_init(&sem_NE, 0, 1)==-1) )
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
+                cout<<">> attente de "<<--wait_t<<"  threads"<<endl;
+                
+            }
+        }else if(num_etape==2){
+            //ETAPE2
 
-                /*Insertion des semaphore dans la map*/
-                map<string,sem_t*> m_sem;
-                m_sem.insert (pair<string,sem_t*>("NO",&sem_NO) );
-                m_sem.insert (pair<string,sem_t*>("SE",&sem_SE) );
-                m_sem.insert (pair<string,sem_t*>("SO",&sem_SO) );
-                m_sem.insert (pair<string,sem_t*>("NE",&sem_NE) );
+            sem_t sem_terrain;
+            if(sem_init(&sem_terrain, 0, 1)==-1)
+            {
+                perror("sem_init()");
+                exit(1);
+            }     
 
+            /*Contexte commun*/
+            CyclicBarrier barrier(pow(2,nb_personne));
+            Contexte my_contexte(2,&t);
+            my_contexte.setSemaphore(&sem_terrain);         
+            my_contexte.setCyclicBarrier(&barrier);
+            
+            /*On lance un thread par personne */
+            for (int i = 0; i < t.liste_personnes.size(); ++i)
+            {
 
-                /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
-                //NO
-                sem_t join_NO;
-                if(sem_init(&join_NO, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
+                //Mise en place contexe
+                my_contexte.setPersonne(&(t.liste_personnes[i]));
 
-                //SO
-                sem_t join_SO;
-                if(sem_init(&join_SO, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
-
-
-                //NE
-                sem_t join_NE;
-                if(sem_init(&join_NE, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
-
-
-                //SE
-                sem_t join_SE;
-                if(sem_init(&join_SE, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
-
-
-                /*Initialisation des Contextes*/
-
-                //NO
-                Contexte contexte_NO(2,&t,&m_sem,&join_NO);
-                //SO
-                Contexte contexte_SO(2,&t,&m_sem,&join_SO);
-                //NE
-                Contexte contexte_NE(2,&t,&m_sem,&join_NE);
-                //SE
-                Contexte contexte_SE(2,&t,&m_sem,&join_SE);
-
-                /*lancement des threads*/
-                if(    (pthread_create(&t2, NULL, thread_avancerNE, &contexte_NO)!=0)
-                    || (pthread_create(&t4, NULL, thread_avancerNO, &contexte_SO)!=0)
-                    || (pthread_create(&t1, NULL, thread_avancerSE, &contexte_NE)!=0)
-                    || (pthread_create(&t3, NULL, thread_avancerSO, &contexte_SE)!=0))
+                //lancement thread
+                pthread_t th_personne;
+                
+                if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
                 {
                     perror("pthread_create()");
                     exit(1);
                 }
                 
-                /*up sur les semaphore des threads (bis) logiquement bloqué si la thread est active*/
-                if(   (sem_wait(&join_NO)==-1)
-                    ||(sem_wait(&join_SO)==-1)
-                    ||(sem_wait(&join_NE)==-1)
-                    ||(sem_wait(&join_SE)==-1))
-                {
-                    perror("sem_wait() in main.cpp");
-                    exit(1);
-                }
-
-                /*destruction des sémaphores*/
-                if ((sem_destroy(&sem_NE)==-1)
-                    ||(sem_destroy(&sem_SE)==-1)
-                    ||(sem_destroy(&sem_NO)==-1)
-                    ||(sem_destroy(&sem_SO)==-1)
-                    ||(sem_destroy(&join_NO)==-1)
-                    ||(sem_destroy(&join_SO)==-1)
-                    ||(sem_destroy(&join_NE)==-1)
-                    ||(sem_destroy(&join_SE)==-1))
-                {
-                    perror("sem_destroy()");
-                    exit(1);
-                }
-            }else{ // -t1 -e3
-                cout<<"e3"<<endl;
-                /*Initialisation du moniteur*/
-                //condition
-                pthread_cond_t zoneNE;
-                pthread_cond_t zoneNO;
-                pthread_cond_t zoneSO;
-                pthread_cond_t zoneSE;
-                //Tableau de conditions
-                pthread_cond_t cond[4];
-                cond[0]=zoneNE;cond[1]=zoneNO;cond[2]=zoneSO;cond[3]=zoneSE;
-
-                /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
-                //NO
-                sem_t join_NO;
-                if(sem_init(&join_NO, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
-
-                //SO
-                sem_t join_SO;
-                if(sem_init(&join_SO, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
-
-
-                //NE
-                sem_t join_NE;
-                if(sem_init(&join_NE, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
-
-
-                //SE
-                sem_t join_SE;
-                if(sem_init(&join_SE, 0, 0)) //sémaphore privée
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }
-                cout << "coucou" << endl;
-                //mutex
-                pthread_mutex_t mutex;
-                Moniteur my_moniteur(cond,mutex);
-
-                /*initialisation du contexte*/
-                Contexte my_contexte(3,&t);
-                my_contexte.setMoniteur(&my_moniteur);
-                my_contexte.setJoin(&join_NE);
-
-
-                /*Lancement des threads*/
-                if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0))
-                {
-                    perror("pthread_create()");
-                    exit(1);
-                }
-
-                my_contexte.setJoin(&join_SE);
-                if(    (pthread_create(&t1, NULL, thread_avancerSE, &my_contexte)!=0))
-                {
-                    perror("pthread_create()");
-                    exit(1);
-                }
-
-                my_contexte.setJoin(&join_NO);
-                if(    (pthread_create(&t1, NULL, thread_avancerNO, &my_contexte)!=0))
-                {
-                    perror("pthread_create()");
-                    exit(1);
-                }
-
-                my_contexte.setJoin(&join_SO);
-                if(    (pthread_create(&t1, NULL, thread_avancerSO, &my_contexte)!=0))
-                {
-                    perror("pthread_create()");
-                    exit(1);
-                }
-
-
-                /*attente de la fin des threads*/
-                if (  (pthread_join(t1, NULL))
-                    ||(pthread_join(t2, NULL))
-                    ||(pthread_join(t3, NULL))
-                    ||(pthread_join(t4, NULL)))
-                {
-                    perror("pthread_join()");
-                    exit(1);
-                }
-
-
-
             }
+            cout<<">> Début de l'attente"<<endl;
 
-        }else{//nb_thread=2
-
-            if (num_etape==1)
-            {   //ETAPE 1
-
-                Contexte my_contexte(1,&t);
-                vector<pthread_t> v_thread; //création pour l'attente des threads
-                /*On lance un thread par personne */
-                cout<<">> lancement d'un thread par personne (-t2)"<<endl;
-                usleep(5000);
-                for (int i = 0; i < t.liste_personnes.size(); ++i)
-                {
-                    pthread_t th_personne;
-                    my_contexte._pers=&(t.liste_personnes[i]);
-                    v_thread.push_back(th_personne);
-                    if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
-                    {
-                        perror("pthread_create()");
-                        exit(1);
-                    }
-                    
-                    
-                }
-                cout<<">> tous les threads sont lancés (-t2)"<<endl;
-
-                /*On attend la fin de chaque thread */
-                int wait_t=(int)pow(2,nb_personne);
-                cout<<">> attente de "<<wait_t<<"  threads"<<endl;
-                for (pthread_t t : v_thread)
-                {
-                    if (pthread_join(t, NULL))
-                    {
-                        perror("pthread_join()");
-                        exit(1);
-                    }
-                    cout<<">> attente de "<<--wait_t<<"  threads"<<endl;
-                    
-                }
-            }else if(num_etape==2){
-                //ETAPE2
-
-                sem_t sem_terrain;
-                if(sem_init(&sem_terrain, 0, 1)==-1)
-                {
-                    perror("sem_init()");
-                    exit(1);
-                }     
-
-                /*Contexte commun*/
-                CyclicBarrier barrier(pow(2,nb_personne));
-                Contexte my_contexte(2,&t);
-                my_contexte.setCyclicBarrier(&barrier);
-                my_contexte.setSemaphore(&sem_terrain);
-                
-                /*On lance un thread par personne */
-                for (int i = 0; i < t.liste_personnes.size(); ++i)
-                {
-
-                    //Mise en place contexe
-                    my_contexte.setPersonne(&(t.liste_personnes[i]));
-
-                    //lancement thread
-                    pthread_t th_personne;
-                    
-                    if (pthread_create(&th_personne, NULL, thread_avancerALONE, &my_contexte)!=0)
-                    {
-                        perror("pthread_create()");
-                        exit(1);
-                    }
-                    
-                }
-                cout<<">> Début de l'attente"<<endl;
-
-                barrier.block();//appel bloquant
-                cout<<">> Tous les threads sont terminés (-t2)"<<endl;
-               
-            }
-        }   
+            barrier.block();//appel bloquant
+            cout<<">> Tous les threads sont terminés (-t2)"<<endl;
+           
+        }
+    }   
     
     if(pthread_join(tGraph, NULL)!=0)
     {

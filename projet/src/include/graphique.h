@@ -1,7 +1,7 @@
 /*
- * Terrain.h
+ * graphique.h
  *
- *  Created on: 24 sept. 2016
+ *  Created on: 2 déc. 2016
  *      Author: Adrien Prestini & Antoine Rabenandrasana
  */
 
