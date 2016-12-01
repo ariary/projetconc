@@ -10,6 +10,14 @@
 
 #compiler
 COMPILER = g++
+
+ifeq ($(GRAPHIQUE),yes)
+	COMPILER = g++ -DGRAPHIQUE
+else 
+	
+endif
+
+
 #linker
 LINKER =g++
 
@@ -32,13 +40,18 @@ OBJ = $(COMPILER) -c -I ./src/include
 LIBS	= -lpthread -ll
 
 GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
+GRAPHIQUE = no
 
-sans: $(EXE_NAME)
+
+compilation: $(EXE_NAME)
 
 $(EXE_NAME): main.o
 	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(GRAPH) $(FLAGS)
 
 main.o: terrain.o personne.o mythreads.o contexte.o graphique.o CyclicBarrier.o
+
+
+main.o: terrain.o personne.o mythreads.o contexte.o graphique.o
 	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp --std=c++11
 
 terrain.o: personne.o 
