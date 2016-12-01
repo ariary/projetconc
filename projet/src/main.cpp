@@ -86,13 +86,14 @@ int main(int argc, char *argv[]){
 
     /*lancement du programme*/
     terrain t = terrain((int)pow(2,nb_personne)) ;
-#ifndef GRAPHIQUE
+#ifdef GRAPH
     pthread_t tGraph;
     if(pthread_create(&tGraph, NULL, afficher, &t)!=0)
     {
         perror("pthread_create() du graphe");
         exit(1);
     }
+
 #endif
     if (nb_thread==0)
     {
@@ -311,7 +312,7 @@ int main(int argc, char *argv[]){
            
         }
     }   
-#ifndef GRAPHIQUE
+#ifdef GRAPH
     if(pthread_join(tGraph, NULL)!=0)
     {
         perror("pthread_join() graphique");

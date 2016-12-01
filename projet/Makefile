@@ -12,7 +12,7 @@
 COMPILER = g++
 
 ifeq ($(GRAPHIQUE),yes)
-	COMPILER = g++ -DGRAPHIQUE
+	COMPILER = g++ -DGRAPH
 else 
 	
 endif
@@ -22,7 +22,7 @@ endif
 LINKER =g++
 
 #options for linker and compiler
-FLAGS =-g -ansi -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -D_DEBUG_ -std=c++11
+FLAGS =-g -ansi -Wall -Wextra -Wold-style-cast -Woverloaded-virtual  -std=c++11
 
 EXE_NAME = main.exe
 
@@ -40,7 +40,6 @@ OBJ = $(COMPILER) -c -I ./src/include
 LIBS	= -lpthread -ll
 
 GRAPH = `pkg-config --libs --cflags sfml-system sfml-window sfml-graphics sfml-audio sfml-network`
-GRAPHIQUE = no
 
 
 compilation: $(EXE_NAME)
@@ -48,10 +47,10 @@ compilation: $(EXE_NAME)
 $(EXE_NAME): main.o
 	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(GRAPH) $(FLAGS)
 
+#main.o: terrain.o personne.o mythreads.o contexte.o graphique.o 
+
+
 main.o: terrain.o personne.o mythreads.o contexte.o graphique.o CyclicBarrier.o
-
-
-main.o: terrain.o personne.o mythreads.o contexte.o graphique.o
 	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp --std=c++11
 
 terrain.o: personne.o 
