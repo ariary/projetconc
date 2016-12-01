@@ -14,14 +14,14 @@
 #include "include/terrain.h"
 #include "include/mythreads.h"
 #include "include/contexte.h"
+#include "include/graphique.h"
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
 #include <math.h> //pow
 #include <pthread.h>
 #include <semaphore.h> //utilisation sémarphore
-#include "include/graphique.h"
- #include <unistd.h>
+#include <unistd.h>
 
 
 
@@ -386,7 +386,6 @@ int main(int argc, char *argv[]){
             }else if(num_etape==2){
                 //ETAPE2
 
-                vector<sem_t*> v_private; //création pour l'attente des threads avec semaphores privées
                 sem_t sem_terrain;
                 if(sem_init(&sem_terrain, 0, 1)==-1)
                 {
@@ -394,21 +393,18 @@ int main(int argc, char *argv[]){
                     exit(1);
                 }     
 
+                /*Contexte commun*/
+                CyclicBarrier barrier(pow(2,nb_personne));
+                Contexte my_contexte(2,&t);
+                my_contexte.setCyclicBarrier(&barrier);
+                my_contexte.setSemaphore(&sem_terrain);
+                
                 /*On lance un thread par personne */
                 for (int i = 0; i < t.liste_personnes.size(); ++i)
                 {
 
-                    //Mise en place contexte
-                    sem_t s_private;
-                    if(sem_init(&s_private, 0, 0)) //sémaphore privée
-                    {
-                        perror("sem_init()");
-                        exit(1);
-                    }
-
-                    v_private.push_back(&s_private);
-                    Contexte my_contexte(2,&t,nullptr,&s_private,&(t.liste_personnes[i]));
-                    my_contexte.mutex=&sem_terrain;
+                    //Mise en place contexe
+                    my_contexte.setPersonne(&(t.liste_personnes[i]));
 
                     //lancement thread
                     pthread_t th_personne;
@@ -422,29 +418,7 @@ int main(int argc, char *argv[]){
                 }
                 cout<<">> Début de l'attente"<<endl;
 
-                /*On attend la fin de chaque thread */ 
-                int i=pow(2,nb_personne);              
-                for (sem_t* s_private: v_private)
-                {   
-                    if (s_private!=nullptr)
-                    {
-                        if(sem_wait(s_private)==-1)
-                        {
-                            perror("sem_wait() in main.cpp");
-                            exit(1);
-                        }
-                    }else{
-                        break; //eviter segfault
-                    }
-                    cout<<">> attente de "<<i--<<" threads"<<endl;
-
-                    if (sem_destroy(s_private)==-1)
-                    {
-                        perror("sem_destroy()");
-                        exit(1);
-                    }
-                    v_private.pop_back();
-                }
+                barrier.block();//appel bloquant
                 cout<<">> Tous les threads sont terminés (-t2)"<<endl;
                
             }

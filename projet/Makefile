@@ -19,7 +19,7 @@ FLAGS =-g -ansi -Wall -Wextra -Wold-style-cast -Woverloaded-virtual -D_DEBUG_ -s
 EXE_NAME = main.exe
 
 #can have several ones separated by spaces, only cpp files
-SOURCES = main.cpp personne.cpp terrain.cpp mythreads.cpp contexte.cpp
+SOURCES = main.cpp personne.cpp terrain.cpp mythreads.cpp contexte.cpp CyclicBarrier.cpp
 
 SRCDIR = src
 BINDIR = bin
@@ -38,7 +38,7 @@ sans: $(EXE_NAME)
 $(EXE_NAME): main.o
 	$(COMPILER) -o $(BINDIR)/$(EXE_NAME) $(BINDIR)/*.o $(LIBS) $(GRAPH) $(FLAGS)
 
-main.o: terrain.o personne.o mythreads.o contexte.o graphique.o
+main.o: terrain.o personne.o mythreads.o contexte.o graphique.o CyclicBarrier.o
 	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp --std=c++11
 
 terrain.o: personne.o 
@@ -50,11 +50,14 @@ personne.o:
 mythreads.o:
 	$(OBJ) -o $(BINDIR)/mythreads.o $(SRCDIR)/mythreads.cpp --std=c++11
 
-contexte.o:
+contexte.o: CyclicBarrier.o
 	$(OBJ) -std=c++11 -o $(BINDIR)/contexte.o $(SRCDIR)/contexte.cpp --std=c++11
 
 graphique.o:
 	$(OBJ) -o $(BINDIR)/graphique.o $(SRCDIR)/graphique.cpp --std=c++11
+
+CyclicBarrier.o:
+	$(OBJ) -o $(BINDIR)/CyclicBarrier.o $(SRCDIR)/CyclicBarrier.cpp --std=c++11
 
 clean:
 	rm -f $(BINDIR)/*.o $(BINDIR)/$(EXE_NAME)

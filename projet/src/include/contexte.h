@@ -19,7 +19,7 @@
 #include <semaphore.h>
 #include <map>
 #include <string>
-
+ #include "CyclicBarrier.h"
 using namespace std;
 
 class Moniteur
@@ -41,11 +41,16 @@ class Contexte {
 		sem_t *mutex;
 		personne *_pers;
 		Moniteur* m;
+		CyclicBarrier* barrier;
+
 
 		Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem=nullptr,sem_t* join=nullptr,personne* pers=nullptr,sem_t* mutex=nullptr);
 
 		void setMoniteur(Moniteur* m);
 		void setJoin(sem_t *join);
+		void setCyclicBarrier(CyclicBarrier* barrier);
+		void setSemaphore(sem_t* mutex);
+		void setPersonne(personne* p);
 
 };
 

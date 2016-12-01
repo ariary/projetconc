@@ -20,12 +20,33 @@ Contexte::Contexte(int num_etap,terrain* ter,map<string,sem_t*> *map_sem,sem_t* 
 	this->mutex=mutex;
 }
 
+
+
+/*
+ *  Seteur:
+ *	- Moniteur
+ *	-Join (mutex privée)
+ *	-CyclicBarrier
+ */
+
 void Contexte::setMoniteur(Moniteur* m){
 	this->m=m;
 }
 
 void Contexte::setJoin(sem_t *join){
 	this->join=join;
+}
+
+void Contexte::setCyclicBarrier(CyclicBarrier* barrier){
+	this->barrier=barrier;
+}
+
+void Contexte::setSemaphore(sem_t* mutex){
+	this->mutex=mutex;
+}
+
+void Contexte::setPersonne(personne* p){
+	this->_pers=p;
 }
 
 

@@ -764,7 +764,7 @@ void *thread_avancerALONE(void *p_data){
       Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
       terrain my_terrain=*(c->t);
       personne my_personne=*(c->_pers);
-      if (c->join != nullptr)c->_etape=2;
+      if (c->barrier!= nullptr)c->_etape=2;
       switch(c->_etape){
         case 1:
             while(!my_personne.aFini())
@@ -773,38 +773,26 @@ void *thread_avancerALONE(void *p_data){
         default:
 
             sem_t* mutex=c->mutex;
+            CyclicBarrier* barrier=c->barrier;
             while(!my_personne.aFini())
             {
-              cout<<"wait"<<endl;
               usleep(5000);
-              my_personne.print_personne();
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
                 perror("sem_wait() in mythread.cpp");
                 exit(1);
               }
               my_terrain.avancer(my_personne);
-              if(sem_post(mutex)==-1)
+              if(sem_post(mutex)==-1)// je rends le terrain
               {
                   perror("sem_post()");
                   exit(1);
               }
-              cout<<"libère"<<endl;
             }
 
 
-            /*je fais down sur la sémaphore privée du thread avant d'en sortir*/
-            if (c->join != nullptr){
-               if(sem_post(c->join)==-1) //je libère la sémaphore avant de quitter le thread
-               {
-                   perror("sem_post()");
-                   exit(1);
-               }
-            }
-            else{
-              cerr<<"Semaphore de threads inéxistantes (nullptr): sortie du programme"<<endl;
-              exit(1);
-            }    
+            // je signale que je suis devant la barrière avant de sortir
+            barrier->await();
             break;            
       }
 
