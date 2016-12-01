@@ -161,88 +161,36 @@ int main(int argc, char *argv[]){
             m_sem.insert (pair<string,sem_t*>("NE",&sem_NE) );
 
 
-            /*Initialisation des sémaphores utiles pour attendre la fin des threads*/
-            //NO
-            sem_t join_NO;
-            if(sem_init(&join_NO, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
+            /*Initialisation Cyclicbarrier pour attendre la fin des threads*/
+            CyclicBarrier barrier(4);
 
-            //SO
-            sem_t join_SO;
-            if(sem_init(&join_SO, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
-
-
-            //NE
-            sem_t join_NE;
-            if(sem_init(&join_NE, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
-
-
-            //SE
-            sem_t join_SE;
-            if(sem_init(&join_SE, 0, 0)) //sémaphore privée
-            {
-                perror("sem_init()");
-                exit(1);
-            }
-
-
-            /*Initialisation des Contextes*/
-
-            //NO
-            Contexte contexte_NO(2,&t,&m_sem,&join_NO);
-            //SO
-            Contexte contexte_SO(2,&t,&m_sem,&join_SO);
-            //NE
-            Contexte contexte_NE(2,&t,&m_sem,&join_NE);
-            //SE
-            Contexte contexte_SE(2,&t,&m_sem,&join_SE);
+            /*Initialisation du Contexte*/
+            Contexte my_contexte(2,&t,&m_sem);
+            my_contexte.setCyclicBarrier(&barrier);
 
             /*lancement des threads*/
-            if(    (pthread_create(&t2, NULL, thread_avancerNE, &contexte_NO)!=0)
-                || (pthread_create(&t4, NULL, thread_avancerNO, &contexte_SO)!=0)
-                || (pthread_create(&t1, NULL, thread_avancerSE, &contexte_NE)!=0)
-                || (pthread_create(&t3, NULL, thread_avancerSO, &contexte_SE)!=0))
+            if(    (pthread_create(&t2, NULL, thread_avancerNE, &my_contexte)!=0)
+                || (pthread_create(&t4, NULL, thread_avancerNO, &my_contexte)!=0)
+                || (pthread_create(&t1, NULL, thread_avancerSE, &my_contexte)!=0)
+                || (pthread_create(&t3, NULL, thread_avancerSO, &my_contexte)!=0))
             {
                 perror("pthread_create()");
                 exit(1);
             }
             
-            /*up sur les semaphore des threads (bis) logiquement bloqué si la thread est active*/
-            if(   (sem_wait(&join_NO)==-1)
-                ||(sem_wait(&join_SO)==-1)
-                ||(sem_wait(&join_NE)==-1)
-                ||(sem_wait(&join_SE)==-1))
-            {
-                perror("sem_wait() in main.cpp");
-                exit(1);
-            }
+            /*Appel bloquant de la barrière tant que tous les threads ne sont pas terminés*/
+            barrier.block();
 
             /*destruction des sémaphores*/
             if ((sem_destroy(&sem_NE)==-1)
                 ||(sem_destroy(&sem_SE)==-1)
                 ||(sem_destroy(&sem_NO)==-1)
-                ||(sem_destroy(&sem_SO)==-1)
-                ||(sem_destroy(&join_NO)==-1)
-                ||(sem_destroy(&join_SO)==-1)
-                ||(sem_destroy(&join_NE)==-1)
-                ||(sem_destroy(&join_SE)==-1))
+                ||(sem_destroy(&sem_SO)==-1))
             {
                 perror("sem_destroy()");
                 exit(1);
             }
         }else{ // -t1 -e3
-            cout<<"e3"<<endl;
             /*Initialisation du moniteur*/
             //condition
             pthread_cond_t zoneNE;
@@ -394,7 +342,7 @@ int main(int argc, char *argv[]){
             Contexte my_contexte(2,&t);
             my_contexte.setSemaphore(&sem_terrain);         
             my_contexte.setCyclicBarrier(&barrier);
-            
+
             /*On lance un thread par personne */
             for (int i = 0; i < t.liste_personnes.size(); ++i)
             {

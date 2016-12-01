@@ -15,12 +15,11 @@ CyclicBarrier::CyclicBarrier(int i){
 
 void CyclicBarrier::await(){
 	this->nb_expected--;
-	cout<<nb_expected<<endl;
+	cout<<">> Attente de "<<nb_expected<<"threads à la barrière"<<endl;
 }
 
 void CyclicBarrier::block(){
 	while(nb_expected!=0){}
-		cout<<nb_expected<<endl;
 	  if(sem_post(&(this->join))==-1)
 	  {
 	      perror("sem_post()");
