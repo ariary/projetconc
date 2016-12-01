@@ -122,8 +122,9 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             /*ACTIONS*/
             while(!t->finish())
             {
-
+                
                 for(int i = 0; i < t->liste_personnes.size(); i++){
+                    usleep(500);
                     personne& p=t->liste_personnes.at(i);
                     if(isOnNE(p))
                     {
@@ -305,6 +306,7 @@ void *thread_avancerNO(void *p_data){
         {
 
             for(int i = 0; i < t->liste_personnes.size(); i++){
+                usleep(500);
                 personne& p=t->liste_personnes.at(i);
                 if(isOnNO(p))
                 {
@@ -472,6 +474,7 @@ void *thread_avancerSE(void *p_data){
             {
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
+                    usleep(500);
                     personne& p=t->liste_personnes.at(i);
                     if(isOnSE(p))
                     {
@@ -637,6 +640,7 @@ void *thread_avancerSO(void *p_data){
             {
 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
+                    usleep(500);
                     personne& p=t->liste_personnes.at(i);
                     if(isOnSO(p))
                     {
@@ -767,10 +771,13 @@ void *thread_avancerALONE(void *p_data){
               my_terrain.avancer(my_personne);
             break;
         default:
+
             sem_t* mutex=c->mutex;
             while(!my_personne.aFini())
             {
               cout<<"wait"<<endl;
+              usleep(5000);
+              my_personne.print_personne();
               if(sem_wait(mutex)==-1) //j'attends que le terrain soit disponible
               {
                 perror("sem_wait() in mythread.cpp");
