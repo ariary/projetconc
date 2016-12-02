@@ -2,22 +2,27 @@
 #define MONITEUR_H
 #include <pthread.h>
 #include <atomic>
+#include <utility>
 
-
+using namespace std;
 class Moniteur
 {
 	public:
-		std::atomic<int> NEavailable;
-		std::atomic<int> NOavailable;
-		std::atomic<int> SEavailable;
-		std::atomic<int> SOavailable;
+		//t1
+		pair <pthread_mutex_t,pthread_cond_t> pr_zone1;
+		pair <pthread_mutex_t,pthread_cond_t> pr_zone2;
+		pair <pthread_mutex_t,pthread_cond_t> pr_zone3;
+		pair <pthread_mutex_t,pthread_cond_t> pr_zone4;
 
+		Moniteur(); //pour t1
+
+		//t2
 		std::atomic<int> available;
 
 		pthread_cond_t* cond; //tableau de condition ou ptr de condition
 		pthread_mutex_t mutex;
 
-		Moniteur(pthread_cond_t* cond,pthread_mutex_t& mutex);
+		Moniteur(pthread_cond_t* cond,pthread_mutex_t& mutex); //pour t2
 };
 
 #endif
