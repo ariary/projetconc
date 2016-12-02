@@ -331,7 +331,7 @@ int main(int argc, char *argv[]){
 
 
 
-            Contexte my_contexte(2,&t);
+            Contexte my_contexte(3,&t);
             my_contexte.setMoniteur(&my_moniteur);     
             my_contexte.setCyclicBarrier(&barrier);
 

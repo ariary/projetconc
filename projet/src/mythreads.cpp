@@ -594,7 +594,6 @@ void *thread_avancerALONE(void *p_data){
       Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
       terrain my_terrain=*(c->t);
       personne my_personne=*(c->_pers);
-      if (c->barrier!= nullptr)c->_etape=2;
       switch(c->_etape){
         case 1:
 
@@ -641,7 +640,7 @@ void *thread_avancerALONE(void *p_data){
 
                 while(!my_personne.aFini()){
                     pthread_mutex_lock(&(moniteur->mutex));
-                    if(1) pthread_cond_wait(moniteur->cond, &(moniteur->mutex)); //A CHANGER
+                    if(!(moniteur->available)) pthread_cond_wait(moniteur->cond, &(moniteur->mutex)); 
                     my_terrain.avancer(my_personne);
                     pthread_cond_signal(moniteur->cond);
                     pthread_mutex_unlock(&(moniteur->mutex));
