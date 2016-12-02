@@ -18,6 +18,7 @@ class personne {
 	private:
 		int position_x;
 		int position_y;
+		int numZoneActuelle;
 
 
 	public:
@@ -27,18 +28,19 @@ class personne {
 
 		int get_pos_x();
 		int get_pos_y();
+		int getZone();
 
 		void changer_position(int newX,int newY);
 		void set_position(int x, int y);
+		void majZone();
 
 		bool droite_du_centre();
 		bool au_dessus_azimuth1();
 		bool au_dessous_azimuth2();
 
-		bool near_NO();
-		bool near_SO();
-		bool near_SE();
-		bool near_NE();
+		bool near_Zone1();
+		bool near_Zone2();
+		bool near_Zone3();
 
 		bool isOut();
 		

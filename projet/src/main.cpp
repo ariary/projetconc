@@ -117,19 +117,19 @@ int main(int argc, char *argv[]){
 
         
     }else if(nb_thread==1){
-        pthread_t t1; //NE
-        pthread_t t2; //NO
-        pthread_t t3; //SE
-        pthread_t t4; //SO
+        pthread_t t1; //zone1
+        pthread_t t2; //zone2
+        pthread_t t3; //Zone3
+        pthread_t t4; //Zone4
         
         if (num_etape==1)
         {  //ETAPE 1
 
             Contexte my_contexte(1,&t);
-            if(    (pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
-                || (pthread_create(&t2, NULL, thread_avancerNO, &my_contexte)!=0)
-                || (pthread_create(&t3, NULL, thread_avancerSE, &my_contexte)!=0)
-                || (pthread_create(&t4, NULL, thread_avancerSO, &my_contexte)!=0))
+            if(    (pthread_create(&t1, NULL, thread_avancerZone1, &my_contexte)!=0)
+                || (pthread_create(&t2, NULL, thread_avancerZone2, &my_contexte)!=0)
+                || (pthread_create(&t3, NULL, thread_avancerZone3, &my_contexte)!=0)
+                || (pthread_create(&t4, NULL, thread_avancerZone4, &my_contexte)!=0))
             {
                 perror("pthread_create()");
                 exit(1);
@@ -146,11 +146,11 @@ int main(int argc, char *argv[]){
         }else if(num_etape==2){
             //ETAPE 2               
             /*Initialisation d'une sémaphore par zone*/
-            sem_t sem_NO,sem_SE,sem_SO,sem_NE;
-            if(   (sem_init(&sem_NO, 0, 1)==-1)
-                ||(sem_init(&sem_SE, 0, 1)==-1)
-                ||(sem_init(&sem_SO, 0, 1)==-1)
-                ||(sem_init(&sem_NE, 0, 1)==-1) )
+            sem_t sem_Zone1,sem_Zone2,sem_Zone3,sem_Zone4;
+            if(   (sem_init(&sem_Zone1, 0, 1)==-1)
+                ||(sem_init(&sem_Zone2, 0, 1)==-1)
+                ||(sem_init(&sem_Zone3, 0, 1)==-1)
+                ||(sem_init(&sem_Zone4, 0, 1)==-1) )
             {
                 perror("sem_init()");
                 exit(1);
@@ -158,10 +158,10 @@ int main(int argc, char *argv[]){
 
             /*Insertion des semaphore dans la map*/
             map<string,sem_t*> m_sem;
-            m_sem.insert (pair<string,sem_t*>("NO",&sem_NO) );
-            m_sem.insert (pair<string,sem_t*>("SE",&sem_SE) );
-            m_sem.insert (pair<string,sem_t*>("SO",&sem_SO) );
-            m_sem.insert (pair<string,sem_t*>("NE",&sem_NE) );
+            m_sem.insert (pair<string,sem_t*>("Zone1",&sem_Zone1) );
+            m_sem.insert (pair<string,sem_t*>("Zone2",&sem_Zone2) );
+            m_sem.insert (pair<string,sem_t*>("Zone3",&sem_Zone3) );
+            m_sem.insert (pair<string,sem_t*>("Zone4",&sem_Zone4) );
 
 
             /*Initialisation Cyclicbarrier pour attendre la fin des threads*/
@@ -172,10 +172,10 @@ int main(int argc, char *argv[]){
             my_contexte.setCyclicBarrier(&barrier);
 
             /*lancement des threads*/
-            if(    (pthread_create(&t2, NULL, thread_avancerNE, &my_contexte)!=0)
-                || (pthread_create(&t4, NULL, thread_avancerNO, &my_contexte)!=0)
-                || (pthread_create(&t1, NULL, thread_avancerSE, &my_contexte)!=0)
-                || (pthread_create(&t3, NULL, thread_avancerSO, &my_contexte)!=0))
+            if(    (pthread_create(&t1, NULL, thread_avancerZone1, &my_contexte)!=0)
+                || (pthread_create(&t2, NULL, thread_avancerZone2, &my_contexte)!=0)
+                || (pthread_create(&t3, NULL, thread_avancerZone3, &my_contexte)!=0)
+                || (pthread_create(&t4, NULL, thread_avancerZone4, &my_contexte)!=0))
             {
                 perror("pthread_create()");
                 exit(1);
@@ -185,10 +185,10 @@ int main(int argc, char *argv[]){
             barrier.block();
 
             /*destruction des sémaphores*/
-            if ((sem_destroy(&sem_NE)==-1)
-                ||(sem_destroy(&sem_SE)==-1)
-                ||(sem_destroy(&sem_NO)==-1)
-                ||(sem_destroy(&sem_SO)==-1))
+            if ((sem_destroy(&sem_Zone4)==-1)
+                ||(sem_destroy(&sem_Zone3)==-1)
+                ||(sem_destroy(&sem_Zone2)==-1)
+                ||(sem_destroy(&sem_Zone1)==-1))
             {
                 perror("sem_destroy()");
                 exit(1);
@@ -196,13 +196,13 @@ int main(int argc, char *argv[]){
         }else{ // -t1 -e3
             /*Initialisation du moniteur*/
             //condition
-            pthread_cond_t zoneNE;
-            pthread_cond_t zoneNO;
-            pthread_cond_t zoneSO;
-            pthread_cond_t zoneSE;
+            pthread_cond_t zone1;
+            pthread_cond_t zone2;
+            pthread_cond_t zone3;
+            pthread_cond_t zone4;
             //Tableau de conditions
             pthread_cond_t cond[4];
-            cond[0]=zoneNE;cond[1]=zoneNO;cond[2]=zoneSO;cond[3]=zoneSE;
+            cond[0]=zone1;cond[1]=zone2;cond[2]=zone3;cond[3]=zone4;
 
             CyclicBarrier barrier(4);
 
@@ -223,10 +223,10 @@ int main(int argc, char *argv[]){
 
 
             /*Lancement des threads*/
-            if((pthread_create(&t1, NULL, thread_avancerNE, &my_contexte)!=0)
-              ||(pthread_create(&t2, NULL, thread_avancerSE, &my_contexte)!=0)
-              ||(pthread_create(&t3, NULL, thread_avancerNO, &my_contexte)!=0)
-              ||(pthread_create(&t4, NULL, thread_avancerSO, &my_contexte)!=0))
+            if((pthread_create(&t1, NULL, thread_avancerZone1, &my_contexte)!=0)
+              ||(pthread_create(&t2, NULL, thread_avancerZone2, &my_contexte)!=0)
+              ||(pthread_create(&t3, NULL, thread_avancerZone3, &my_contexte)!=0)
+              ||(pthread_create(&t4, NULL, thread_avancerZone4, &my_contexte)!=0))
             {
                 perror("pthread_create()");
                 exit(1);

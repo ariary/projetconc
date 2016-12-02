@@ -58,8 +58,8 @@ void *thread_avancerALL (void *p_data){
  *
  *  @param Le contexte associé au thread
  */
-void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
-  cout<<">> lancement thread zone Nord-Est"<<endl;
+void *thread_avancerZone1(void *p_data){ //peut être iterateur pour parcourir les joueurs de la zone
+  cout<<">> lancement thread zone 1"<<endl;
   if (p_data != nullptr)
    {
       
@@ -72,16 +72,16 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
         case 1: /*Etape 1*/
             while (!t->finish()){
                 usleep(50000);
-              avancer_all_NE(t);
+              avancer_all_Zone1(t);
             }
-            cout<<">> fin thread zone Nord-Est"<<endl;
+            cout<<">> fin thread zone 1"<<endl;
             break;
 
         case 2: /*Etape 2*/
             {
             /*récupération contexte suite*/
             map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
-            sem_t *my_sem,*sem_SO,*sem_SE,*sem_NO; //semaphore des zones 
+            sem_t *my_sem,*sem_Zone2,*sem_Zone3,*sem_Zone4; //semaphore des zones 
 
             if (c->map_sem!=nullptr)
                 map_mutex=c->map_sem;
@@ -91,19 +91,19 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                 exit(1);
             }    
             
-            map<string,sem_t*>::iterator it1=map_mutex->find("NO");
-            map<string,sem_t*>::iterator it2=map_mutex->find("SE");
-            map<string,sem_t*>::iterator it3=map_mutex->find("NE");
-            map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+            map<string,sem_t*>::iterator it1=map_mutex->find("Zone1");
+            map<string,sem_t*>::iterator it2=map_mutex->find("Zone2");
+            map<string,sem_t*>::iterator it3=map_mutex->find("Zone3");
+            map<string,sem_t*>::iterator it4=map_mutex->find("Zone4");
             if ((it1!=map_mutex->end())
                  && (it2!=map_mutex->end())
                  && (it3!=map_mutex->end())
                  && (it4!=map_mutex->end()))
             {
-                my_sem= map_mutex->find("NE")->second;
-                sem_SO= map_mutex->find("SO")->second;
-                sem_SE= map_mutex->find("SE")->second;
-                sem_NO= map_mutex->find("NO")->second;
+                my_sem= map_mutex->find("Zone1")->second;
+                sem_Zone2= map_mutex->find("Zone2")->second;
+                sem_Zone3= map_mutex->find("Zone3")->second;
+                sem_Zone4= map_mutex->find("Zone4")->second;
             }else{
                 cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
                 exit(1);
@@ -116,68 +116,25 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     usleep(500);
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnNE(p))
+                    if(isOnZone1(p))
                     {
-                        if (p.near_SO())
+                        if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
                         {
-                            if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-                            t->avancer(p);
+                            perror("sem_wait() in mythread.cpp");
+                            exit(1);
+                        }
 
-                            if(sem_post(sem_SO)==-1) //je libère
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
-                        }else if(p.near_NO()){
-                            if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-                            t->avancer(p);
+                        t->avancer(p);
 
-                            if(sem_post(sem_NO)==-1) //je libère
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
-
-                        }else if(p.near_SE())
-                        {   
-                            if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-                            t->avancer(p);
-
-                            if(sem_post(sem_SE)==-1) //je libère
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
-                        }else{
-                            if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-
-                            t->avancer(p);
-
-                            if(sem_post(my_sem)==-1) //je libère ma zone
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
+                        if(sem_post(my_sem)==-1) //je libère ma zone
+                        {
+                            perror("sem_post()");
+                            exit(1);
                         }
                     }
                 }
             }
+            
 
             /*je signale à la barrière que je suis devant*/
             if (c->barrier!=nullptr)
@@ -188,7 +145,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
               exit(1);
             }
 
-            cout<<">> fin thread zone Nord-Est"<<endl;    
+            cout<<">> fin thread zone Zone1"<<endl;    
             break;
         }
         case 3:
@@ -196,7 +153,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
             while(!t->finish()){
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnNE(p))
+                    if(isOnZone1(p))
                     {
                         if(pthread_mutex_lock(&(moniteur->mutex))!=0){
                             perror("pthread_mutex_lock");
@@ -218,7 +175,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
-            cout<<">> fin thread zone Nord-Est"<<endl; 
+            cout<<">> fin thread zone 1"<<endl; 
             break;
     }
 
@@ -235,29 +192,28 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
  *
  *  @param Le contexte associé au thread
  */
-void *thread_avancerNO(void *p_data){
-  cout<<">> lancement thread zone Nord-Ouest"<<endl; 
-  if (p_data != nullptr)
-   {
+void *thread_avancerZone2(void *p_data){
+  cout<<">> lancement thread zone 2"<<endl; 
+  if (p_data != nullptr){
       
-        Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
-        terrain* t=c->t;
-      //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Ouest
-      switch(c->_etape){
-        case 1:
+    Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
+    terrain* t=c->t;
+    //on va s'occuper uniquement des personnes qui sont dans la zone Nord-Ouest
+    switch(c->_etape){
+    case 1:
 
-          while (!t->finish()){
+        while (!t->finish()){
             usleep(50000);
-            avancer_all_NO(t);
-          }
-          cout<<">> fin thread zone Nord-Ouest"<<endl;
-          break;
+            avancer_all_Zone2(t);
+        }
+        cout<<">> fin thread zone 2"<<endl;
+        break;
 
-        case 2:
+    case 2:
         /*récupération contexte suite*/
-        {
+    {
         map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
-        sem_t *my_sem,*sem_SO,*sem_SE,*sem_NE; //semaphore des zones 
+        sem_t *my_sem,*sem_Zone1,*sem_Zone3,*sem_Zone4; //semaphore des zones 
 
         if (c->map_sem!=nullptr)
             map_mutex=c->map_sem;
@@ -268,19 +224,19 @@ void *thread_avancerNO(void *p_data){
         }    
                 
 
-        map<string,sem_t*>::iterator it1=map_mutex->find("NO");
-        map<string,sem_t*>::iterator it2=map_mutex->find("SE");
-        map<string,sem_t*>::iterator it3=map_mutex->find("NE");
-        map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+        map<string,sem_t*>::iterator it1=map_mutex->find("Zone1");
+        map<string,sem_t*>::iterator it2=map_mutex->find("Zone2");
+        map<string,sem_t*>::iterator it3=map_mutex->find("Zone3");
+        map<string,sem_t*>::iterator it4=map_mutex->find("Zone4");
         if ((it1!=map_mutex->end())
              && (it2!=map_mutex->end())
              && (it3!=map_mutex->end())
              && (it4!=map_mutex->end()))
         {
-            my_sem= map_mutex->find("NO")->second;
-            sem_SO= map_mutex->find("SO")->second;
-            sem_SE= map_mutex->find("SE")->second;
-            sem_NE= map_mutex->find("NE")->second;
+            my_sem= map_mutex->find("Zone2")->second;
+            sem_Zone1= map_mutex->find("Zone1")->second;
+            sem_Zone3= map_mutex->find("Zone3")->second;
+            sem_Zone4= map_mutex->find("Zone4")->second;
         }else{
             cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
             exit(1);
@@ -293,52 +249,22 @@ void *thread_avancerNO(void *p_data){
             for(int i = 0; i < t->liste_personnes.size(); i++){
                 usleep(500);
                 personne& p=t->liste_personnes.at(i);
-                if(isOnNO(p))
+                if(isOnZone2(p))
                 {
-                    if (p.near_SO())
+                    if (p.near_Zone1())
                     {
-                        if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
+                        if(sem_wait(sem_Zone1)==-1) //j'attends que cette partie soit libre
                         {
                             perror("sem_wait() in mythread.cpp");
                             exit(1);
                         }
                         t->avancer(p);
 
-                        if(sem_post(sem_SO)==-1) //je libère
+                        if(sem_post(sem_Zone1)==-1) //je libère
                         {
                             perror("sem_post()");
                             exit(1);
                         }
-                    }else if(p.near_NE()){
-
-                        if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
-                        {
-                            perror("sem_wait() in mythread.cpp");
-                            exit(1);
-                        }
-                        t->avancer(p);
-
-                        if(sem_post(sem_NE)==-1) //je libère
-                        {
-                            perror("sem_post()");
-                            exit(1);
-                        }
-
-                    }else if(p.near_SE())
-                    {
-                        if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
-                        {
-                            perror("sem_wait() in mythread.cpp");
-                            exit(1);
-                        }
-                        t->avancer(p);
-
-                        if(sem_post(sem_SE)==-1) //je libère
-                        {
-                            perror("sem_post()");
-                            exit(1);
-                        }
-
                     }else{
 
                         if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
@@ -368,7 +294,7 @@ void *thread_avancerNO(void *p_data){
               exit(1);
             }
 
-            cout<<">> fin thread zone Nord-Ouest"<<endl;}
+            cout<<">> fin thread zone 2"<<endl;}
             break;
         case 3:
             Moniteur* moniteur=c->m; //recuperation du moniteur
@@ -381,7 +307,7 @@ void *thread_avancerNO(void *p_data){
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
-            cout<<">> fin thread zone Nord-Ouest"<<endl;
+            cout<<">> fin thread zone 2"<<endl;
             break;
       }
 
@@ -398,8 +324,8 @@ void *thread_avancerNO(void *p_data){
  *
  *  @param Le contexte associé au thread
  */
-void *thread_avancerSE(void *p_data){
-  cout<<">> lancement thread zone Sud-Est"<<endl;
+void *thread_avancerZone3(void *p_data){
+  cout<<">> lancement thread zone 3"<<endl;
   if (p_data != nullptr)
    {
       
@@ -412,16 +338,16 @@ void *thread_avancerSE(void *p_data){
 
               while (!t->finish()){
                 usleep(50000);
-                avancer_all_SE(t);
+                avancer_all_Zone3(t);
               }
-              cout<<">> fin thread zone Sud-Est"<<endl;
+              cout<<">> fin thread zone 3"<<endl;
               break; 
 
           case 2:
             {
             /*récupération contexte suite*/
             map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
-            sem_t *my_sem,*sem_SO,*sem_NE,*sem_NO; //semaphore des zones 
+            sem_t *my_sem,*sem_Zone1,*sem_Zone2,*sem_Zone4; //semaphore des zones 
 
             if (c->map_sem!=nullptr)
                 map_mutex=c->map_sem;
@@ -431,19 +357,19 @@ void *thread_avancerSE(void *p_data){
                 exit(1);
             }    
             
-            map<string,sem_t*>::iterator it1=map_mutex->find("NO");
-            map<string,sem_t*>::iterator it2=map_mutex->find("SE");
-            map<string,sem_t*>::iterator it3=map_mutex->find("NE");
-            map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+            map<string,sem_t*>::iterator it1=map_mutex->find("Zone1");
+            map<string,sem_t*>::iterator it2=map_mutex->find("Zone2");
+            map<string,sem_t*>::iterator it3=map_mutex->find("Zone3");
+            map<string,sem_t*>::iterator it4=map_mutex->find("Zone4");
             if ((it1!=map_mutex->end())
                  && (it2!=map_mutex->end())
                  && (it3!=map_mutex->end())
                  && (it4!=map_mutex->end()))
             {
-                my_sem= map_mutex->find("SE")->second;
-                sem_SO= map_mutex->find("SO")->second;
-                sem_NE= map_mutex->find("NE")->second;
-                sem_NO= map_mutex->find("NO")->second;
+                my_sem= map_mutex->find("Zone3")->second;
+                sem_Zone1= map_mutex->find("Zone1")->second;
+                sem_Zone2= map_mutex->find("Zone2")->second;
+                sem_Zone4= map_mutex->find("Zone4")->second;
             }else{
                 cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
                 exit(1);
@@ -456,52 +382,22 @@ void *thread_avancerSE(void *p_data){
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     usleep(500);
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnSE(p))
+                    if(isOnZone3(p))
                     {
-                        if (p.near_SO())
+                        if (p.near_Zone2())
                         {
-                            if(sem_wait(sem_SO)==-1) //j'attends que cette partie soit libre
+                            if(sem_wait(sem_Zone2)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
                                 exit(1);
                             }
                             t->avancer(p);
 
-                            if(sem_post(sem_SO)==-1) //je libère
+                            if(sem_post(sem_Zone2)==-1) //je libère
                             {
                                 perror("sem_post()");
                                 exit(1);
                             }
-                        }else if(p.near_NO()){
-
-                            if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-                            t->avancer(p);
-
-                            if(sem_post(sem_NO)==-1) //je libère
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
-
-                        }else if(p.near_NE())
-                        {
-                            if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-                            t->avancer(p);
-
-                            if(sem_post(sem_NE)==-1) //je libère
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
-
                         }else{
 
                             if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
@@ -531,7 +427,7 @@ void *thread_avancerSE(void *p_data){
               exit(1);
             }
 
-            cout<<">> fin thread zone Sud-Est"<<endl;           
+            cout<<">> fin thread zone 3"<<endl;           
             break;
         }
         case 3:
@@ -543,7 +439,7 @@ void *thread_avancerSE(void *p_data){
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
-            cout<<">> fin thread zone Sud-Est"<<endl; 
+            cout<<">> fin thread zone 3"<<endl; 
             break;
         }
 
@@ -559,28 +455,28 @@ void *thread_avancerSE(void *p_data){
  *
  *  @param Le contexte associé au thread
  */
-void *thread_avancerSO(void *p_data){
+void *thread_avancerZone4(void *p_data){
   cout<<">> lancement thread zone Sud-Ouest"<<endl;
   if (p_data != nullptr)
    {
       
         Contexte* c=(Contexte*) p_data;// recuperation du contexte applicatif
         terrain* t=c->t;
-        //on va s'occuper uniquement des personnes qui sont dans la zone Sud-Ouest
+        //on va s'occuper uniquement des personnes qui sont dans la zone 4
 
         switch(c->_etape){
           case 1:
               while (!t->finish()){
                 usleep(50000);
-                avancer_all_SO(t);
+                avancer_all_Zone4(t);
               }
-              cout<<">> fin thread zone Sud-Ouest"<<endl;
+              cout<<">> fin thread zone 4"<<endl;
               break;
           case 2:
             /*récupération contexte suite*/
             {
             map<string,sem_t*> *map_mutex; //map de toutes les sémaphores
-            sem_t *my_sem,*sem_NE,*sem_SE,*sem_NO; //semaphore des zones 
+            sem_t *my_sem,*sem_Zone1,*sem_Zone2,*sem_Zone3; //semaphore des zones 
 
             if (c->map_sem!=nullptr)
                 map_mutex=c->map_sem;
@@ -590,19 +486,19 @@ void *thread_avancerSO(void *p_data){
                 exit(1);
             }    
             
-            map<string,sem_t*>::iterator it1=map_mutex->find("NO");
-            map<string,sem_t*>::iterator it2=map_mutex->find("SE");
-            map<string,sem_t*>::iterator it3=map_mutex->find("NE");
-            map<string,sem_t*>::iterator it4=map_mutex->find("SO");
+            map<string,sem_t*>::iterator it1=map_mutex->find("Zone1");
+            map<string,sem_t*>::iterator it2=map_mutex->find("Zone2");
+            map<string,sem_t*>::iterator it3=map_mutex->find("Zone3");
+            map<string,sem_t*>::iterator it4=map_mutex->find("Zone4");
             if ((it1!=map_mutex->end())
                  && (it2!=map_mutex->end())
                  && (it3!=map_mutex->end())
                  && (it4!=map_mutex->end()))
             {
-                my_sem= map_mutex->find("SO")->second;
-                sem_NE= map_mutex->find("NE")->second;
-                sem_SE= map_mutex->find("SE")->second;
-                sem_NO= map_mutex->find("NO")->second;
+                my_sem= map_mutex->find("Zone4")->second;
+                sem_Zone1= map_mutex->find("Zone1")->second;
+                sem_Zone2= map_mutex->find("Zone2")->second;
+                sem_Zone3= map_mutex->find("Zone3")->second;
             }else{
                 cerr<<"Recherche d'un élément inéxistant dans la map"<<endl;
                 exit(1);
@@ -615,52 +511,22 @@ void *thread_avancerSO(void *p_data){
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     usleep(500);
                     personne& p=t->liste_personnes.at(i);
-                    if(isOnSO(p))
+                    if(isOnZone4(p))
                     {
-                        if (p.near_NE())
+                        if (p.near_Zone3())
                         {
-                            if(sem_wait(sem_NE)==-1) //j'attends que cette partie soit libre
+                            if(sem_wait(sem_Zone3)==-1) //j'attends que cette partie soit libre
                             {
                                 perror("sem_wait() in mythread.cpp");
                                 exit(1);
                             }
                             t->avancer(p);
 
-                            if(sem_post(sem_NE)==-1) //je libère
+                            if(sem_post(sem_Zone3)==-1) //je libère
                             {
                                 perror("sem_post()");
                                 exit(1);
                             }
-                        }else if(p.near_NO()){
-
-                            if(sem_wait(sem_NO)==-1) //j'attends que cette partie soit libre
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-                            t->avancer(p);
-
-                            if(sem_post(sem_NO)==-1) //je libère
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
-
-                        }else if(p.near_SE())
-                        {
-                            if(sem_wait(sem_SE)==-1) //j'attends que cette partie soit libre
-                            {
-                                perror("sem_wait() in mythread.cpp");
-                                exit(1);
-                            }
-                            t->avancer(p);
-
-                            if(sem_post(sem_SE)==-1) //je libère
-                            {
-                                perror("sem_post()");
-                                exit(1);
-                            }
-
                         }else{
 
                             if(sem_wait(my_sem)==-1) //j'attends que ma partie soit dispo au cas où une autre thread l'a prise
@@ -689,7 +555,7 @@ void *thread_avancerSO(void *p_data){
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
-            cout<<">> fin thread zone Sud-Ouest"<<endl;         
+            cout<<">> fin thread zone 4"<<endl;         
             break;
         }
         case 3:
@@ -701,7 +567,7 @@ void *thread_avancerSO(void *p_data){
               exit(1);
             }
 
-            cout<<">> fin thread zone Sud-Ouest"<<endl;
+            cout<<">> fin thread zone 4"<<endl;
             break;
 
         }
@@ -798,41 +664,40 @@ void *thread_avancerALONE(void *p_data){
 /*definition des fonctions*/
 
 /*
- * Permet de determiner si une personne est dans la zone NE
+ * Permet de determiner si une personne est dans la zone 1
  */
-bool isOnNE(personne p){
-  return p.get_pos_y() >= 255 && p.get_pos_x() <=63 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
+bool isOnZone1(personne p){
+  return p.getZone() == 1;
+}
+/*
+ * Permet de determiner si une personne est dans la zone 2
+ */
+bool isOnZone2(personne p){;
+  return p.getZone() == 2;
 }
 
 /*
- * Permet de determiner si une personne est dans la zone NO
+ * Permet de determiner si une personne est dans la zone 3
  */
-bool isOnNO(personne p){;
-  return p.get_pos_y() < 256 && p.get_pos_x() < 64 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
+bool isOnZone3(personne p){
+  return p.getZone() == 3;
 }
 
 /*
- * Permet de determiner si une personne est dans la zone SE
+ * Permet de determiner si une personne est dans la zone 4
  */
-bool isOnSE(personne p){
-  return p.get_pos_y() >= 255 && p.get_pos_x() > 63 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
-}
-
-/*
- * Permet de determiner si une personne est dans la zone SO
- */
-bool isOnSO(personne p){
-  return p.get_pos_y() < 256 && p.get_pos_x() > 63 && p.get_pos_y() >= 0 && p.get_pos_x() >= 0;
+bool isOnZone4(personne p){
+  return p.getZone() == 4;
 }
 
 
 /*
  * Fait avancer toutes les personnes présentes dans la zone SO
  */
-void avancer_all_SO(terrain *t){
+void avancer_all_Zone1(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
-      if(isOnSO(t->liste_personnes.at(i)))
+      if(isOnZone1(t->liste_personnes.at(i)))
         t->avancer(t->liste_personnes.at(i));
     }
 }
@@ -840,10 +705,10 @@ void avancer_all_SO(terrain *t){
 /*
  * Fait avancer toutes les personnes présentes dans la zone SE
  */
-void avancer_all_SE(terrain *t){
+void avancer_all_Zone2(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
-      if(isOnSE(t->liste_personnes.at(i)))
+      if(isOnZone2(t->liste_personnes.at(i)))
         t->avancer(t->liste_personnes.at(i));
     }
 }
@@ -851,10 +716,10 @@ void avancer_all_SE(terrain *t){
 /*
  * Fait avancer toutes les personnes présentes dans la zone NE
  */
-void avancer_all_NE(terrain *t){
+void avancer_all_Zone3(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
-      if(isOnNE(t->liste_personnes.at(i)))
+      if(isOnZone3(t->liste_personnes.at(i)))
         t->avancer(t->liste_personnes.at(i));
     }
 }
@@ -862,10 +727,10 @@ void avancer_all_NE(terrain *t){
 /*
  * Fait avancer toutes les personnes présentes dans la zone NO
  */
-void avancer_all_NO(terrain *t){
+void avancer_all_Zone4(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
-      if(isOnNO(t->liste_personnes.at(i)))
+      if(isOnZone4(t->liste_personnes.at(i)))
         t->avancer(t->liste_personnes.at(i));
     }
 }
@@ -876,7 +741,7 @@ void avancer_all_NO(terrain *t){
 //-----------------------------
 //          etape 2
 //-----------------------------
-void avancer_NO_moniteur(terrain* t,personne* p){}
-void avancer_SO_moniteur(terrain* t,personne* p){}
-void avancer_NE_moniteur(terrain* t,personne* p){}
-void avancer_all_SE(terrain* t,personne* p){}
+void avancer_Zone1_moniteur(terrain* t,personne* p){}
+void avancer_Zone2_moniteur(terrain* t,personne* p){}
+void avancer_Zone3_moniteur(terrain* t,personne* p){}
+void avancer_Zone4_moniteur(terrain* t,personne* p){}
