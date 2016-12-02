@@ -639,11 +639,35 @@ void *thread_avancerALONE(void *p_data){
                 Moniteur* moniteur=c->m;
 
                 while(!my_personne.aFini()){
-                    pthread_mutex_lock(&(moniteur->mutex));
-                    if(!(moniteur->available)) pthread_cond_wait(moniteur->cond, &(moniteur->mutex)); 
+                    //LOCK
+                    if (pthread_mutex_lock(&(moniteur->mutex)))
+                    {
+                        perror("(-t2) pthread_mutex_lock");
+                        exit(1);
+                    }
+                    //WHILE(!COND) WAIT()
+                    while(!(moniteur->available)){
+                        if (pthread_cond_wait(moniteur->cond, &(moniteur->mutex))!=0)
+                        {
+                            perror("(-t2) pthread_cond_wait");
+                            exit(1);
+                        }
+                        
+                    }
                     my_terrain.avancer(my_personne);
-                    pthread_cond_signal(moniteur->cond);
-                    pthread_mutex_unlock(&(moniteur->mutex));
+
+                    //SIGNAL()
+                    if(pthread_cond_signal(moniteur->cond)!=0){
+                        perror("(-t2) pthread_cond_signal");
+                        exit(1);
+                    }
+                    //UNLOCK
+                    if (pthread_mutex_unlock(&(moniteur->mutex)))
+                    {
+                        perror("(-t2) pthread_cond_unlock");
+                        exit(1);
+                    }
+                    
                 }
                 barrier->await();
             }else{
