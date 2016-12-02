@@ -44,13 +44,3 @@ void Contexte::setSemaphore(sem_t* mutex){
 void Contexte::setPersonne(personne* p){
 	this->_pers=p;
 }
-
-
-//-----------------------------
-//			MONITEUR
-//-----------------------------
-
-Moniteur::Moniteur(pthread_cond_t* cond,pthread_mutex_t& mutex){
-	this->cond=cond;
-	this->mutex=mutex;
-}

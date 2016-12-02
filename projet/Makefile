@@ -27,7 +27,7 @@ FLAGS =-g -ansi -Wall -Wextra -Wold-style-cast -Woverloaded-virtual  -std=c++11
 EXE_NAME = main.exe
 
 #can have several ones separated by spaces, only cpp files
-SOURCES = main.cpp personne.cpp terrain.cpp mythreads.cpp contexte.cpp CyclicBarrier.cpp
+SOURCES = main.cpp personne.cpp terrain.cpp mythreads.cpp contexte.cpp CyclicBarrier.cpp Moniteur.cpp
 
 SRCDIR = src
 BINDIR = bin
@@ -50,7 +50,7 @@ $(EXE_NAME): main.o
 #main.o: terrain.o personne.o mythreads.o contexte.o graphique.o 
 
 
-main.o: terrain.o personne.o mythreads.o contexte.o graphique.o CyclicBarrier.o
+main.o: terrain.o personne.o mythreads.o contexte.o graphique.o CyclicBarrier.o Moniteur.o
 	$(OBJ) -o $(BINDIR)/main.o $(SRCDIR)/main.cpp --std=c++11
 
 terrain.o: personne.o 
@@ -62,7 +62,7 @@ personne.o:
 mythreads.o:
 	$(OBJ) -o $(BINDIR)/mythreads.o $(SRCDIR)/mythreads.cpp --std=c++11
 
-contexte.o: CyclicBarrier.o
+contexte.o: CyclicBarrier.o Moniteur.o
 	$(OBJ) -std=c++11 -o $(BINDIR)/contexte.o $(SRCDIR)/contexte.cpp --std=c++11
 
 graphique.o:
@@ -70,6 +70,9 @@ graphique.o:
 
 CyclicBarrier.o:
 	$(OBJ) -o $(BINDIR)/CyclicBarrier.o $(SRCDIR)/CyclicBarrier.cpp --std=c++11
+
+Moniteur.o:
+	$(OBJ) -o $(BINDIR)/Moniteur.o $(SRCDIR)/Moniteur.cpp --std=c++11
 
 clean:
 	rm -f $(BINDIR)/*.o $(BINDIR)/$(EXE_NAME)

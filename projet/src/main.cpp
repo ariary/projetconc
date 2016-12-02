@@ -14,6 +14,7 @@
 #include "include/mythreads.h"
 #include "include/contexte.h"
 #include "include/graphique.h"
+#include "include/Moniteur.h"
 #include  <iostream>
 #include <getopt.h>
 #include <sys/resource.h> //getrusage
@@ -206,9 +207,14 @@ int main(int argc, char *argv[]){
             CyclicBarrier barrier(4);
 
 
-            //mutex
-            pthread_mutex_t mutex;
-            Moniteur my_moniteur(cond,mutex);
+            //mutex & Moniteur
+            pthread_mutex_t lock;
+            if (pthread_mutex_init(&lock, NULL) != 0)
+            {
+                cout<<">> initialisation du mutex échouée"<<endl;
+                return 1;
+            }
+            Moniteur my_moniteur(cond,lock);
 
             /*initialisation du contexte*/
             Contexte my_contexte(3,&t);
@@ -313,10 +319,15 @@ int main(int argc, char *argv[]){
         }else if (num_etape==3)
         {
             CyclicBarrier barrier(pow(2,nb_personne));
-            //mutex
-            pthread_mutex_t mutex;
+            //mutex & Moniteur
+            pthread_mutex_t lock;
+            if (pthread_mutex_init(&lock, NULL) != 0)
+            {
+                cout<<">> initialisation du mutex échouée"<<endl;
+                return 1;
+            }
             pthread_cond_t cond;
-            Moniteur my_moniteur(&cond,mutex);
+            Moniteur my_moniteur(&cond,lock);
 
 
 

@@ -1,7 +1,7 @@
 #ifndef CYCLIC_H
 #define CYCLIC_H
 #include <semaphore.h> //utilisation sémarphore
- #include <unistd.h>
+#include <unistd.h>
 #include <atomic>
 #include "CyclicBarrier.h"
 

@@ -19,17 +19,10 @@
 #include <semaphore.h>
 #include <map>
 #include <string>
- #include "CyclicBarrier.h"
+#include "CyclicBarrier.h"
+#include "Moniteur.h"
+
 using namespace std;
-
-class Moniteur
-{
-	public:
-		pthread_cond_t* cond; //tableau de condition
-		pthread_mutex_t mutex;
-
-		Moniteur(pthread_cond_t* cond,pthread_mutex_t& mutex);
-};
 
 class Contexte {
 

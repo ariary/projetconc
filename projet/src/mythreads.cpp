@@ -51,16 +51,6 @@ void *thread_avancerALL (void *p_data){
 
 /*t1*/
 
-/*
- * Les quatres fonctions suivantes permettent de faire avancer
- * toutes les personnes présentes dans une certaine zone.
- * zones possibles: NO, SO, NE, SE
- */
-static void avancer_all_NO(terrain *t);
-static void avancer_all_SO(terrain *t);
-static void avancer_all_NE(terrain *t);
-static void avancer_all_SE(terrain *t);
-
 
 /**
  *  Thread qui fait avancer toutes les personnes présentes 
@@ -203,7 +193,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
         }
         case 3:
             Moniteur* moniteur=c->m;
-            /*while(!t->finish()){
+            while(!t->finish()){
                 for(int i = 0; i < t->liste_personnes.size(); i++){
                     personne& p=t->liste_personnes.at(i);
                     if(isOnNE(p))
@@ -218,7 +208,7 @@ void *thread_avancerNE(void *p_data){ //peut être iterateur pour parcourir les 
                         //si proche d'une zone faire faire pareil avec cond différent
                     }
                 }
-            }*/
+            }
             
             /*thread arrivé à son terme (devant la barrière)*/
             if (c->barrier!=nullptr)
@@ -839,7 +829,7 @@ bool isOnSO(personne p){
 /*
  * Fait avancer toutes les personnes présentes dans la zone SO
  */
-static void avancer_all_SO(terrain *t){
+void avancer_all_SO(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
       if(isOnSO(t->liste_personnes.at(i)))
@@ -850,7 +840,7 @@ static void avancer_all_SO(terrain *t){
 /*
  * Fait avancer toutes les personnes présentes dans la zone SE
  */
-static void avancer_all_SE(terrain *t){
+void avancer_all_SE(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
       if(isOnSE(t->liste_personnes.at(i)))
@@ -861,7 +851,7 @@ static void avancer_all_SE(terrain *t){
 /*
  * Fait avancer toutes les personnes présentes dans la zone NE
  */
-static void avancer_all_NE(terrain *t){
+void avancer_all_NE(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
       if(isOnNE(t->liste_personnes.at(i)))
@@ -872,10 +862,21 @@ static void avancer_all_NE(terrain *t){
 /*
  * Fait avancer toutes les personnes présentes dans la zone NO
  */
-static void avancer_all_NO(terrain *t){
+void avancer_all_NO(terrain *t){
     
     for(int i = 0; i < t->liste_personnes.size(); i++){
       if(isOnNO(t->liste_personnes.at(i)))
         t->avancer(t->liste_personnes.at(i));
     }
 }
+
+
+
+
+//-----------------------------
+//          etape 2
+//-----------------------------
+void avancer_NO_moniteur(terrain* t,personne* p){}
+void avancer_SO_moniteur(terrain* t,personne* p){}
+void avancer_NE_moniteur(terrain* t,personne* p){}
+void avancer_all_SE(terrain* t,personne* p){}

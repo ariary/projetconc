@@ -22,6 +22,28 @@ void *thread_avancerNO(void *pd_data);
 void *thread_avancerSE(void *pd_data);
 void *thread_avancerSO(void *pd_data);
 
+/*
+ * fonctions suivantes permettent de faire avancer
+ * toutes les personnes présentes dans une certaine zone.
+ * zones possibles: NO, SO, NE, SE
+ */
+
+//-----------------------------
+//			etape 1
+//-----------------------------
+ void avancer_all_NO(terrain *t);
+ void avancer_all_SO(terrain *t);
+ void avancer_all_NE(terrain *t);
+ void avancer_all_SE(terrain *t);
+//-----------------------------
+//			etape 2
+//-----------------------------
+void avancer_NO_moniteur(terrain* t,personne* p);
+void avancer_SO_moniteur(terrain* t,personne* p);
+void avancer_NE_moniteur(terrain* t,personne* p);
+void avancer_all_SE(terrain* t,personne* p);
+
+
 //outils pour connaitre la région d'une personne
 bool isOnNE(personne p);
 bool isOnNO(personne p);
