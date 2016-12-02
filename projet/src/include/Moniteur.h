@@ -12,7 +12,9 @@ class Moniteur
 		std::atomic<int> SEavailable;
 		std::atomic<int> SOavailable;
 
-		pthread_cond_t* cond; //tableau de condition
+		std::atomic<int> available;
+
+		pthread_cond_t* cond; //tableau de condition ou ptr de condition
 		pthread_mutex_t mutex;
 
 		Moniteur(pthread_cond_t* cond,pthread_mutex_t& mutex);
