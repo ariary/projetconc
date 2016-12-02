@@ -194,27 +194,9 @@ int main(int argc, char *argv[]){
                 exit(1);
             }
         }else{ // -t1 -e3
-            /*Initialisation du moniteur*/
-            //condition
-            pthread_cond_t zone1;
-            pthread_cond_t zone2;
-            pthread_cond_t zone3;
-            pthread_cond_t zone4;
-            //Tableau de conditions
-            pthread_cond_t cond[4];
-            cond[0]=zone1;cond[1]=zone2;cond[2]=zone3;cond[3]=zone4;
-
+            /*Initialisation du moniteur & de la barrière*/
             CyclicBarrier barrier(4);
-
-
-            //mutex & Moniteur
-            pthread_mutex_t lock;
-            if (pthread_mutex_init(&lock, NULL) != 0)
-            {
-                cout<<">> initialisation du mutex échouée"<<endl;
-                return 1;
-            }
-            Moniteur my_moniteur(cond,lock);
+            Moniteur my_moniteur;
 
             /*initialisation du contexte*/
             Contexte my_contexte(3,&t);
@@ -327,7 +309,7 @@ int main(int argc, char *argv[]){
                 return 1;
             }
             pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
-            
+
             Moniteur my_moniteur(&cond,lock);
 
 
