@@ -560,8 +560,57 @@ void *thread_avancerZone4(void *p_data){
         }
         case 3:
             /*thread arrivé à son terme (devant la barrière)*/
+            if (c->m!=nullptr)
+            {   
+                //récupération moniteur et paire de la zone 3 et 4
+                Moniteur* moniteur=c->m;
+                pair <pthread_mutex_t,pthread_cond_t>& pr4=moniteur->pr_zone4;
+                pair <pthread_mutex_t,pthread_cond_t>& pr3=moniteur->pr_zone3;
+
+                while(!t->finish()){
+                    for(int i = 0; i < t->liste_personnes.size(); i++){
+                        usleep(500);
+                        personne& p=t->liste_personnes.at(i);
+                        if(isOnZone4(p))
+                        {
+                            //LOCK4
+                            if (pthread_mutex_lock(&(pr4.first)))
+                            {
+                                perror("(-t1) pthread_mutex_lock");
+                                exit(1);
+                            }
+                            //WHILE(!COND4) WAIT()
+                            while(!(moniteur->available4)){
+                                if (pthread_cond_wait(moniteur->cond, &(moniteur->mutex))!=0)
+                                {
+                                    perror("(-t2) pthread_cond_wait");
+                                    exit(1);
+                                }
+                            }
+                            //SI JE SUIS PRET DE 3
+                            if (p.near_Zone3())
+                            {
+                                //LOCK3
+                                //WHILE(!COND3) WAIT()
+                                //SIGNAL3
+                                //UNLOCK3
+                                //SIGNAL4
+                                //UNLOCK4
+                            }else{
+                                //SIGNAL4
+                                //UNLOCK4
+                            }
+                        }
+                    }
+                }
+            }else{
+                cout<<">> probleme de récupération du moniteur"<<endl;
+                exit(1); 
+            }
+
+            /*je signale à la barrière que je suis arrivé*/
             if(c->barrier!=nullptr){
-              c->barrier->await();
+                c->barrier->await();
             }else{
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);

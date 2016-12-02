@@ -17,6 +17,7 @@ Moniteur::Moniteur(pthread_cond_t* cond,pthread_mutex_t& mutex){
 Moniteur::Moniteur(){
 
 	//zone1
+	available1=1;
 	pthread_mutex_t lock1;
 	if (pthread_mutex_init(&lock1, NULL) != 0)
 	{
@@ -27,6 +28,7 @@ Moniteur::Moniteur(){
 	pr_zone1=make_pair(lock1,cond1);
 
 	//zone2
+	available2=1;
 	pthread_mutex_t lock2;
 	if (pthread_mutex_init(&lock2, NULL) != 0)
 	{
@@ -37,6 +39,7 @@ Moniteur::Moniteur(){
 	pr_zone2=make_pair(lock2,cond2);
 
 	//zone3
+	available3=1;
 	pthread_mutex_t lock3;
 	if (pthread_mutex_init(&lock3, NULL) != 0)
 	{
@@ -47,6 +50,7 @@ Moniteur::Moniteur(){
 	pr_zone3=make_pair(lock3,cond3);
 
 	//zone4
+	available4=1;
 	pthread_mutex_t lock4;
 	if (pthread_mutex_init(&lock4, NULL) != 0)
 	{
