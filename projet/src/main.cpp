@@ -326,7 +326,8 @@ int main(int argc, char *argv[]){
                 cout<<">> initialisation du mutex échouée"<<endl;
                 return 1;
             }
-            pthread_cond_t cond;
+            pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+            
             Moniteur my_moniteur(&cond,lock);
 
 

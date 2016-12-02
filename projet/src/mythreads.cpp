@@ -645,6 +645,7 @@ void *thread_avancerALONE(void *p_data){
                         perror("(-t2) pthread_mutex_lock");
                         exit(1);
                     }
+                    cout<<"lock"<<endl;
                     //WHILE(!COND) WAIT()
                     while(!(moniteur->available)){
                         if (pthread_cond_wait(moniteur->cond, &(moniteur->mutex))!=0)
@@ -652,21 +653,23 @@ void *thread_avancerALONE(void *p_data){
                             perror("(-t2) pthread_cond_wait");
                             exit(1);
                         }
-                        
+                        cout<<"wait"<<endl;
                     }
                     my_terrain.avancer(my_personne);
-
+                    cout<<"before signal"<<endl;
                     //SIGNAL()
                     if(pthread_cond_signal(moniteur->cond)!=0){
                         perror("(-t2) pthread_cond_signal");
                         exit(1);
                     }
+                    cout<<"signal"<<endl;
                     //UNLOCK
                     if (pthread_mutex_unlock(&(moniteur->mutex)))
                     {
                         perror("(-t2) pthread_cond_unlock");
                         exit(1);
                     }
+                    cout<<"unlock"<<endl;
                     
                 }
                 barrier->await();
