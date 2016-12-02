@@ -149,34 +149,63 @@ void *thread_avancerZone1(void *p_data){ //peut être iterateur pour parcourir l
             break;
         }
         case 3:
-            Moniteur* moniteur=c->m;
-            while(!t->finish()){
-                for(int i = 0; i < t->liste_personnes.size(); i++){
-                    personne& p=t->liste_personnes.at(i);
-                    if(isOnZone1(p))
-                    {
-                        if(pthread_mutex_lock(&(moniteur->mutex))!=0){
-                            perror("pthread_mutex_lock");
+            /*thread arrivé à son terme (devant la barrière)*/
+            if (c->m!=nullptr)
+            {   
+                //récupération moniteur et paire de la zone 1
+                Moniteur* moniteur=c->m;
+                pair <pthread_mutex_t,pthread_cond_t>& pr1=moniteur->pr_zone1;
+
+                while(!t->finish()){
+                    for(int i = 0; i < t->liste_personnes.size(); i++){
+                        usleep(500);
+                        personne& p=t->liste_personnes.at(i);
+                        if(isOnZone1(p))
+                        {
+                            //LOCK1
+                            if (pthread_mutex_lock(&(pr1.first)))
+                            {
+                                perror("(-t1) pthread_mutex_lock");
+                                exit(1);
+                            }
+                            //WHILE(!COND1) WAIT()
+                            while(!(moniteur->available1)){
+                                if (pthread_cond_wait(&(pr1.second), &(pr1.first))!=0)
+                                {
+                                    perror("(-t2) pthread_cond_wait");
+                                    exit(1);
+                                }
+                            }
+                            //SIGNAL1
+                            if(pthread_cond_signal(&(pr1.second))!=0){
+                                perror("(-t1) pthread_cond_signal");
+                                exit(1);
+                            }
+                            //UNLOCK1
+                            if (pthread_mutex_unlock(&(pr1.first)))
+                            {
+                                perror("(-t1) pthread_cond_unlock");
+                                exit(1);
+                            }
                         }
-                        while(!moniteur->cond+0) wait();//cond+0 condition NE
-                        t->avancer(p);
-                        //notify all
-                        //unlock
-                        //si proche d'une zone faire faire pareil avec cond différent
                     }
                 }
+            }else{
+                cout<<">> probleme de récupération du moniteur"<<endl;
+                exit(1); 
             }
-            
-            /*thread arrivé à son terme (devant la barrière)*/
-            if (c->barrier!=nullptr)
-            {
-              c->barrier->await();
+
+            /*je signale à la barrière que je suis arrivé*/
+            if(c->barrier!=nullptr){
+                c->barrier->await();
             }else{
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
-            cout<<">> fin thread zone 1"<<endl; 
+
+            cout<<">> fin thread zone 4"<<endl;
             break;
+
     }
 
   }else{
@@ -297,18 +326,93 @@ void *thread_avancerZone2(void *p_data){
             cout<<">> fin thread zone 2"<<endl;}
             break;
         case 3:
-            Moniteur* moniteur=c->m; //recuperation du moniteur
-            
             /*thread arrivé à son terme (devant la barrière)*/
-            if (c->barrier!=nullptr)
-            {
-              c->barrier->await();
+            if (c->m!=nullptr)
+            {   
+                //récupération moniteur et paire de la zone 1 et 2
+                Moniteur* moniteur=c->m;
+                pair <pthread_mutex_t,pthread_cond_t>& pr2=moniteur->pr_zone2;
+                pair <pthread_mutex_t,pthread_cond_t>& pr1=moniteur->pr_zone1;
+
+                while(!t->finish()){
+                    for(int i = 0; i < t->liste_personnes.size(); i++){
+                        usleep(500);
+                        personne& p=t->liste_personnes.at(i);
+                        if(isOnZone2(p))
+                        {
+                            //LOCK4
+                            if (pthread_mutex_lock(&(pr2.first)))
+                            {
+                                perror("(-t1) pthread_mutex_lock");
+                                exit(1);
+                            }
+                            //WHILE(!COND2) WAIT()
+                            while(!(moniteur->available2)){
+                                if (pthread_cond_wait(&(pr2.second), &(pr2.first))!=0)
+                                {
+                                    perror("(-t2) pthread_cond_wait");
+                                    exit(1);
+                                }
+                            }
+                            //SI JE SUIS PRET DE 1
+                            if (p.near_Zone1())
+                            {
+                                //LOCK1
+                                if (pthread_mutex_lock(&(pr1.first)))
+                                {
+                                    perror("(-t1) pthread_mutex_lock");
+                                    exit(1);
+                                }
+                                //WHILE(!COND1) WAIT()
+                                while(!(moniteur->available1)){
+                                    if (pthread_cond_wait(&(pr1.second), &(pr1.first))!=0)
+                                    {
+                                        perror("(-t1) pthread_cond_wait");
+                                        exit(1);
+                                    }
+                                }
+                                //SIGNAL1
+                                if(pthread_cond_signal(&(pr1.second))!=0){
+                                    perror("(-t1) pthread_cond_signal");
+                                    exit(1);
+                                }
+                                //UNLOCK1
+                                if (pthread_mutex_unlock(&(pr1.first)))
+                                {
+                                    perror("(-t1) pthread_cond_unlock");
+                                    exit(1);
+                                }
+                            }
+                            //SIGNAL4
+                            if(pthread_cond_signal(&(pr2.second))!=0){
+                                perror("(-t1) pthread_cond_signal");
+                                exit(1);
+                            }
+                            //UNLOCK2
+                            if (pthread_mutex_unlock(&(pr2.first)))
+                            {
+                                perror("(-t1) pthread_cond_unlock");
+                                exit(1);
+                            }
+                        }
+                    }
+                }
+            }else{
+                cout<<">> probleme de récupération du moniteur"<<endl;
+                exit(1); 
+            }
+
+            /*je signale à la barrière que je suis arrivé*/
+            if(c->barrier!=nullptr){
+                c->barrier->await();
             }else{
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
+
             cout<<">> fin thread zone 2"<<endl;
             break;
+
       }
 
    }else{
@@ -432,15 +536,92 @@ void *thread_avancerZone3(void *p_data){
         }
         case 3:
             /*thread arrivé à son terme (devant la barrière)*/
-            if (c->barrier!=nullptr)
-            {
-              c->barrier->await();
+            if (c->m!=nullptr)
+            {   
+                //récupération moniteur et paire de la zone 2 et 3
+                Moniteur* moniteur=c->m;
+                pair <pthread_mutex_t,pthread_cond_t>& pr3=moniteur->pr_zone3;
+                pair <pthread_mutex_t,pthread_cond_t>& pr2=moniteur->pr_zone2;
+
+                while(!t->finish()){
+                    for(int i = 0; i < t->liste_personnes.size(); i++){
+                        usleep(500);
+                        personne& p=t->liste_personnes.at(i);
+                        if(isOnZone3(p))
+                        {
+                            //LOCK3
+                            if (pthread_mutex_lock(&(pr3.first)))
+                            {
+                                perror("(-t1) pthread_mutex_lock");
+                                exit(1);
+                            }
+                            //WHILE(!COND3) WAIT()
+                            while(!(moniteur->available3)){
+                                if (pthread_cond_wait(&(pr3.second), &(pr3.first))!=0)
+                                {
+                                    perror("(-t2) pthread_cond_wait");
+                                    exit(1);
+                                }
+                            }
+                            //SI JE SUIS PRET DE 2
+                            if (p.near_Zone2())
+                            {
+                                //LOCK2
+                                if (pthread_mutex_lock(&(pr2.first)))
+                                {
+                                    perror("(-t1) pthread_mutex_lock");
+                                    exit(1);
+                                }
+                                //WHILE(!COND2) WAIT()
+                                while(!(moniteur->available2)){
+                                    if (pthread_cond_wait(&(pr2.second), &(pr2.first))!=0)
+                                    {
+                                        perror("(-t1) pthread_cond_wait");
+                                        exit(1);
+                                    }
+                                }
+                                //SIGNAL2
+                                if(pthread_cond_signal(&(pr2.second))!=0){
+                                    perror("(-t1) pthread_cond_signal");
+                                    exit(1);
+                                }
+                                //UNLOCK2
+                                if (pthread_mutex_unlock(&(pr2.first)))
+                                {
+                                    perror("(-t1) pthread_cond_unlock");
+                                    exit(1);
+                                }
+                            }
+                            //SIGNAL3
+                            if(pthread_cond_signal(&(pr3.second))!=0){
+                                perror("(-t1) pthread_cond_signal");
+                                exit(1);
+                            }
+                            //UNLOCK3
+                            if (pthread_mutex_unlock(&(pr3.first)))
+                            {
+                                perror("(-t1) pthread_cond_unlock");
+                                exit(1);
+                            }
+                        }
+                    }
+                }
+            }else{
+                cout<<">> probleme de récupération du moniteur"<<endl;
+                exit(1); 
+            }
+
+            /*je signale à la barrière que je suis arrivé*/
+            if(c->barrier!=nullptr){
+                c->barrier->await();
             }else{
               cout<<">> probleme de récupération de la barrière"<<endl;
               exit(1);
             }
-            cout<<">> fin thread zone 3"<<endl; 
+
+            cout<<">> fin thread zone 3"<<endl;
             break;
+
         }
 
    }else{
@@ -456,7 +637,7 @@ void *thread_avancerZone3(void *p_data){
  *  @param Le contexte associé au thread
  */
 void *thread_avancerZone4(void *p_data){
-  cout<<">> lancement thread zone Sud-Ouest"<<endl;
+  cout<<">> lancement thread zone 4"<<endl;
   if (p_data != nullptr)
    {
       
@@ -581,7 +762,7 @@ void *thread_avancerZone4(void *p_data){
                             }
                             //WHILE(!COND4) WAIT()
                             while(!(moniteur->available4)){
-                                if (pthread_cond_wait(moniteur->cond, &(moniteur->mutex))!=0)
+                                if (pthread_cond_wait(&(pr4.second), &(pr4.first))!=0)
                                 {
                                     perror("(-t2) pthread_cond_wait");
                                     exit(1);
@@ -591,14 +772,41 @@ void *thread_avancerZone4(void *p_data){
                             if (p.near_Zone3())
                             {
                                 //LOCK3
+                                if (pthread_mutex_lock(&(pr3.first)))
+                                {
+                                    perror("(-t1) pthread_mutex_lock");
+                                    exit(1);
+                                }
                                 //WHILE(!COND3) WAIT()
+                                while(!(moniteur->available3)){
+                                    if (pthread_cond_wait(&(pr3.second), &(pr3.first))!=0)
+                                    {
+                                        perror("(-t1) pthread_cond_wait");
+                                        exit(1);
+                                    }
+                                }
                                 //SIGNAL3
+                                if(pthread_cond_signal(&(pr3.second))!=0){
+                                    perror("(-t1) pthread_cond_signal");
+                                    exit(1);
+                                }
                                 //UNLOCK3
-                                //SIGNAL4
-                                //UNLOCK4
-                            }else{
-                                //SIGNAL4
-                                //UNLOCK4
+                                if (pthread_mutex_unlock(&(pr3.first)))
+                                {
+                                    perror("(-t1) pthread_cond_unlock");
+                                    exit(1);
+                                }
+                            }
+                            //SIGNAL4
+                            if(pthread_cond_signal(&(pr4.second))!=0){
+                                perror("(-t1) pthread_cond_signal");
+                                exit(1);
+                            }
+                            //UNLOCK4
+                            if (pthread_mutex_unlock(&(pr4.first)))
+                            {
+                                perror("(-t1) pthread_cond_unlock");
+                                exit(1);
                             }
                         }
                     }
