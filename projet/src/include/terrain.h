@@ -27,10 +27,10 @@ class terrain {
 
 	public:
 		std::vector<personne> liste_personnes;
-		std::vector<personne> liste_personnesNO;
-		std::vector<personne> liste_personnesNE;
-		std::vector<personne> liste_personnesSO;
-		std::vector<personne> liste_personnesSE;
+		//std::vector<personne> liste_personnesNO;
+		//std::vector<personne> liste_personnesNE;
+		//std::vector<personne> liste_personnesSO;
+		//std::vector<personne> liste_personnesSE;
 		std::vector< std::vector<int> > matrice;
 		void init_muret();
 		terrain(int nombre_personnes);
@@ -47,10 +47,10 @@ class terrain {
 		void deplacement_personne_N(personne& p);
 		void deplacement_personne_O(personne& p);
 
-		void refresh_vector_personnesNE();
-		void refresh_vector_personnesSE();
-		void refresh_vector_personnesNO();
-		void refresh_vector_personnesSO();
+		// void refresh_vector_personnesNE();
+		// void refresh_vector_personnesSE();
+		// void refresh_vector_personnesNO();
+		// void refresh_vector_personnesSO();
 };
 
 

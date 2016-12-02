@@ -212,7 +212,6 @@ void terrain::deplacement_personne_SO(personne& p){
 		this->deplacement_personne_S(p);
 	}
 }
-
 void terrain::deplacement_personne_S(personne& p){
 	//verifier si on peut aller vers le Sud
 
@@ -237,8 +236,6 @@ void terrain::deplacement_personne_S(personne& p){
 	}else
 		this->deplacement_personne_O(p);
 }
-
-
 void terrain::deplacement_personne_NO(personne& p){
 	bool possible_deplacement = true;
 	if(this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()-1) == 1 || this->matrice.at(p.get_pos_x()-1).at(p.get_pos_y()-1) == 2)
@@ -283,10 +280,8 @@ void terrain::deplacement_personne_NO(personne& p){
 		p.set_position(p.get_pos_x()-1,p.get_pos_y()-1);
 	}else{
 		this->deplacement_personne_N(p);
-	}
-	
+	}	
 }
-
 void terrain::deplacement_personne_N(personne& p){
 	//verifier si on peut aller vers le Nord
 	bool possible_deplacement = true;
@@ -333,7 +328,7 @@ void terrain::deplacement_personne_O(personne& p){
 	}
 }
 
-
+/*
 void terrain::refresh_vector_personnesNE(){
 	liste_personnesNE.clear();
 	for(int i = 0 ; i < this->liste_personnes.size(); i++){
@@ -373,3 +368,4 @@ void terrain::refresh_vector_personnesSO(){
 		}
 	}
 }
+*/
