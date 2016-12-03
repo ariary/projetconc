@@ -121,6 +121,7 @@ bool terrain::finish(){
 void terrain::avancer(personne& p){
 	if(p.aFini() || (p.get_pos_x() == -1 && p.get_pos_y() ==-1)){
 		this->enlever_personne(p);
+		cout << "une personne est partie" << endl;
 	}else{ 
 		if(p.au_dessus_azimuth1()){
 				this->deplacement_personne_SO(p);

@@ -160,6 +160,8 @@ void *thread_avancerZone1(void *p_data){ //peut être iterateur pour parcourir l
                     for(int i = 0; i < t->liste_personnes.size(); i++){
                         usleep(500);
                         personne& p=t->liste_personnes.at(i);
+                        
+                        //p.print_personne();
                         if(isOnZone1(p))
                         {
                             //LOCK1
@@ -181,6 +183,7 @@ void *thread_avancerZone1(void *p_data){ //peut être iterateur pour parcourir l
                                 perror("(-t1) pthread_cond_signal");
                                 exit(1);
                             }
+                            t->avancer(p);
                             //UNLOCK1
                             if (pthread_mutex_unlock(&(pr1.first)))
                             {
@@ -383,6 +386,7 @@ void *thread_avancerZone2(void *p_data){
                                     exit(1);
                                 }
                             }
+                            t->avancer(p);
                             //SIGNAL4
                             if(pthread_cond_signal(&(pr2.second))!=0){
                                 perror("(-t1) pthread_cond_signal");
@@ -592,6 +596,7 @@ void *thread_avancerZone3(void *p_data){
                                     exit(1);
                                 }
                             }
+                            t->avancer(p);
                             //SIGNAL3
                             if(pthread_cond_signal(&(pr3.second))!=0){
                                 perror("(-t1) pthread_cond_signal");
@@ -760,6 +765,7 @@ void *thread_avancerZone4(void *p_data){
                                 perror("(-t1) pthread_mutex_lock");
                                 exit(1);
                             }
+
                             //WHILE(!COND4) WAIT()
                             while(!(moniteur->available4)){
                                 if (pthread_cond_wait(&(pr4.second), &(pr4.first))!=0)
@@ -797,6 +803,7 @@ void *thread_avancerZone4(void *p_data){
                                     exit(1);
                                 }
                             }
+                            t->avancer(p);
                             //SIGNAL4
                             if(pthread_cond_signal(&(pr4.second))!=0){
                                 perror("(-t1) pthread_cond_signal");

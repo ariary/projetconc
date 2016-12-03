@@ -35,10 +35,10 @@ void *afficher (void *p_data){
           //             exit(1);
           //           }
 
-                    for (int i = 0; i < ptr_terrain->liste_personnes.size(); ++i)
-                    {
-                        ptr_terrain->liste_personnes.at(i).print_personne(); 
-                    }
+                    // for (int i = 0; i < ptr_terrain->liste_personnes.size(); ++i)
+                    // {
+                    //     ptr_terrain->liste_personnes.at(i).print_personne(); 
+                    // }
                     if(ptr_terrain->finish()){
                         
                         break;
