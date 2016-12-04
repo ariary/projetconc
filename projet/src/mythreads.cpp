@@ -343,7 +343,7 @@ void *thread_avancerZone2(void *p_data){
                         personne& p=t->liste_personnes.at(i);
                         if(isOnZone2(p))
                         {
-                            //LOCK4
+                            //LOCK2
                             if (pthread_mutex_lock(&(pr2.first)))
                             {
                                 perror("(-t1) pthread_mutex_lock");
@@ -387,7 +387,7 @@ void *thread_avancerZone2(void *p_data){
                                 }
                             }
                             t->avancer(p);
-                            //SIGNAL4
+                            //SIGNAL2
                             if(pthread_cond_signal(&(pr2.second))!=0){
                                 perror("(-t1) pthread_cond_signal");
                                 exit(1);
