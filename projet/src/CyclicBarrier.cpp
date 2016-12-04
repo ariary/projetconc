@@ -15,7 +15,7 @@ CyclicBarrier::CyclicBarrier(int i){
 
 void CyclicBarrier::await(){
 	this->nb_expected--;
-	cout<<">> Attente de "<<nb_expected<<"threads à la barrière"<<endl;
+	cout<<">> Attente de "<<nb_expected<<" threads à la barrière"<<flush<<endl;
 }
 
 void CyclicBarrier::block(){
